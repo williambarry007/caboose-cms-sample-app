@@ -81,9 +81,9 @@ Cabooseit::Application.configure do
   config.paperclip_defaults = {
     :storage => :s3,
     :s3_credentials => {
-      :bucket => 'cabooseit',
-      :access_key_id => 'AKIAICC4PX3DLERBZURQ',
-      :secret_access_key => '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'
+      :bucket => 'mybucket',
+      :access_key_id => 'AKIAICCDLERBZURQDJFLKJ',
+      :secret_access_key => 'wVtsdfsdffZYmFgOczcj2U0+4LFnXIABEOywB810Dsdf987jhb'
     },
     :url => ':s3_alias_url',
     :s3_host_alias => 'd9hjv462jiw15.cloudfront.net',

@@ -1,14 +1,14 @@
 development:
-  access_key_id: 'AKIAICC4PX3DLERBZURQ'  
-  secret_access_key: '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'
-  bucket: 'cabooseit'
+  access_key_id: 'mykey'  
+  secret_access_key: 'mysecretkey'
+  bucket: 'mybucket'
 
 test:
-  access_key_id: 'AKIAICC4PX3DLERBZURQ'
-  secret_access_key: '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'
-  bucket: 'cabooseit'
+  access_key_id: 'mykey'  
+  secret_access_key: 'mysecretkey'
+  bucket: 'mybucket'
 
 production:
-  access_key_id: 'AKIAICC4PX3DLERBZURQ'
-  secret_access_key: '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'
-  bucket: 'cabooseit'
+  access_key_id: 'mykey'  
+  secret_access_key: 'mysecretkey'
+  bucket: 'mybucket'
