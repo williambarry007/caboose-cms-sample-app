@@ -1,0 +1,39 @@
+<% cat = Caboose::MediaCategory.where(:id => block.child_value('media_category')).last %>
+<div class="media-category-links-block" id="block_<%= block.id %>" style="min-height:100px;">
+  <% if cat && cat.media && cat.media.count > 0 %>
+    <% if !cat.name.blank? %><h3><%= cat.name %></h3><% end %>
+    <ul>
+      <% cat.media.each do |m| %>
+        <li class="clearfix">
+          <span class="name"><%= m.description.blank? ? m.name : m.description %></span>
+          <% if m.file && m.file.url && !m.file.url.include?('missing') %>
+            <a href="<%= m.file.url %>" target="_blank" title="<%= m.description %>" class="btn">
+            Download
+            </a><br />
+          <% elsif editing %>
+            <p><%= m.description.blank? ? m.name : m.description %> is an empty file.</p>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if cat && cat.children.count > 0 %>
+    <% cat.children.each do |c| %>
+      <h4><%= c.name %></h4>
+      <ul>
+        <% c.media.each do |m| %>
+          <li class="clearfix">
+            <span class="name"><%= m.description.blank? ? m.name : m.description %></span>
+            <% if m.file && m.file.url && !m.file.url.include?('missing') %>
+              <a href="<%= m.file.url %>" target="_blank" title="<%= m.description %>" class="btn">
+              Download
+              </a><br />
+            <% elsif editing %>
+              <p><%= m.description.blank? ? m.name : m.description %> is an empty file.</p>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+</div>

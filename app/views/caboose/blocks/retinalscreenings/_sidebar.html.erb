@@ -1,0 +1,31 @@
+<%
+show_sidebar = block.parent.child_value('show_sidebar')
+%>
+<% if show_sidebar %>
+  <div class="five columns offset-by-one">
+    <div class="roundedBox">
+      <h3>Ways to Learn More</h3>
+      <ul>
+        <li><a href="/contact-us/"  >Request an IRIS demonstration</a></li>
+        <li><a href="/resources/iris-news"    >Read recent news about IRIS</a></li>
+        <li><a href="/resources/gallery"      >Photo/Video Gallery</a></li>
+        <li><a href="/contact-us/faq"         >Read FAQs</a></li>
+        <li><a href="/resources/case-studies" >Review IRIS Case Studies</a></li>
+        <li><strong>Call IRIS: 1-888-535-2574</strong></li>
+      </ul>
+      <p>&nbsp;</p>
+      <p class="alignCenter"><a href="/contact-us/" class="button">Contact Us</a></p>
+      <p>&nbsp;</p>
+    </div>
+    <div class="roundedBox" style="display:table">
+      <h3>Get IRIS Updates:</h3>
+      <script charset="utf-8" src="//js.hsforms.net/forms/current.js"></script>
+      <script>
+        hbspt.forms.create({ 
+          portalId: '464109',
+          formId: '89bf9063-14d3-40ef-a351-4143c4fce35d'
+        });
+      </script>
+    </div>
+  </div>
+<% end %>                               

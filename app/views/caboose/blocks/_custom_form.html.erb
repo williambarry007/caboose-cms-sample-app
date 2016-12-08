@@ -1,0 +1,152 @@
+<%
+form_id = block.child_value('form_id')
+embed_url = block.child_value('embed_url')
+width = block.child_value('width')
+height = block.child_value('height')
+%>
+
+<div class="custom-form" id="block_<%= block.id %>">
+	<% if editing %>
+		<p>Click here to edit or delete Custom Form block.</p>
+	<% end %>
+</div>
+
+<div class="form-holder">
+	<% if editing %>
+		<div class="buttons" style="margin-top:10px;">
+			<% if form_id.blank? %>
+				<a href="#" id="add-form-<%= block.id %>" class="btn">Add Form</a>
+			<% else %>
+				<a href="#" id="edit-form-<%= block.id %>" class="btn">Edit Form</a>
+				<a href="#" id="delete-form-<%= block.id %>" class="btn">Delete Form</a>
+			<% end %>
+		</div>
+	<% end %>
+	<div id="form-<%= block.id %>"></div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		#block_<%= block.id %> {
+			text-align: center;
+		}
+		.form-holder {
+			text-align: center;
+		}
+		#form-<%= block.id %> {
+			position: relative;
+		}
+		#jotform_iframe_wrapper {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+		}
+		#jotform_iframe_wrapper iframe {
+			width: 100% !important;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script type="text/javascript" src="//js.jotform.com/JotFormAnywhere.js"></script>
+	<script>
+	<% if editing %>
+		function post_form_data(data) {
+			$.ajax({
+		    url: "/api/custom-form",
+		    type: 'post',
+		    data: {
+		    	block_id: <%= block.id %>,
+		    	embed_url: data.formEmbedUrl,
+		    	form_id: data.formID,
+		    	width: data.width,
+		    	height: data.height
+		    },
+		    success: function(data) {
+		      console.log("saved form");
+		    }
+		  });
+		}
+		function delete_form(form_id) {
+			$.ajax({
+		    url: "/api/custom-form",
+		    type: 'delete',
+		    data: {
+		    	block_id: <%= block.id %>
+		    },
+		    success: function(data) {
+		      console.log("deleted form");
+		    }
+		  });
+		  $("#form-<%= block.id %>").html("");
+		}
+		JotformAnywhere.subscribe("jotform.formCreated", 
+	    function(response){
+	    	post_form_data(response);
+	    	JotformAnywhere.insertForm({
+	          formID: response.formID,
+	          width: response.width,
+	          height: response.height,
+	          insertTo: "#form-<%= block.id %>",
+	          editMode: true,
+	          formEmbedUrl : response.formEmbedUrl,
+	          putEditButton: false,
+	          putDeleteButton: false
+	      });
+	    }
+	  );
+	  JotformAnywhere.subscribe("jotform.formUpdated", 
+	    function(response){
+	    	post_form_data(response);
+	    }
+	  );
+	  // JotformAnywhere.subscribe("jotform.formDeleted", 
+	  //   function(response){
+	  //   	delete_form();
+	  //   }
+	  // );
+	<% end %>
+	$(document).ready(function() {
+		<% if form_id.blank? && editing %>
+			$("#add-form-<%= block.id %>").click(function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				JotformAnywhere.launchFormBuilder({
+					insertTo: "#form-<%= block.id %>",
+		    	builderMaskColor: "#FFFFFF"
+		    });
+			});
+		<% else %>
+			JotformAnywhere.insertForm({
+	    	formID: "<%= form_id %>",
+	      insertTo: "#form-<%= block.id %>",
+	      putEditButton: false,
+	      putDeleteButton: false,
+	      formEmbedUrl: "<%= embed_url %>"
+	    });
+	    $("#edit-form-<%= block.id %>").click(function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				JotformAnywhere.launchFormBuilder({
+					formID: "<%= form_id %>",
+					insertTo: "#form-<%= block.id %>",
+		    	builderMaskColor: "#FFFFFF",
+		    	openInModal: true
+		    });
+			});
+			$("#delete-form-<%= block.id %>").click(function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				delete_form();
+			});
+		<% end %>
+		<% if editing %>
+			// $(".form-delete-button").click(function(event) {
+			// 	event.stopPropagation();
+			// });
+		<% end %>
+	});
+	</script>
+<% end %>

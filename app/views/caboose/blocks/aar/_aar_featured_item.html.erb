@@ -1,0 +1,34 @@
+<%
+title = block.child_value('title')
+subtitle = block.child_value('subtitle')
+button_url = block.child_value('button_url')
+button_text = block.child_value('button_text')
+description = block.child_value('description')
+banner_color = block.child_value('banner_color').blank? ? "#697c95" : block.child_value('banner_color')
+text_align = block.child_value('text_align').blank? ? "center" : block.child_value('text_align')
+%>
+
+<div class="featured-item" id="block_<%= block.id %>">
+	<div class="text-banner">
+		<% if !title.blank? %><h3 class="title"><%= title %></h3><% end %>
+		<% if !subtitle.blank? %><h4 class="subtitle"><%= subtitle %></h4><% end %>
+	</div>
+	<div class="description">
+		<%== description %>
+	</div>
+	<% if !button_text.blank? && !button_url.blank? %>
+		<a href="<%= button_url %>" title="<%= button_text %>" class="btn"><%= button_text %></a>
+	<% end %>
+</div>
+
+<% content_for :css do %>
+<style>
+	#block_<%= block.id %>{
+		text-align: <%= text_align %>; 
+	}
+	#block_<%= block.id %> .text-banner {
+		text-align: center;
+		background-color: <%= banner_color %>;
+	}
+</style>
+<% end %>

@@ -1,0 +1,16 @@
+<div id="block_<%= block.id %>" class="testimonial-slider">
+  <header>What our patients say about us</header>
+  <button class="left icon-left-big"></button>
+  <button class="right icon-right-big"></button>
+  
+  <ul>
+    <% block.children.each do |child| %><%= block.render(child, local_assigns) %><% end %>
+  </ul>
+  
+  <footer>
+    <ul>
+      <% block.children.each do |child| %><li></li><% end %>
+    </ul>
+  </footer>
+</div>
+

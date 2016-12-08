@@ -1,0 +1,41 @@
+<% color = rand(5) %>
+<div class="header main subpage color-<%= color %>" id="block_<%= block.id %>">
+  <div class="overlay"></div>
+  <div class="constrain">
+    <div class="logo-holder">
+      <a class="logo-link" href="/" title="Home">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/thegraingame/images/ie_logo.png" alt="The Grain Game" id="ie-logo" width="220" />
+        <%= render :partial => "caboose/blocks/thegraingame/logo", :locals => {:color => color, :alt => true} %>
+      </a>
+      <p class="tagline">Every kid. Every nation.</p>
+    </div>
+    <nav class="reveal nav">
+      <% top_pages = Caboose::Page.where(:parent_id => 774, :hide => false).order(:sort_order).all %>
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% top_pages.each do |p| %>
+          <li class="toplevel"><%== ApplicationHelper.nav_link(p, editing, false) %>
+            <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+            <% if subpages.count > 0 %>
+              <div class="dropdown" id="<%= p.slug %>">
+                <div class="constrain">
+                  <nav>
+                    <ul>
+                      <% subpages.each do |p| %>
+                        <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+                      <% end %>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<%
+variants = Caboose::Variant.includes(:product).where("store_variants.clearance = true").where("store_products.site_id = ? AND store_products.status = ?", site.id, "Active").all
+colors_seen = []
+%>
+<div class="outlet product-index" id="block_<%= block.id %>">
+	<div class="outlet-welcome">
+		<h2>Welcome to the WB Outlet</h2>
+		<p>Find the best prices on discontinued clothing and accessories here.</p>
+	</div>
+	<div class="product-grid" id="category-grid">
+	  <% if variants.count > 0 %> 
+	    <% variants.each do |v| %>
+	      <% p = v.product %>
+	      <% op1 = p.option1 == 'Color' %>
+      	<% op2 = p.option2 == 'Color' %>
+      	<% op3 = p.option3 == 'Color' %>
+				<% color = op1 ? v.option1 : (op2 ? v.option2 : (op3 ? v.option3 : nil)) %>
+				<% # Caboose.log("color: " + color) %>
+				<% next if colors_seen.include?(color) %>
+				<% colors_seen << color %>
+	      <% next if p.nil? %>
+	      <% next if p.status != Caboose::Product::STATUS_ACTIVE %>
+		    <div class="product-unit">
+		    	<div class="contain">
+			    	<% if p.on_sale %><div class="product-sale">SALE</div><% end %>
+			    	<% img = v.product_images.first ? v.product_images.first.url(:large) : (p.featured_image ? p.featured_image.url(:large) : '//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg') %>
+			      <a href="/products/<%= p.id %>" title="<%= p.title %>" class="image-holder" style="background-image:url(<%= img %>);"></a>
+			      <div class="product-meta">
+			      	<a href="/products/<%= p.id %>" class="product-title"><%= p.title %></a>
+	            <h4 class="product-price"><%= number_to_currency(v.clearance_price) %></h4>
+			      </div>
+			      <div class="product-desc">
+			      	<%== p.description %>
+			      </div>
+        	</div>
+		    </div>
+	 		<% end %>
+	 	<% else %>
+			<div class="no-products">
+				<p>Sorry, no products were found.</p>
+			</div>
+		<% end %>
+	</div>
+</div>
+
+<% content_for :css do %>
+<style>
+.content_wrapper {
+	padding-top: 2px;
+}
+</style>
+<% end %>

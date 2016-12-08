@@ -1,0 +1,9 @@
+<%
+shape = block.child_value('style').blank? ? "circle" : block.child_value('style').downcase
+color = block.child_value('color').blank? ? "white" : block.child_value('color').downcase
+%>
+<div class="social-icons-block" id="block_<%= block.id %>">
+	<h3 class="section-title">SOCIAL JOIN</h3>
+	<%== ApplicationHelper.social_links(site.id, shape, "white") %>
+	<p class="details">Stay up to date with Ut Unum on all of our social platforms</p>
+</div>

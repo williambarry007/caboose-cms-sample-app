@@ -1,0 +1,126 @@
+<% cals = Caboose::Calendar.where(:site_id => site.id).order(:id).all %>
+<% to_show = !block.child_value('calendars_to_show').blank? ? block.child_value('calendars_to_show') : "" %>
+<% to_show = to_show.include?('all') ? 'all' : to_show %>
+<% to_show = to_show.include?('|') ? to_show.split('|') : to_show %>
+<% if cals.count > 0 %>
+  <div class="calendar-wrapper" id="block_<%= block.id %>">
+    <div class="calendar-selector clearfix">
+      <% cals.each do |c| %>
+        <% show = (to_show == 'all' || to_show.include?(c.id.to_s)) %>
+        <a id="hide-cal-<%= c.id %>" class="icon-shown <%= show %>" href="#" style="background-color:<%= c.color %>;"><span class="text"><%= c.name %></span></a>
+        <a id="show-cal-<%= c.id %>" class="icon-hidden <%= !show %>" style="background-color:<%= c.color %>;" href="#"><span class="text"><%= c.name %></span></a>
+      <% end %>
+      <a id="hide-cal-training" class="icon-shown true" href="#" style="background-color:#b4c1ff;"><span class="text">Training</span></a>
+      <a id="show-cal-training" class="icon-hidden false" style="background-color:#b4c1ff;" href="#"><span class="text">Training</span></a>
+    </div>
+    <div id="calendar"></div>
+    <div class="fullscreen-overlay" id="modal-<%= block.id %>" style="display:none;">
+      <div class="table modal-wrapper" style="display:none;">
+        <div class="table-cell">
+          <div class="modal">
+            <a id="close-calendar-modal" class="icon-close"></a>
+            <h3 class="event-title"></h3>
+            <h4 class="event-location"></h4>
+            <h5 class="event-date"></h5>
+            <div class="event-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% content_for :css do %>
+  <%= stylesheet_link_tag "fullCalendar.css" %>
+  <% end %>
+  <% content_for :js do %>
+    <%= javascript_include_tag "moment.js" %>
+    <%= javascript_include_tag "fullCalendar.js" %>
+    <script>
+      function show_event_data(event_id) {
+        $.ajax({
+          url: '/calendar/event/' + event_id + '/json',
+          type: 'get',
+          success: function(resp) {
+            if (resp && resp.description)
+              window.location = resp.description;
+          }
+        });
+      }
+      $(document).ready(function() {
+        $("#calendar").fullCalendar({
+          header: {
+            left: 'title',
+            center: '',
+            right: 'prev,next today'
+          },
+          eventSources: [
+            <% cals.each do |c| %>
+            <% next if to_show != 'all' && !to_show.include?(c.id.to_s) %>
+            {
+              url: "/calendar/feed/<%= c.id %>",
+              color: "<%= c.color %>",
+              textColor: "white"
+            },
+            <% end %>
+            {
+              url: "/demopd/trainings/feed",
+              color: "#b4c1ff",
+              textColor: "white"
+            }
+          ],
+          eventClick: function(calEvent, jsEvent, view) {
+            console.dir(calEvent);
+            if ( calEvent.url.indexOf('/trainings') >= 0 )
+              window.location = calEvent.url;
+            else
+              show_event_data(calEvent.id);
+            return false;
+          }
+        }); 
+        $("#close-calendar-modal").click(function(event) {
+          var ov = $("#modal-<%= block.id %>"); 
+          event.preventDefault(); 
+          ov.fadeOut(); 
+          ov.find(".modal-wrapper").fadeOut(); 
+        });
+        <% cals.each do |c| %>
+          $("#show-cal-<%= c.id %>").click(function(event) {
+            event.preventDefault();
+            $("#calendar").fullCalendar( 'addEventSource', {
+                url: '/calendar/feed/<%= c.id %>',
+                color: "<%= c.color %>",
+                textColor: 'white'
+              } );
+            $(this).hide();
+            $("#hide-cal-<%= c.id %>").css("display","inline-block");
+          });
+          $("#hide-cal-<%= c.id %>").click(function(event) {
+            event.preventDefault();
+            $("#calendar").fullCalendar( 'removeEventSource', '/calendar/feed/<%= c.id %>' );
+            $(this).hide();
+            $("#show-cal-<%= c.id %>").css("display","inline-block");
+          });
+        <% end %>
+        $("#show-cal-training").click(function(event) {
+          event.preventDefault();
+          $("#calendar").fullCalendar( 'addEventSource', {
+              url: '/demopd/trainings/feed',
+              color: "#b4c1ff",
+              textColor: 'white'
+            } );
+          $(this).hide();
+          $("#hide-cal-training").css("display","inline-block");
+        });
+        $("#hide-cal-training").click(function(event) {
+          event.preventDefault();
+          $("#calendar").fullCalendar( 'removeEventSource', '/demopd/trainings/feed' );
+          $(this).hide();
+          $("#show-cal-training").css("display","inline-block");
+        });
+      });
+    </script>
+  <% end %>
+
+<% else %>
+  <p style="padding:30px 2%;text-align:center;">Sorry, a calendar does not exist for this site.</p>
+<% end %>

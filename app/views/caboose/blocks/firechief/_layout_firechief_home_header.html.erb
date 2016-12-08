@@ -1,0 +1,46 @@
+<% img_url = block.child_value('banner_image') && block.child_value('banner_image').url.include?('placehold') ? "" : block.child_value('banner_image') %>
+
+<div class="header-wrapper home" id="block_<%= block.id %>">
+  <div class="top">
+    <div class="constrain">
+      <div class="left">
+        <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+          <span>toggle menu</span>
+        </a>
+        <a href="/" title="Home" class="link home">Home</a>
+        <% if !logged_in_user || logged_in_user.username == 'elo' %>
+          <a href="/member-login" title="Login" class="link login">Member Login</a>
+        <% else %>
+          <a href="/my-account" title="My Account" class="link">My Account</a>
+          <a href="/logout" title="Logout" class="link">Logout</a>
+        <% end %>
+      </div>
+      <div class="right">
+        <div class="search-wrapper">
+          <form action="/search" method="get">
+            <input type="text" name="q" placeholder="Search" />
+            <a href="#" id="submit-search" class="icon-search"></a>
+          </form>
+        </div>
+        <%== ApplicationHelper.social_links(site.id, "circle", "dark") %>
+      </div>
+      <% if !logged_in_user || logged_in_user.username == 'elo' %>
+        <a href="/member-registration" title="Become a Member" class="badge">
+          <span>Become A<br />Member</span>
+          <span class="down"></span>
+        </a>
+      <% end %>
+    </div>
+  </div>
+<!--   <div class="banner" <% if !img_url.blank? %> style="background-image:url(<%= img_url %>);"<% end %> >
+    <div class="table">
+      <div class="table-cell">
+        <div class="text-overlay">
+          <div class="richtext">
+            <%== block.child_value('text_overlay') %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>

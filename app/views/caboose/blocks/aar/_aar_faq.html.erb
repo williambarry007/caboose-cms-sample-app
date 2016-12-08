@@ -1,0 +1,13 @@
+<div class="faq-block" id="block_<%= block.id %>">
+	<a href="#" class="question" id="question-<%= block.id %>"><%== block.child_value('question') %></a>
+	<p class="answer" id="answer-<%= block.id %>" style="display:none;"><%== block.child_value('answer') %></p>
+</div>
+
+<% content_for :js do %>
+	<script>
+		$("#question-<%= block.id %>").click(function(event) {
+			event.preventDefault();
+			$("#answer-<%= block.id %>").slideToggle();
+		});
+	</script>
+<% end %>

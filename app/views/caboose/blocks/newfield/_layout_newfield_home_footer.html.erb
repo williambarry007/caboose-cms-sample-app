@@ -1,0 +1,44 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="top">
+    <div class="constrain">
+      <div class="grid-row">
+        <div class="unit1of2 left">
+          <div class="grid-row">
+            <div class="unit1of2 data">
+              <img src="http://d9hjv462jiw15.cloudfront.net/media/12357_customer_thumb.png">
+              <h6>Refer Friends</h6>
+              <p>Tell your friends about the Newfield Newsletter using your unique referral URL to receive a discount off your subscription.</p>
+            </div>
+            <div class="unit1of2 data">
+              <img src="http://d9hjv462jiw15.cloudfront.net/media/12360_speedometer_thumb.png">
+              <h6>Earn Money</h6>
+              <p>Using the research presented in the Newfield Newsletter, invest your funds into the stock market and put your money to work for you.</p>
+            </div>
+          </div>
+        </div>
+        <div class="unit1of2 right">
+          <nav>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <% Caboose::Page.where(:parent_id => 2081, :hide => false).order(:sort_order).all.each do |p| %>
+                <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+              <% end %>
+            </ul>
+          </nav>
+
+          <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="constrain">
+      <div class="main-text">
+        <%== block.child_value('bottom_text') %>
+      </div>
+      <span class="design">
+        WEBSITE DESIGN BY <a href="http://www.nine.is" title="The Nine" target="_blank">THE NINE</a>
+      </span>
+    </div>
+  </div>
+</footer>

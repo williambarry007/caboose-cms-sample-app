@@ -1,0 +1,26 @@
+<% img = block.child_value('background_image') ? block.child_value('background_image').url(:huge) : "//d9hjv462jiw15.cloudfront.net/assets/bwb/images/brewing.jpg" %>
+
+<footer class="basic" id="block_<%= block.id %>" style="background-image:url(<%= img %>);">
+  <div class="constrain">
+    <div class="socials">
+      <div class="grid-row">
+        <div class="unit2of3">
+          <ul class='social-links'>
+            <li><a href='https://www.facebook.com/304379426305946' target='_blank' title='Facebook' class='icon-outline-facebook white'></a></li>
+            <li><a href='https://www.twitter.com/blackwarriorbc' target='_blank' title='Twitter' class='icon-outline-twitter white'></a></li>
+            <li><a href='https://www.instagram.com/blackwarriorbrewing' target='_blank' title='Instagram' class='icon-outline-instagram white'></a></li>
+            <li><a href="https://untappd.com/BlackWarriorBrewingCo" target="_blank" title="Untappd" class="icon-outline-untappd white"></a></li>
+          </ul>
+        </div>
+        <div class="unit1of3"></div>
+      </div>
+    </div>
+    <a href="/store-policies" title="Store Policies" class="policies">Store Policies</a>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

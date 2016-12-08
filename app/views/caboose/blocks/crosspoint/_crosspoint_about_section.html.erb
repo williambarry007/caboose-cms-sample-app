@@ -1,0 +1,24 @@
+<div class="about-section" id="block_<%= block.id %>">
+	<div class="constrain">
+		<% img2 = block.child_value('image') %>
+		<% img2 = (img2.blank? || img2.url.include?('missing')) ? "" : img2 %>
+		<div class="left" style="background-image:url('<%= img2 %>');"></div>
+		<div class="right">
+			<h4 class="section-title"><%= block.child_value('section_title') %></h4>
+			<div class="text-wrapper">
+				<div class="main-text richtext"><%== block.child_value('main_text') %></div>
+				<div class="features">
+					<% img1 = block.child_value('pastor_image') %>
+					<% img1 = (img1.blank? || img1.url.include?('missing')) ? "" : img1 %>
+					<img src="<%= img1 %>" class="pastor-image" alt="<%= block.child_value('pastor_name') %>" />
+					<h5 class="pastor-title">Pastor</h5>
+					<h4 class="pastor-name"><%= block.child_value('pastor_name') %></h4>
+					<div class="podcast">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/crosspoint/images/icons/podcast.png" class="podcast-image" />
+						<p class="meta">Subscribe to our podcast <a href="<%= block.child_value('podcast_url') %>" target="_blank">here</a>.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,47 @@
+<%
+suites = Colonnade::Suite.where(:id => (Colonnade::UserSuite.where(:user_id => logged_in_user.id).pluck(:suite_id))).all
+show_billing = suites && suites.count > 0 && suites.map{|s| (s.require_payment_info && s.venue.allow_additional_orders)}.include?(true)
+%>
+
+<div class="content_wrapper" id='block_<%= block.id %>'>
+  <div class="content_body home-content">
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>
+      <% if block.constrain == true %><div class='constrain'><% end %>
+      <%= raw controller_view_content %>
+      <% if block.constrain == true %></div><% end %>
+    <% elsif post %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <%
+      constrain_all = block.constrain_all
+      outer_header = block.constrain == true ? (constrain_all ? "<div class='constrain'>" : '') : ''
+      outer_footer = block.constrain == true ? (constrain_all ? "</div>" : '') : ''
+      inner_header = block.constrain == true ? (constrain_all ? '' : "<div class='constrain'>") : ''
+      inner_footer = block.constrain == true ? (constrain_all ? '' : "</div>") : ''      
+      %>
+      <%= raw outer_header %>
+      <% block.children.each do |b| %>
+        <% if block.constrain && !b.full_width %><%= raw inner_header %><% end %>
+        <%= raw block.render(b, local_assigns) %>
+        <% if block.constrain && !b.full_width %><%= raw inner_footer %><% end %>
+      <% end %>
+      <%= raw outer_footer %>
+    <% end %>
+  </div>
+</div>
+
+<% content_for :css do %>
+<style>
+.home-content { padding: <%= page.custom_field_value('vertical_padding') %> 0;}
+<% if !show_billing %>
+#caboose-my-account .grid-row .unit1of2.left {
+  width: 100%;
+}
+#caboose-my-account .grid-row .unit1of2.right {
+  display: none !important;
+  opacity: 0;
+  visibility: hidden;
+}
+<% end %>
+</style>
+<% end %>

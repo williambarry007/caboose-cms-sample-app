@@ -1,0 +1,68 @@
+<% cal = Caboose::Calendar.where(:site_id => site.id).first %>
+
+<% if cal %>
+
+  <div class="calendar-wrapper" id="block_<%= block.id %>">
+    <%= stylesheet_link_tag "fullCalendar.css" %>
+    <div id="calendar"></div>
+    <div class="fullscreen-overlay" id="modal-<%= block.id %>" style="display:none;">
+      <div class="table modal-wrapper" style="display:none;">
+        <div class="table-cell">
+          <div class="modal">
+            <a id="close-modal" class="icon-close"></a>
+            <h3 class="event-title"></h3>
+            <h5 class="event-date"></h5>
+            <div class="event-content">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% content_for :js do %>
+    <%= javascript_include_tag "moment.js" %>
+    <%= javascript_include_tag "fullCalendar.js" %>
+    <script>
+      $(document).ready(function() {
+        $("#calendar").fullCalendar({
+          header: {
+            left: 'title',
+            center: '',
+            right: 'prev,next today'
+          },
+          eventTextColor: "#fff",
+          events: "/calendar/feed/<%= cal.id %>",
+          eventClick: function(calEvent, jsEvent, view) {
+            var ov = $("#modal-<%= block.id %>"); 
+            ov.fadeIn();
+            ov.find(".modal-wrapper").fadeIn();
+            ov.find(".event-title").html( calEvent.title ); 
+            if ( calEvent.allDay ) {
+              if ( calEvent.start.format("MMMM") == calEvent.end.format("MMMM") && calEvent.start.format("Do") == calEvent.end.format("Do") ) {
+                ov.find(".event-date").html( calEvent.start.format("MMMM Do, YYYY"));
+              }
+              else {
+                ov.find(".event-date").html( calEvent.start.format("MMMM Do") + " - " + calEvent.end.format("MMMM Do, YYYY") );
+              }
+            }
+            else {
+              ov.find(".event-date").html( calEvent.start.format("MMMM Do, YYYY [at] h:mm a") );
+            }
+            ov.find(".event-content").html( calEvent.url ); 
+            return false;
+          }
+        }); 
+        $("#close-modal").click(function(event) {
+          var ov = $("#modal-<%= block.id %>"); 
+          event.preventDefault(); 
+          ov.fadeOut(); 
+          ov.find(".modal-wrapper").fadeOut(); 
+        }); 
+      });
+    </script>
+  <% end %>
+
+<% else %>
+  <p style="padding:30px 2%;text-align:center;">Sorry, a calendar does not exist for this site.</p>
+<% end %>

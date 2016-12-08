@@ -1,0 +1,265 @@
+<%
+#sliders = block.children.where(:block_type_id => 366).all
+coords_north_america = [406,476,401,488,385,495,357,456,319,434,278,428,255,409,255,389,223,328,219,341,238,385,228,385,215,352,208,318,197,298,197,265,227,217,218,201,226,188,220,158,212,139,179,137,160,146,161,134,143,138,141,148,71,172,118,146,104,146,104,141,98,135,146,112,128,110,141,100,161,100,161,91,241,71,288,88,339,79,392,86,387,92,463,92,468,79,476,84,472,92,485,82,505,59,522,55,552,57,594,69,627,43,642,30,755,8,830,12,854,19,825,32,824,48,802,70,801,80,731,98,708,108,687,140,660,128,653,99,662,69,666,49,634,47,601,75,601,88,619,99,606,104,596,96,588,105,597,120,575,126,542,110,565,99,568,86,538,82,521,98,517,110,496,120,490,112,436,130,437,156,470,170,472,195,484,189,488,175,516,156,507,149,527,126,558,134,562,152,586,138,586,163,605,183,581,199,538,205,515,219,548,208,539,228,550,230,562,227,528,247,528,237,497,250,497,257,476,263,454,289,453,301,434,313,413,334,413,374,405,370,400,339,386,339,373,335,360,346,331,342,308,371,307,407,326,421,344,405,365,398,359,420,349,434,377,437,379,461,387,477] 
+coords_south_america = [406,477,409,488,416,505,399,539,393,580,419,629,460,672,470,802,487,840,486,867,510,903,555,920,530,898,536,870,522,863,532,853,525,825,539,827,537,811,563,807,555,779,578,782,612,709,635,704,651,650,648,639,672,594,659,581,633,567,614,569,602,552,588,558,572,519,551,500,541,509,503,470,472,471,448,467,417,484]
+coords_africa = [829,325,828,342,818,350,808,357,784,396,786,417,781,455,800,480,829,511,866,510,907,502,916,511,939,518,937,553,965,624,954,658,972,700,995,779,1040,774,1067,749,1077,722,1091,715,1089,684,1122,654,1147,663,1142,699,1149,719,1170,704,1182,657,1178,631,1147,660,1123,652,1129,621,1120,598,1118,583,1153,531,1187,486,1192,465,1151,477,1139,467,1144,459,1110,430,1104,395,1075,346,1086,352,1073,332,1048,334,1021,323,998,326,998,338,943,314,948,293,918,293,879,303,853,300]
+coords_australia = [1614,661,1607,678,1569,690,1556,698,1555,726,1552,732,1546,784,1595,776,1643,763,1659,784,1675,785,1675,802,1697,808,1698,824,1692,832,1688,842,1711,833,1708,824,1703,807,1727,805,1763,766,1821,840,1787,862,1802,865,1893,807,1879,803,1874,785,1865,811,1828,840,1766,764,1783,737,1766,687,1752,645,1746,628,1740,619,1742,610,1754,600,1791,621,1772,591,1752,569,1729,604,1741,610,1735,633,1723,666,1695,647,1707,631,1680,622,1658,649,1645,641]
+coords_asia = [1351,490,1314,391,1309,407,1294,393,1273,371,1234,372,1215,362,1202,363,1169,335,1162,346,1178,376,1197,377,1212,371,1233,388,1229,412,1196,433,1144,458,1124,409,1089,347,1080,349,1073,331,1090,320,1090,294,1062,297,1040,290,1036,269,1049,265,1087,262,1116,262,1141,268,1144,240,1159,229,1177,233,1156,188,1159,130,1186,83,1202,89,1188,77,1207,59,1217,100,1225,100,1234,89,1216,74,1218,63,1235,66,1251,59,1274,49,1306,38,1361,50,1348,60,1415,63,1413,55,1462,75,1498,72,1493,64,1531,71,1575,75,1636,81,1692,84,1732,97,1755,98,1764,117,1728,109,1741,123,1725,131,1711,133,1701,132,1687,143,1707,160,1715,175,1709,197,1672,163,1674,139,1673,127,1665,136,1647,127,1646,144,1590,144,1580,175,1597,178,1612,181,1633,215,1622,255,1614,252,1601,273,1624,300,1606,309,1583,274,1570,279,1564,267,1547,279,1559,290,1577,289,1567,306,1589,331,1593,354,1573,390,1535,406,1528,398,1515,415,1543,465,1515,487,1486,451,1486,487,1514,536,1545,535,1587,503,1599,510,1689,551,1697,565,1712,557,1739,566,1726,603,1713,606,1719,587,1704,576,1690,572,1678,552,1684,551,1597,512,1597,534,1584,570,1495,528,1493,535,1522,564,1524,588,1565,591,1572,603,1526,599,1498,574,1482,542,1459,509,1490,529,1495,524,1485,505,1473,469,1463,430,1449,437,1426,390,1403,399,1360,438,1366,473]
+coords_europe = [1186,84,1163,82,1126,82,1095,98,1078,111,1063,118,1046,95,1074,101,1082,93,1035,78,998,73,957,89,940,117,921,127,924,151,945,145,942,156,932,164,932,175,920,187,905,196,898,183,881,161,885,155,871,146,861,160,870,168,846,172,836,194,859,190,858,174,875,179,867,194,865,204,895,196,895,188,903,203,885,208,866,214,884,233,878,248,839,249,834,289,845,292,862,297,894,266,904,264,904,249,936,246,970,267,977,285,978,271,987,271,954,241,965,237,989,253,1014,295,1020,286,1017,270,1030,266,1040,267,1047,266,1044,239,1059,227,1071,230,1068,236,1072,247,1082,238,1078,229,1095,225,1090,236,1118,253,1118,263,1143,268,1142,240,1156,235,1176,234,1157,191,1159,119,1170,99]
+def get_coords(array, ratio)
+	array.map{ |c| (c * ratio).to_i }.join(',').gsub('[','').gsub(']','')
+end
+%>
+
+<% if modal %>
+
+<% else %>
+
+	<% if !params[:post_id] || params[:post_id].blank? %>
+
+		<div class="read-page-wrapper">
+
+			<div class="map-wrapper">
+
+				<div class="map-container">
+					<div class="layer" id="background">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/map/background.png" usemap="#continent-map">
+					</div>
+					<div class="layer continent" id="north-america">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/map/north_america.png" usemap="#continent-map">
+						<h5 class="continent-name" id="north-america" title="North America">Church in North America</h5>
+					</div>
+					<div class="layer continent" id="south-america">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/map/south_america.png" usemap="#continent-map">
+						<h5 class="continent-name" id="south-america" title="South America">Church in South America</h5>
+					</div>
+					<div class="layer continent" id="australia">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/map/australia.png" usemap="#continent-map">
+						<h5 class="continent-name" id="australia" title="Australia">Church in Australia</h5>
+					</div>
+					<div class="layer continent" id="africa">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/map/africa.png" usemap="#continent-map">
+						<h5 class="continent-name" id="africa" title="Africa">Church in Africa</h5>
+					</div>
+					<div class="layer continent" id="asia">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/map/asia.png" usemap="#continent-map">
+						<h5 class="continent-name" id="asia" title="Asia">Church in Asia</h5>
+					</div>
+					<div class="layer continent" id="europe">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/map/europe.png" usemap="#continent-map">
+						<h5 class="continent-name" id="europe" title="Europe">Church in Europe</h5>
+					</div>
+					<div class="icon-globe" id="global" title="Global">
+						<h5 class="continent-name" id="global" title="Global">The Global Church</h5>
+					</div>
+				</div>
+
+				<map name="continent-map" id="continent-map">
+					<area href="#" id="africa" title="Africa" shape="poly" coords="<%= get_coords(coords_africa, 0.5) %>" target="_blank" />
+					<area href="#" id="south-america" title="South America" shape="poly" coords="<%= get_coords(coords_south_america, 0.5) %>" target="_blank" />
+					<area href="#" id="north-america" title="North America" shape="poly" coords="<%= get_coords(coords_north_america, 0.5) %>" target="_blank" />
+					<area href="#" id="australia" title="Australia" shape="poly" coords="<%= get_coords(coords_australia, 0.5) %>" target="_blank" />
+					<area href="#" id="asia" title="Asia" shape="poly" coords="<%= get_coords(coords_asia, 0.5) %>" target="_blank" />
+					<area href="#" id="europe" title="Europe" shape="poly" coords="<%= get_coords(coords_europe, 0.5) %>" target="_blank" />
+				</map>
+
+				<map name="continent-map-small" id="continent-map-small">
+					<area href="#" id="africa" title="Africa" shape="poly" coords="<%= get_coords(coords_africa, 0.4) %>" target="_blank" />
+					<area href="#" id="south-america" title="South America" shape="poly" coords="<%= get_coords(coords_south_america, 0.4) %>" target="_blank" />
+					<area href="#" id="north-america" title="North America" shape="poly" coords="<%= get_coords(coords_north_america, 0.4) %>" target="_blank" />
+					<area href="#" id="australia" title="Australia" shape="poly" coords="<%= get_coords(coords_australia, 0.4) %>" target="_blank" />
+					<area href="#" id="asia" title="Asia" shape="poly" coords="<%= get_coords(coords_asia, 0.4) %>" target="_blank" />
+					<area href="#" id="europe" title="Europe" shape="poly" coords="<%= get_coords(coords_europe, 0.4) %>" target="_blank" />
+				</map>
+
+				<div class="mobile-continent-selector conceal">
+					<a href="#" class="btn mobile-continent" id="north-america" title="North America">Church in North America</a>
+					<a href="#" class="btn mobile-continent" id="south-america" title="South America">Church in South America</a>
+					<a href="#" class="btn mobile-continent" id="europe" title="Europe">Church in Europe</a>
+					<a href="#" class="btn mobile-continent" id="asia" title="Asia">Church in Asia</a>
+					<a href="#" class="btn mobile-continent" id="africa" title="Africa">Church in Africa</a>
+					<a href="#" class="btn mobile-continent" id="australia" title="Australia">Church in Australia</a>
+					<a href="#" class="btn mobile-continent" id="global" title="Global">Global Church</a>
+				</div>
+
+			</div>
+
+			<div class="body-wrapper">
+				<div class="constrain">
+					<div class="slider-wrapper">
+						<h4 class="slider-title"></h4>
+						<% # sliders.each do |s| %>
+							<% # raw block.render(s, local_assigns) %>
+						<% # end %>
+					</div>
+					<div class="news-ads-wrapper clearfix">
+
+						<div class="news-wrapper">
+							<% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC") %>
+
+							<div class="news-list-wrapper">
+								<div class="no-posts post-unit clearfix" style="display:none;">
+									<div class="middle">
+										<div class="post-text">
+											<div class="post-excerpt" style="font-size:1.5em;"><p>Sorry, there aren't any posts under that category yet.</p></div>
+										</div>
+									</div>
+									
+								</div>
+								<% posts.each_with_index do |p| %>
+									<% last_cat = p.post_categories.where("name != ?","General News").last %>
+									<% cont = last_cat ? last_cat.name.downcase.gsub(" ","-") : "None" %>
+									<div class="post-unit clearfix global <%= cont %>">
+										<div class="top clearfix">
+											<a href="<%= p.uri %>" class="post-title"><%= p.title %>
+												<% if !p.author.blank? %><span class="author"><%= p.author %><% end %>
+											</a>
+											<div class="share" style="display:none;">
+												<span>Share</span>
+												<div class="icons">
+													<% url = "http://" + site.primary_domain.domain + p.uri %>
+													<a href="https://www.facebook.com/sharer/sharer.php?u=<%= url %>" target="_blank" class="icon-circle-facebook"></a>
+													<a href="https://twitter.com/home?status=<%= p.title + ' @ ' + url %>" target="_blank" class="icon-circle-twitter"></a>
+												</div>
+											</div>
+										</div>
+										<div class="middle">
+											<% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+												<div class="image-holder" style="background-image:url(<%= p.image.url(:large) %>);"></div>
+											<% end %>
+											<div class="post-text">
+												<% if p.id == 162 %>
+													<h5 class="post-date">AD 251</h5>
+												<% else %>
+											  	<h5 class="post-date"><%= (p.created_at - 6.hours).strftime("%B %-d, %Y") %></h5>
+											  <% end %>
+											  <% src_text = p.preview %>
+											  <% if p.preview.blank? && !p.body.blank? %>
+													<% src_text = p.body %>
+											  <% end %>
+											  <% if !src_text.blank? %>
+							            <div class="post-excerpt">
+							              <% 
+							                html = Nokogiri::HTML( src_text ) 
+							                text = html.at('body').inner_text
+							                words = text.blank? ? "" : text.split[0..50] 
+							              %>
+							              <% if !words.blank? && words.count > 49 %>
+							              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+							              <% else %>
+															<%= words.blank? ? "" : words.join(' ') %>
+							              <% end %>
+							            </div>
+							          <% end %>
+							    <!--       <a href="/read?post_id=<%= p.id %>" class="btn read-more">Read More</a> -->
+							        </div>
+										</div>
+										<div class="bottom">
+											
+											<!-- <a href="" class="btn black-outline print">PRINT</a> -->
+											<div class="button-holder">
+												<a href="<%= p.uri %>" class="btn read-more">Read More</a>
+											</div>
+										</div>
+						        
+									</div>
+
+								<% end %>
+							</div>
+
+						</div>
+
+						<div class="sidebar">
+							<section>
+								<h2 class="section-title">Sponsors</h2>
+							</section>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+
+		<% content_for :js do %>
+			<script>
+				$("area").hover(function() {
+					var cont = $(this).attr("id");
+					var width = $(window).width();
+					if ( width > 800 ) {
+						$(".continent").hide();
+						$("#" + cont).show();
+					}
+				});
+				$(".icon-globe#global").click(function() {
+					var cont = $(this).attr("id");
+					var cont_title = $(this).attr("title");
+					$(".post-unit").hide();
+					if ( cont_title == "Global" ) {
+						$(".slider-title").text("The Global Church");
+					}
+					else {
+						$(".slider-title").text("The Church in " + cont_title);
+					}
+					$(".post-unit." + cont).fadeIn();
+				});
+				$("area, .continent-name, .mobile-continent").click(function(event) {
+					event.preventDefault();
+					var cont = $(this).attr("id");
+					var cont_title = $(this).attr("title");
+					$(".no-posts").hide();
+					$(".post-unit").hide();
+					if ( cont_title == "Global" ) {
+						$(".slider-title").text("The Global Church");
+					}
+					else {
+						$(".slider-title").text("The Church in " + cont_title);
+					}
+					$(".post-unit." + cont).fadeIn();
+					console.log("size: " + $(".post-unit." + cont).length.toString());
+					if ( $(".post-unit." + cont).length == 0 ) {
+						$(".no-posts").show();
+					}
+					$(".slider-block-container").hide();
+					$(".slider-block-container[data-continent='" + cont + "']").fadeIn();
+				});
+				$(window).resize(function() {
+					var width = $(window).width();
+					if ( width < 1000 && width > 800 ) {
+						$(".layer img").attr("usemap","#continent-map-small");
+					}
+					else if ( width < 800 ) {
+						$(".layer img").attr("usemap","");
+					}
+					else {
+						$(".layer img").attr("usemap","#continent-map");
+					}
+				});
+				$(window).load(function() {
+					var width = $(window).width();
+					if ( width < 1000 && width > 800 ) {
+						$(".layer img").attr("usemap","#continent-map-small");
+					}
+					else if ( width < 800 ) {
+						$(".layer img").attr("usemap","");
+					}
+					else {
+						$(".layer img").attr("usemap","#continent-map");
+					}
+				});
+			</script>
+		<% end %>
+
+	<% else %>
+
+			<div class="post-details-wrapper">
+				<div class="constrain">
+					<p>Sorry, the post you are looking for could not be found.</p>
+				</div>
+			</div>
+
+	<% end %>
+
+<% end %>

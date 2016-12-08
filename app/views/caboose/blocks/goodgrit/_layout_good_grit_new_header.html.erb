@@ -1,0 +1,142 @@
+<% bi = Caboose::Block.where(:block_type_id => 2103).last %>
+<% default_image = (bi && bi.media) ? bi.media.image.url(:huge) : "/assets/goodgrit/images/awaken.jpg" %>
+<% images = block.children.where(:block_type_id => 911).order(:sort_order).all %>
+<% title = block.child_value('issue_title') %>
+<% months = block.child_value('issue_months') %>
+<% desc = block.child_value('issue_description') %>
+<% # desc = "<p>This is the description.</p>" %>
+
+<% if modal %>
+
+  <% if block.child("issue_title") %>
+    <div id="block_<%= block.child('issue_title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Issue Title: <%= title %>
+    </div>
+  <% end %>
+  <% if block.child("issue_months") %>
+    <div id="block_<%= block.child('issue_months').id %>" style="text-decoration:underline;cursor:pointer;">
+      Issue Months: <%= months %>
+    </div>
+  <% end %>
+  <% if block.child("issue_description") %>
+    <div id="block_<%= block.child('issue_description').id %>" style="text-decoration:underline;cursor:pointer;">
+      Issue Description: Click to Edit
+    </div>
+  <% end %>
+  <p>Images:</p>
+  <ul>
+    <% images.each_with_index do |s,i| %>
+      <% name = s.child_value('alt_text') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Image #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new image!</a>
+  <% elsif block.post %>
+    <a href='/admin/pages/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new image!</a>
+  <% end %>
+
+<% else %>
+
+<header class="new" id="block_<%= block.id %>">
+  <div class="header-slider-wrapper">
+    <div class="logo-container">
+      <div class="logo-wrapper">
+        <h1>Good Grit</h1>
+        <h2>The Character of the South</h2>
+      </div>
+    </div>
+    <% if images.count > 1 %>
+      <div class="liquid-slider" id="slider-<%= block.id %>">
+        <% images.each do |i| %>
+          <% image = i.child_value('image').url(:huge) %>
+          <% img_url = image && !image.include?('placehold') ? image : default_image %>
+          <div class="slide" style="background-image:url(<%= img_url %>);"></div>
+        <% end %>
+      </div>
+    <% elsif images.count == 1 %>
+      <% image = images.first.child_value('image').url(:huge) %>
+      <% img_url = image && !image.include?('placehold') ? image : default_image %>
+      <div class="banner" style="background-image:url(<%= img_url %>);"></div>
+    <% else %>
+      <% img_url = default_image %>
+      <div class="banner" style="background-image:url(<%= img_url %>);"></div>
+    <% end %>
+    <% if !title.blank? && !months.blank? %>
+      <a class="issue-wrapper show-issue-modal" href="#">
+        <div class="issue-meta">
+          <h3><%= title %></h3>
+          <h4><%= months %></h4>
+        </div>
+      </a>
+    <% end %>
+  </div>
+  <div class="nav-wrapper">
+ <!--    <h4 class="subscribe"><a href="http://store.goodgritmag.com/collections/subscriptions/" title="Subscribe">Subscribe to Good Grit</a></h4> -->
+    <nav class="reveal">
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 879, :hide => false).order(:sort_order).all.each do |p| %>
+          <li class="li-1">
+            <%== ApplicationHelper.nav_link(p, editing, false) %>
+            <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+            <% if subpages.count > 0 %>
+              <div class="dropdown">
+                <ul>
+                  <% subpages.each do |s| %>
+                    <li class="li-2"><%== ApplicationHelper.nav_link(s, editing, false) %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+          </li>
+          <% if p.id == 880 && false # after About page show Exclusive Content link %>
+            <% user = controller.logged_in_user %>
+            <% if user && user.id != 2 %>
+              <li><a href="/stories/exclusive-content" title="Exclusive Content">Exclusive Content</a></li>
+            <% else %>
+              <li><a href="#" title="Login" class="show-login">Login</a></li>
+            <% end %>
+          <% end %>
+        <% end %>
+      </ul>
+    </nav>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</header>
+
+<% if !desc.blank? %>
+  <div class="fullscreen-overlay" id="issue-modal">
+    <div class="table modal-wrapper animated fadeInDown">
+      <div class="table-cell">
+        <div class="modal" id="modal-issue">
+          <a id="close-modal" class="icon-close" onclick="close_issue_modal(); return false;"></a>
+          <h5><%= title %></h5>
+          <h6><%= months %></h6>
+          <div class="richtext"><%== desc %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+<% end %>
+
+<% content_for :js do %>
+<script>
+$(document).ready(function() {
+  $("#slider-<%= block.id %>").liquidSlider({
+    autoSlide: true,
+    autoSlideInterval: 8000,
+    autoHeight: false,
+    slideEaseFunction: "fade",
+    dynamicArrows: false
+  });
+});
+</script>
+<% end %>

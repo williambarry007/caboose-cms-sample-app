@@ -1,0 +1,42 @@
+<div class="prayer-count-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<% count = Caboose::Setting.where(:site_id => site.id, :name => 'prayer_count').last %>
+		<% if count %>
+			<h1 class="count"><span id="number"><%= count.value %></span> <%= count.value == "1" ? "person has" : "peope have" %> prayed this month</h1>
+			<a href="#" id="i-prayed" class="btn">I Prayed Today</a>
+			<h4 id="thanks">Thanks for your commitment to prayer!</h4>
+		<% end %>
+	</div>
+</div>
+
+<% content_for :js do %>
+	<script>
+		$("#i-prayed").click(function(event) {
+			event.preventDefault();
+			var current = parseInt($(".count #number").html());
+			$.ajax({
+		    url: '/utunum/prayer',
+		    type: 'post',
+		    data: [1],
+		    success: function(resp) {
+		    	if (resp.success) {
+		    		if (current == 0) {
+							$(".count").html("<span id='number'>1</span> person has prayed this month");
+						}
+						else {
+							$(".count #number").html((current + 1).toString());
+						}
+						$("#i-prayed").hide();
+						$("#thanks").show();
+		    	}
+		    	else {
+		    		$("#i-prayed").hide();
+		    		$("#thanks").html("We've already recorded your prayer!");
+		    		$("#thanks").show();
+		    	}
+		      
+		    }
+		  });
+		});
+	</script>
+<% end %>

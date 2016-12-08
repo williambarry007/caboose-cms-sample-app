@@ -1,0 +1,16 @@
+<% quote = block.child_value('quote') %>
+<% align = block.child_value('align') %>
+<% 
+  sc = Caboose::SocialConfig.where(:site_id => site.id).last
+  un = sc ? sc.twitter_username : ''
+  un = un.blank? ? '' : un.downcase
+%>
+<div class="tweetable-quote clearfix <%= align %>" id="block_<%= block.id %>">
+	<% if !quote.blank? %>
+		<p class="quote"><%== quote %></p>
+		<a href="https://twitter.com/home?status=&quot;<%= quote %>&quot;&nbsp;@<%= un %>" title="Share on Twitter" target="_blank" class="icon-twitter colored" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"></a>
+	<% elsif editing %>
+		<p>Empty quote. Click to edit.</p>
+	<% end %>
+</div>

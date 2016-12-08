@@ -1,0 +1,15 @@
+<div id="block_<%= block.id %>" class="entree">
+  <figure style="background-image: url(<%= block.child_value('image').url(:thumb) %>)"></figure>
+  <h4 class="title"><%= block.child_value('title') %></h4>
+  <h5 class="price">$<%= block.child_value('price') %></h5>
+  <p><%= raw block.child_value('description') %></p>
+  
+  <% if !block.child_value('ingredients').nil? && !block.child_value('ingredients').empty? %>
+    <ul>
+      <% block.child_value('ingredients').split(',').each do |ingredient| %>
+        <li><%= ingredient.strip %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+

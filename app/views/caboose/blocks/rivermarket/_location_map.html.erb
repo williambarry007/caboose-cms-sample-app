@@ -1,0 +1,71 @@
+
+<% 
+  # id = block.child('id').value.blank? ? "map" : block.child('id') 
+  # lat = block.child('lat').value.blank? ? "87.5346" : block.child('lat')
+  # lng = block.child('lng').value.blank? ? "-33.2065" : block.child('lng')
+  # zoom = block.child('zoom').value.blank? ? "8" : block.child('zoom')
+  # info = block.child('info').value.blank? ? "" : block.child('info')
+  # height = block.child('height').value.blank? ? "400" : block.child('height')
+
+  id = "contact_map"
+  lat = "33.215892"
+  lng = "-87.564232"
+  zoom = "16"
+  info = "Tuscaloosa River Market"
+  height = "400"
+%>
+
+<div id="block_<%= block.id %>">
+
+<div id='contact_map' class='map' style="height: <%= height %>px;"></div>
+
+<% content_for :js do %>
+  <script>
+    var mapCanvasId, mapCenterLat, mapCenterLng, mapDefaultZoom;
+
+    mapCanvasId = "<%= id %>";
+    mapCenterLat = <%= lat %>;
+    mapCenterLng = <%= lng %>;
+    mapDefaultZoom = <%= zoom %>;
+    mapInfoWindow = "<%= info %>";
+
+    function initialize() {
+      console.log("initialize"); 
+      var mapOptions = {
+        center: new google.maps.LatLng(mapCenterLat, mapCenterLng),
+        scrollwheel: false,
+        zoom: mapDefaultZoom
+      };
+      var map = new google.maps.Map(document.getElementById(mapCanvasId), mapOptions);
+
+      var marker = new google.maps.Marker({
+        position: {lat: mapCenterLat, lng: mapCenterLng},
+        map: map
+      });
+
+      if(mapInfoWindow != "") {
+        var info = new google.maps.InfoWindow({
+          content: mapInfoWindow
+        });
+
+        info.open(map, marker);
+
+        google.maps.event.addListener(marker, 'click', function() {
+          info.open(map,marker);
+        });
+      }
+    }
+
+    function loadScript() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = "https://maps.googleapis.com/maps/api/js?v=3key=AIzaSyAjSs-Jq6hpuT35RG9wD6LuqaDFzYDCOPk&callback=initialize";
+      document.body.appendChild(script);
+    }
+
+    window.onload = loadScript;
+
+  </script>
+<% end %>
+
+</div>

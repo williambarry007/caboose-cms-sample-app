@@ -1,0 +1,63 @@
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main home">
+    <div class="constrain">
+      <p class="phone reveal">GIVE US A CALL: 205-535-1034</p>
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="<%= asset_path 'turnerlawgroup/images/main_logo.png' %>" alt="<%= site.description %>" width="100" height="88" />
+      </a>
+      <div class="menu-link">
+        <span class="text">Menu</span>
+        <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx" href="#mmenu" title="Menu">
+          <span>toggle menu</span>
+        </a>
+      </div>
+    </div>
+  </header>
+  <div class="home-banner">
+    <div class="constrain">
+      <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+    </div>
+    <% terms = ['Expungement', 'Divorce', 'Bankruptcy', 'Business'] %>
+    <div class="slide-holder">
+      <% terms.each_with_index do |term, i| %>
+        <div class="slide color-<%= rand(10) %> <% if i > 0 %>s-hide<% end %>">
+          <div class="table"><div class="table-cell">
+            <div class="top-text">
+              <h4>SERVING ALL OF YOUR</h4>
+              <h3>LEGAL NEEDS</h3>
+            </div>
+            <div class="text-fader">
+              <h1><%= term %></h1>
+            </div>
+          </div></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="arrow-holder">
+      <a href="#" class="arrow previous"><span class="icon-left-big"></span></a>
+      <a href="#" class="arrow next"><span class="icon-right-big"></span></a>
+    </div>
+  </div>
+</div>
+
+<% content_for :css do %>
+<style>
+.content_wrapper {
+  background: url('//d9hjv462jiw15.cloudfront.net/assets/turnerlawgroup/images/sprite.png') no-repeat -9999px -9999px;
+  background-size: 0;
+}
+
+.header-wrapper {
+  background: url('//d9hjv462jiw15.cloudfront.net/assets/turnerlawgroup/images/sprite2.png') no-repeat -9999px -9999px;
+  background-size: 0;
+}*/
+</style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+    $(window).load(function() {
+      $('.slide').removeClass('s-hide');
+    });
+  </script>
+<% end %>

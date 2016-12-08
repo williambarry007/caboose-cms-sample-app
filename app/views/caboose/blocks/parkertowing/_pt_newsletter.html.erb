@@ -1,0 +1,21 @@
+<%
+title = block.child_value('title')
+file = block.child_value('file')
+photo = block.child_value('photo')
+%>
+<div class="newsletter-block" id="block_<%= block.id %>">
+	<% if file.url && !file.url.include?('missing') %>
+		<a class="image-wrapper" href="<%= file.url %>" target="_blank" title="<%= title %> Newsletter">
+			<% if photo.url && !photo.url.include?('placehold') %>
+				<img src="<%= photo.url(:thumb) %>" alt="<%= title %>" />
+			<% else %>
+				<span><%= title %></span>
+			<% end %>
+		</a>
+		<div class="text-wrapper">
+			<h4><%= title %></h4>
+		</div>
+	<% elsif editing %>
+		<p>Please upload a file.</p>
+	<% end %>
+</div>

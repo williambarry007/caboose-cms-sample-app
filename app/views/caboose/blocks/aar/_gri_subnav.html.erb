@@ -1,0 +1,28 @@
+<% p = Caboose::Page.where(:id => 1215).first %>
+<% if p %>
+  <div class="sidebar-section-body">
+    <nav class="m-sidenav">
+      <% p.children.where(:hide => false).each do |p2| %>
+        <% next if p2.id <= 3 %>
+        <% if p2.children.count > 0 %>
+          <a href="/<%= p2.uri %>" class="sidenav-anchor"><%= raw p2.title %></a>
+          <% if p2.id == 1204 %>
+            <div class="sidenav-submenu" style="display:block !important;">
+          <% else %>
+            <div class="sidenav-submenu">
+          <% end %>
+            <% p2.children.all.each do |p3| %>
+              <%= raw nav_link(p3, 'sidenav-link') %>              
+            <% end %>
+          </div>
+        <% else %>
+          <% if p2.redirect_url.blank? || p2.redirect_url.starts_with?("http") %>
+            <%= raw nav_link(p2, 'sidenav-link') %>
+          <% else %>
+            <a href="<%= p2.redirect_url %>" class="sidenav-link"><%= p2.title %></a>
+          <% end %>
+        <% end %>
+      <% end %>
+    </nav>
+  </div>
+<% end %>

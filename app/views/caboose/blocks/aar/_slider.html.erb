@@ -1,0 +1,335 @@
+<%
+  slides = block.children.where(:block_type_id => 367).all
+  autoslide = block.child_value('auto_slide').blank? ? "Yes" : block.child_value('auto_slide')
+  height = block.child_value('height').blank? ? "500px" : block.child_value('height')
+  arrow_color = block.child_value('arrow_color').blank? ? "#ffffff" : block.child_value('arrow_color')
+  if !height.include?("px")
+    height = height + "px"
+  end
+  width = block.child_value('width').blank? ? "100%" : block.child_value('width')
+  interval = block.child_value('interval').blank? ? 6 : block.child_value('interval')
+  transition = block.child_value('transition').blank? ? "Slide" : block.child_value('transition')
+  slide_function = "easeInOutSine"
+  if transition == "Fade"
+    slide_function = "fade"
+  elsif transition == "Bounce"
+    slide_function = "easeInOutBack"
+  end
+  begin
+    ms = interval.to_i * 1000
+  rescue
+    ms = 6000
+  end
+  arrow_position = "100px"
+  begin
+    arrow_position = ((block.child_value('height').to_i / 2) - 20).to_s + "px"
+  rescue
+    arrow_position = "100px"
+  end
+%>
+
+<% if modal %>
+  <% if block.child("auto_slide") %>
+    <div id="block_<%= block.child('auto_slide').id %>" style="text-decoration:underline;cursor:pointer;">
+      Auto Slide: <%= autoslide %>
+    </div>
+  <% end %>
+  <% if block.child("height") %>
+    <div id="block_<%= block.child('height').id %>" style="text-decoration:underline;cursor:pointer;">
+      Height: <%= block.child_value('height') %>
+    </div>
+  <% end %>
+  <% if block.child("width") %>
+    <div id="block_<%= block.child('width').id %>" style="text-decoration:underline;cursor:pointer;">
+      Width: <%= width %>
+    </div>
+  <% end %>
+  <% if block.child("interval") %>
+    <div id="block_<%= block.child('interval').id %>" style="text-decoration:underline;cursor:pointer;">
+      Slide Interval: <%= interval %>
+    </div>
+  <% end %>
+  <% if block.child("transition") %>
+    <div id="block_<%= block.child('transition').id %>" style="text-decoration:underline;cursor:pointer;">
+      Transition: <%= transition %>
+    </div>
+  <% end %>
+  <% if block.child("arrow_color") %>
+    <div id="block_<%= block.child('arrow_color').id %>" style="text-decoration:underline;cursor:pointer;">
+      Arrow Color: <%= arrow_color %>
+    </div>
+  <% end %>
+  <p>Slides:</p>
+  <ul>
+    <% slides.each_with_index do |s,i| %>
+      <% name = s.child_value('title') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Slide #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new slide!</a>
+  <% elsif block.post %>
+    <a href='/admin/pages/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new slide!</a>
+  <% end %>
+<% else %>
+
+  <div class="slider-block-container" id="block_<%= block.id %>">
+
+    <% if slides.size > 0 %>
+
+      <div class="slider-container" id="slider-container-<%= block.id %>">
+        <div class="left-nav" id="nav-left-<%= block.id %>">
+          <div class="arrow icon-left-big"></div>
+        </div>
+        <div class="liquid-slider" id="slider-<%= block.id %>" data-size="<%= slides.count %>">
+          <% slides.each_with_index do |slide, index| %>
+
+            <%
+              bg_color = slide.child('advanced_options').child_value('background_color').blank? ? "#ffffff" : slide.child('advanced_options').child_value('background_color')
+              bgimg = slide.child_value('background_image')
+              bg_image = (bgimg.blank? || bgimg.url.include?('placehold')) ? "" : bgimg.url(:huge)
+              btn_url = slide.child('advanced_options').child_value('button_link_url').blank? ? "" : slide.child('advanced_options').child_value('button_link_url')
+              btn_text = slide.child('advanced_options').child_value('button_text').blank? ? "" : slide.child('advanced_options').child_value('button_text')
+              btn_style = slide.child('advanced_options').child_value('button_style').blank? ? "Solid Color" : slide.child('advanced_options').child_value('button_style')
+              image_sizing = slide.child('advanced_options').child_value('image_sizing').blank? ? "Fill (Center)" : slide.child('advanced_options').child_value('image_sizing')
+              overlay_color = slide.child('advanced_options').child_value('overlay_color').blank? ? "#000000" : slide.child('advanced_options').child_value('overlay_color')
+              overlay_opacity = slide.child('advanced_options').child_value('overlay_opacity').blank? ? "0%" : slide.child('advanced_options').child_value('overlay_opacity')
+              text_overlay = slide.child_value('text_overlay').blank? ? "" : slide.child_value('text_overlay')
+              title = slide.child_value('title').blank? ? "" : slide.child_value('title')
+              font_size = slide.child('advanced_options').child_value('font_size').blank? ? "24px" : slide.child('advanced_options').child_value('font_size')
+              text_align = slide.child('advanced_options').child_value('text_align').blank? ? "Center" : slide.child('advanced_options').child_value('text_align')
+              slide_link = slide.child('advanced_options').child_value('slide_link').blank? ? "" : slide.child('advanced_options').child_value('slide_link')
+              btn_class = ""
+              if btn_style == "Solid White"
+                btn_class = "white"
+              elsif btn_style == "Color Outline"
+                btn_class = "color-outline"
+              elsif btn_style == "White Outline"
+                btn_class = "white-outline"
+              end
+              if overlay_opacity == "100%"
+                opacity = "1.0"
+              else
+                opacity = "0." + overlay_opacity.gsub("%","") 
+              end
+              sizing = image_sizing.include?('Fill') ? "cover" : "contain"
+              btn_target = "parent"
+              if !btn_url.blank? 
+                btn_target = btn_url.start_with?('/') ? "parent" : "blank"
+                btn_url = btn_url.start_with?('www.') ? ("http://" + btn_url) : btn_url
+              end
+              position = "center"
+              position = image_sizing.include?('Top') ? "top" : position
+              position = image_sizing.include?('Bottom') ? "bottom" : position
+              image_overlay = slide.child('advanced_options').child_value('image_overlay')
+              img_overlay = (image_overlay.blank? || image_overlay.url.include?('placehold')) ? "" : image_overlay.url(:large)
+              image_overlay_width = slide.child('advanced_options').child_value('image_overlay_width').blank? ? "300px" : slide.child('advanced_options').child_value('image_overlay_width')
+            %>
+
+            <div class="slide clearfix" id="slide-<%= index %>" <% if index > 0 && editing %>style="display:none;"<% end %>>
+              <div class="slider-slide clearfix">
+                <% if !btn_url.blank? %><a href="<%= btn_url %>" target="_<%= btn_target %>" title="<%= title %>" class="slide-link"><% end %>
+                <div class="overlay" id="overlay-<%= index %>"></div>
+                <div class="slide-content">
+                  <div class="content-holder">
+                    <% if !img_overlay.blank? %>
+                      <img src="<%= img_overlay %>" width="<%= image_overlay_width.gsub('px','') %>" />
+                    <% end %>
+                    <% if !text_overlay.blank? %>
+                      <div class="text-overlay clearfix">
+                        <div class="text-contain">
+                          <%== text_overlay %>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+                <% if !btn_url.blank? %></a><% end %>
+              </div>
+            </div>
+
+            <% if !slide_link.blank? && !editing %>
+            <% content_for :js do %>
+            <script>
+              $("#slide-<%= index %>").css("cursor","pointer").click(function(ev) { window.location = "<%= slide_link %>"; } );
+            </script>
+            <% end %>
+            <% end %>
+
+            <% content_for :css do %>
+              <style>
+                #slider-<%= block.id %> #slide-<%= index %> {
+                  height: <%= height %>;
+                }
+                #slider-<%= block.id %> #slide-<%= index %> .slider-slide {
+                  height: <%= height %>;
+                  background-image: url('<%= bg_image %>');
+                  background-color: <%= bg_color %>;
+                  background-size: <%= sizing %>;
+                  background-position: center <%= position %>;
+                }
+                #slider-<%= block.id %> #slide-<%= index %> #overlay-<%= index %> {
+                  background-color: <%= overlay_color %>;
+                  opacity: <%= opacity %>;
+                }
+                #slider-<%= block.id %> #slide-<%= index %> .slide-content .content-holder {
+                  text-align: <%= text_align %>;
+                }
+                <% if text_align == "Left" %>
+                  #slider-<%= block.id %> #slide-<%= index %> .slide-content {
+                    padding-left: 5%;
+                  }
+                <% elsif text_align == "Right" %>
+                  #slider-<%= block.id %> #slide-<%= index %> .slide-content {
+                    padding-right: 5%;
+                  }
+                  #slider-<%= block.id %> #slide-<%= index %> .slide-content .content-holder .text-overlay {
+                    width: 100%;
+                    max-width: none;
+                    <% if btn_text.blank? || btn_url.blank? %>
+                      margin-bottom: 0;
+                    <% end %>
+                  }
+                  #slider-<%= block.id %> #slide-<%= index %> .slide-content .content-holder .text-overlay .text-contain {
+                    max-width: 700px;
+                    float: right;
+                  }
+                <% else %>
+                  #slider-<%= block.id %> #slide-<%= index %> .slide-content .content-holder .text-overlay {
+                    <% if btn_text.blank? || btn_url.blank? %>
+                      margin: 0 auto;
+                    <% else %>
+                      margin: 0 auto 30px auto;
+                    <% end %>
+                  }
+                <% end %>
+                #slider-<%= block.id %> #slide-<%= index %> .slide-content .content-holder .text-overlay {
+                  font-size: <%= font_size %>;
+                }
+              </style>
+            <% end %>
+
+          <% end %><!-- end slide --> 
+        </div>
+        <div class="right-nav" id="nav-right-<%= block.id %>">
+          <div class="arrow icon-right-big"></div>
+        </div>
+      </div>
+
+      <% content_for :css do %>
+        <style>
+          .slider-container {
+            position: relative;
+          }
+          #slider-container-<%= block.id %> {
+            width: <%= width %>;
+            margin: 0 auto;
+          }
+          #slider-<%= block.id %> {
+            width: 100%;
+            height: <%= height %>;
+          }
+          #slider-<%= block.id %>-wrapper {
+            max-width: none !important;
+          }
+          #slider-<%= block.id %> .panel-wrapper {
+            padding: 0;
+          }
+          #slider-<%= block.id %> .slide .slider-slide {
+            position: relative;
+            background-repeat: no-repeat;
+            -ms-behavior: url('/bg.htc');
+            overflow: hidden;
+          }
+          #slider-<%= block.id %> .slide .overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; 
+            left: 0;
+          }
+          #slider-<%= block.id %> .slide .slide-link {
+            display: block;
+            text-decoration: none;
+          }
+          #slider-<%= block.id %> .slide .slide-content {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            height: 100%;
+            position: relative;
+          }
+          #slider-<%= block.id %> .slide .slide-content .content-holder {
+            display: table-cell;
+            padding-left: 40px;
+            padding-right: 40px;
+            width: 100%;
+            height: 100%;
+            vertical-align: middle;
+            position: relative;
+            z-index: 15;
+          }
+          #slider-<%= block.id %> .slide .slide-content .content-holder .text-overlay {
+            width: 90%;
+            max-width: 700px;
+            margin-bottom: 30px;
+          }
+          #slider-<%= block.id %>-wrapper, 
+          .liquid-slider#slider-<%= block.id %> {
+            height: <%= height %>;
+          }
+
+          #nav-left-<%= block.id %> {
+            position: absolute;
+            color: <%= arrow_color %>;
+            font-size: 40px;
+            top: <%= arrow_position %>;
+            left: 2%;
+            z-index: 10;
+            cursor: pointer;
+          }
+          #nav-right-<%= block.id %> {
+            position: absolute;
+            color: <%= arrow_color %>;
+            font-size: 40px;
+            top: <%= arrow_position %>;
+            right: 2%;
+            z-index: 10;
+            cursor: pointer;
+          }
+        </style>
+      <% end %>
+
+    <% else %>
+      <% if editing %>
+        <p style="padding:10px;border:1px solid #000;">Empty slider container. Click to add slides.</p>
+      <% end %>
+    <% end %>
+
+    <% content_for :js do %>
+      <script>
+        $(document).ready(function() {
+          $("#slider-<%= block.id %>").liquidSlider({
+            autoSlide: <%= autoslide == "Yes" ? true : false %>,
+            autoSlideInterval: <%= ms %>,
+            autoHeight: false,
+            slideEaseFunction: "<%= slide_function %>",
+            dynamicArrows: false,
+            dynamicTabs: false
+          });
+          var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+          $("#nav-left-<%= block.id %>").click(function() {
+            api.setNextPanel('left');
+            api.updateClass($(this)); 
+          });
+          $("#nav-right-<%= block.id %>").click(function() {
+            api.setNextPanel('right');
+            api.updateClass($(this)); 
+          });
+        });
+      </script>
+    <% end %>
+  </div>
+<% end %>

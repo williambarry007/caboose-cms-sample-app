@@ -1,0 +1,84 @@
+<%
+show_submenu = block.child_value('show_submenu').to_i
+uri = "/#{page.uri}"
+%>
+<% if modal %>
+  <div id="block_<%= block.id %>">Header</div>
+<% else %>
+  <nav id="block_<%= block.id %>">
+    <div id="menuWrapper">
+      <div class="container">
+        <div class="logoWrapper"><a href="/" class="imageFadeLink"><img src="//d9hjv462jiw15.cloudfront.net/assets/retinalscreenings/images/logo_med.png" width="302" height="56" alt="IRIS"></a></div>
+        <div class="menuRightBlock">
+
+
+          <ul class="topMenu">
+            <li><a href="/" title="Home" <% if uri == "/"   %>class="active"<% end %>>Home</a></li>
+            <% top_pages = Caboose::Page.where(:parent_id => 695, :hide => false).order(:sort_order).all %>
+            <% top_pages.each do |p| %>
+              <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+              <li>
+                <% if subpages.count > 0 %>
+                  <%== ApplicationHelper.nav_link(p) %>
+                  <div class="dropdown" <%= p.title == "Contact Us" ? raw("id='contact'") : "" %>>
+                    <ul>
+                      <% subpages.each do |s| %>
+                        <li><%== ApplicationHelper.nav_link(s) %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% else %>
+                  <a href="/<%= p.uri %>" title="<%= p.title %>" <% if uri == "/" + p.uri   %>class="active"<% end %>><%= p.menu_title.blank? ? p.title : p.menu_title %></a>
+                <% end %>
+              </li>
+            <% end %>
+
+          </ul>
+
+
+<!--           <ul class="bigMenu">
+            <li><a href="/about/who-we-are"   <% if uri == "/about/who-we-are"   %>class="active"<% end %>>Who We Are</a></li>
+            <li><a href="/about/how-we-help"  <% if uri == "/about/how-we-help"  %>class="active"<% end %>>How We Help</a></li>
+            <li><a href="/about/who-we-help"  <% if uri == "/about/who-we-help"  %>class="active"<% end %>>Who We Help</a></li>
+          </ul>  -->
+
+
+        </div>
+      </div>
+      <div id="subMenuWrapper">
+        <div class="container">
+
+<!--             <ul class="subMenu">
+              <li><a href="#Management" >Management Team</a></li>
+              <li><a href="#Board"      >Board of Directors</a></li>
+              <li><a href="#Advisors"   >Medical Advisors</a></li>
+            </ul>
+  -->
+          <a class="mobileMenuTrigger" id="mobileMenuTrigger" href="#">Menu</a>
+          <div class="mobileMenuBlock" id="mobileMenuBlock">
+            <ul class="mobileMenu">
+              <li><a href="/" title="Home">Home</a></li>
+              <% top_pages = Caboose::Page.where(:parent_id => 695, :hide => false).order(:sort_order).all %>
+              <% top_pages.each do |p| %>
+                <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+                <li><a href="/<%= p.uri %>" title="<%= p.title %>"><%= p.menu_title.blank? ? p.title : p.menu_title %></a></li>
+                  <% if subpages.count > 0 %>
+         
+                    <% subpages.each do |s| %>
+                      <li><%== ApplicationHelper.nav_link(s) %></li>
+                    <% end %>
+              
+                  <% else %>
+                    
+                  <% end %>
+            
+              <% end %>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+<% end %>
+           

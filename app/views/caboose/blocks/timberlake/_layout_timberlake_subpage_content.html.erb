@@ -1,0 +1,105 @@
+<%
+fb = FacebookCache.where(:site_id => site.id).order('date_created DESC').first
+mc = Caboose::MediaCategory.where(:id => 3105).first
+media = mc ? mc.media.offset( rand(mc.media.count) ).first : nil
+formscat = Caboose::MediaCategory.where(:id => 2912).first
+
+
+message = fb.message.nil? ? "" : fb.message.truncate(200)
+story = fb.story.nil? ? "" : fb.story.truncate(200)
+description = fb.description.nil? ? "" : fb.description.truncate(200)
+picture = fb.picture
+link = fb.link
+
+%>
+
+<div class="content_wrapper subpage" id='block_<%= block.id %>'>
+
+  <div class="sidebar-content-wrapper flexbox">
+    <aside>
+      <section>
+        <h5 class="title">Quick Links</h5>
+        <ul>
+          <li><a href="/forms">Forms</a></li>
+          <li><a href="/rental-agreement">Rental Agreement</a></li>
+        </ul>
+      </section>
+      <% if formscat && formscat.media.count > 0 %>
+        <section>
+          <h5 class="title">Forms</h5>
+          <ul>
+            <% formscat.media.each do |m| %>
+              <li>
+                <img src="<%= asset_path 'timberlake/images/pdf.png' %>" alt="PDF" width="14" height="18" />
+                <a href="<%= m.file.url %>" target="_blank"><%= m.description %></a></li>
+            <% end %>
+          </ul>
+        </section>
+      <% end %>
+      <section>
+        <h5 class="title">Facebook</h5>
+       <!--  <span class="icon-facebook"></span> -->
+        <div class="facebook-post">
+          <p class="post-date"><%= time_ago_in_words(fb.date_created) %> ago</p>
+          <% if false && !picture.blank? %>
+            <% if !link.blank? %><a href="<%= link %>" target="_blank"><% end %>
+              <img src="<%= picture %>" class="post-image" />
+            <% if !link.blank? %></a><% end %>
+          <% end %>
+          <% if !story.blank? %><p class="post-story"><%== story %>&nbsp;<a href="<%= fb.post_url %>" target="_blank">View Post</a></p><% end %>
+          <% if !message.blank? %><p class="post-body"><%== message %>&nbsp;<a href="<%= fb.post_url %>" target="_blank">View Post</a></p><% end %>
+        </div>
+      </section>
+      <% if media && media.image && !media.image.url.include?('placehold') %>
+        <section>
+          <img src="<%= media.image.url(:large) %>" alt="<%= media.description %>" />
+        </section>
+      <% end %>
+      <section>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="LVYVKWHKCSYFE">
+          <input class="donate-btn" type="image" src="<%= asset_path('timberlake/images/donate_btn.png').gsub('http://','//') %>" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+          <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" style="display:none;">
+        </form>
+      </section>
+    </aside>
+    <div class="content_body subpage-content">
+      <% if controller_view_content && controller_view_content.strip.length > 0 %>
+        <% if block.constrain == true %><div class='constrain'><% end %>
+        <%= raw controller_view_content %>
+        <% if block.constrain == true %></div><% end %>
+      <% elsif post %>
+        <%= raw block.partial('post', local_assigns) %>
+      <% elsif block.children.count > 0 %>
+        <%
+        constrain_all = block.constrain_all
+        outer_header = block.constrain == true ? (constrain_all ? "<div class='constrain'>" : '') : ''
+        outer_footer = block.constrain == true ? (constrain_all ? "</div>" : '') : ''
+        inner_header = block.constrain == true ? (constrain_all ? '' : "<div class='constrain'>") : ''
+        inner_footer = block.constrain == true ? (constrain_all ? '' : "</div>") : ''
+        %>
+        <%= raw outer_header %>
+        <% block.children.each do |b| %>
+          <% if block.constrain && !b.full_width %><%= raw inner_header %><% end %>
+          <%= raw block.render(b, local_assigns) %>
+          <% if block.constrain && !b.full_width %><%= raw inner_footer %><% end %>
+        <% end %>
+        <%= raw outer_footer %>
+      <% else %>
+        <% if editing %>
+          <p style="border:1px dashed gray;padding:10px;width:94%;margin:0 auto;text-align:center;cursor:pointer;">Empty content area. Click to add child blocks.</p>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+
+</div>
+<% if page %>
+  <% content_for :css do %>
+  <style>
+  .subpage-content { padding: <%= page.custom_field_value('vertical_padding') %> 0;}
+  </style>
+  <% end %>
+<% end %>

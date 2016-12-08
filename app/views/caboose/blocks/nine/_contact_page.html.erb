@@ -1,0 +1,147 @@
+<div id="contact-page-wrapper">
+
+	<a href="#" id="close-contact-page" class="icon-close"></a>
+
+	<div class="table">
+
+	<div class="table-cell">
+<!-- 	<h3 class="contact-title">Contact Us</h3> -->
+
+	<% 
+	  lat = 33.2085503
+	  lng = -87.5652489
+	  zoom = 16
+	  info = "The Nine"
+	  height = "100vh"
+	  style = "Normal"
+	%>
+
+
+  <div class="map-block-container" id="nine-map-container">
+    <div class='map' id="nine-map" data-lat="<%= lat %>" data-long="<%= lng %>" data-zoom="<%= zoom %>" data-info="<%= info %>" data-style="<%= style %>"></div>
+    <% content_for :css do %>
+      <style>
+        .map-block-container#nine-map-container {
+          width: 100%;
+          height: <%= height %>;
+        }
+        #nine-map {
+          width: 100%;
+          height: 100%;
+        }
+      </style>
+    <% end %>
+    <% content_for :js do %>
+      <script>
+      	var nine_map;
+
+				function initialize_maps() {
+					$(".map-block-container").each(function(index, Element) {
+
+						var mapel = $(Element).find(".map"); 
+
+				 		var mapCanvasId, mapCenterLat, mapCenterLng, mapDefaultZoom, mapInfoWindow, style, style_code;
+
+				    mapCanvasId = mapel.attr("id");
+				    mapCenterLat = mapel.data("lat");
+				    mapCenterLng = mapel.data("long");
+				    mapDefaultZoom = mapel.data("zoom");
+				    mapInfoWindow = "<p style='color:#000;padding:3px 10px 0 7px;'>The Nine</p>";
+				    style = mapel.data("style"); 
+
+				    // style_code = [{'featureType': 'landscape','stylers': [{ 'color': '#808080' },{ 'lightness': -100 }]},{'featureType': 'administrative','stylers': [{ 'lightness': -100 }]},{'featureType': 'administrative','elementType': 'labels','stylers': [{ 'visibility': 'off' }]},{'featureType': 'poi','stylers': [{ 'visibility': 'off' }]},{'featureType': 'transit','stylers': [{ 'visibility': 'off' }]},{'featureType': 'road','elementType': 'geometry','stylers': [{ 'color': '#f26d7d' }]},{'featureType': 'road','elementType': 'labels','stylers': [{ 'visibility': 'simplified' },{ 'lightness': 100 }]},{'featureType': 'road','elementType': 'labels.icon','stylers': [{ 'visibility': 'off' }]},{'featureType': 'water','stylers': [{ 'color': '#809e8d' },{ 'hue': '#0088ff' },{ 'saturation': 97 },{ 'lightness': 58 }]},{'featureType': 'road','elementType': 'geometry.fill','stylers': [{ 'visibility': 'off' }]},{}];
+
+				//    style_code = [{"stylers": [{ "invert_lightness": true },{ "hue": "#ff0091" },{ "lightness": 22 },{ "saturation": -22 }]},{}];
+
+						style_code = [{"stylers": [{ "invert_lightness": true },{ "hue": "#ff003b" },{ "saturation": -60 },{ "lightness": -3 },{ "gamma": 1.02 }]},{}];
+
+				    var mapOptions = {
+				      center: new google.maps.LatLng(mapCenterLat, mapCenterLng),
+				      scrollwheel: false,
+				      styles: style_code,
+				      mapTypeControl: false,
+				      zoomControl: false,
+				      panControl: false,
+				      scaleControl: false,
+				      rotateControl: false,
+				      streetViewControl: false,
+				      zoom: mapDefaultZoom
+				    };
+
+				    nine_map = new google.maps.Map(document.getElementById(mapCanvasId), mapOptions);
+
+				    var nineIcon = new google.maps.MarkerImage("http://d9hjv462jiw15.cloudfront.net/assets/nine/images/icons/map.png", null, null, null, new google.maps.Size(100,51));
+
+				    var marker = new google.maps.Marker({
+				      position: {lat: mapCenterLat, lng: mapCenterLng},
+				      icon: nineIcon,
+				      map: nine_map
+				    });
+
+				    google.maps.event.addListener(marker, 'click', function() {
+
+				    	var win = window.open('https://www.google.com/maps/dir//2207+7th+St,+Tuscaloosa,+AL+35401/@33.2085649,-87.5652547,17z/data=!4m13!1m4!3m3!1s0x888602e96ac7c6a3:0x4cd1023194da50ff!2s2207+7th+St,+Tuscaloosa,+AL+35401!3b1!4m7!1m0!1m5!1m1!1s0x888602e96ac7c6a3:0x4cd1023194da50ff!2m2!1d-87.5652547!2d33.2085649', '_blank');
+							if(win){
+							    //Browser has allowed it to be opened
+							    win.focus();
+							}else{
+							    //Broswer has blocked it
+							 //   alert('Please allow popups for this site');
+							}
+
+			      });
+
+				    // if(mapInfoWindow != "") {
+				    //   var info = new google.maps.InfoWindow({
+				    //     content: mapInfoWindow
+				    //   });
+				    //   info.open(nine_map, marker);
+				    //   google.maps.event.addListener(marker, 'click', function() {
+				    //     info.open(nine_map,marker);
+				    //   });
+				    // }
+
+					});
+				}
+
+				function loadScript() {
+				  var script = document.createElement('script');
+				  script.type = 'text/javascript';
+				  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAjSs-Jq6hpuT35RG9wD6LuqaDFzYDCOPk&callback=initialize_maps";
+				  document.body.appendChild(script);
+				}
+					
+				window.onload = loadScript;
+      </script>
+    <% end %>
+  </div>
+
+	<div class="map-bottom">
+		<div class="constrain">
+			<div class="grid-row">
+				<div class="unit1of3">
+					<p>For support, email <br />us at <a href="mailto:support@nine.is">support@nine.is</a> <br />or call (205)-561-6691.</p>
+				</div>
+				<div class="unit1of3">
+					<p>
+							The Nine<br />
+							2207 7th Street, Ste. B<br />
+							Tuscaloosa, AL 35401
+					</p>
+				</div>
+				<div class="unit1of3">
+						<div class="contact-social">
+					  	<h5 class="social-title">Get Social</h5>
+					  	<%== ApplicationHelper.social_links(site.id, "outline", "white") %>
+					  </div>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+  
+
+
+</div>
+</div>
+</div>

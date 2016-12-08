@@ -1,0 +1,120 @@
+<div class="content_wrapper home" id='block_<%= block.id %>'>
+  <div class="content_body home-content">
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>
+      <% if block.constrain == true %><div class='constrain'><% end %>
+      <%= raw controller_view_content %>
+      <% if block.constrain == true %></div><% end %>
+    <% elsif post %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <%
+      constrain_all = block.constrain_all
+      outer_header = block.constrain == true ? (constrain_all ? "<div class='constrain'>" : '') : ''
+      outer_footer = block.constrain == true ? (constrain_all ? "</div>" : '') : ''
+      inner_header = block.constrain == true ? (constrain_all ? '' : "<div class='constrain'>") : ''
+      inner_footer = block.constrain == true ? (constrain_all ? '' : "</div>") : ''      
+      %>
+      <%= raw outer_header %>
+      <% block.children.each do |b| %>
+        <% if block.constrain && !b.full_width %><%= raw inner_header %><% end %>
+        <%= raw block.render(b, local_assigns) %>
+        <% if block.constrain && !b.full_width %><%= raw inner_footer %><% end %>
+      <% end %>
+      <%= raw outer_footer %>
+    <% else %>
+      <% if editing %>
+        <p style="border:1px dashed gray;padding:10px;width:94%;margin:0 auto;text-align:center;cursor:pointer;">Empty content area. Click to add child blocks.</p>
+      <% end %>
+    <% end %>
+    <div class="flexbox home-grid">
+      <div class="video-bg">
+        <div class="overlay"></div>
+        <a href="#" id="show-menu" data-effect="st-effect-12">
+          <span class="icon-menu-4"></span>
+          <span class="text">MENU</span>
+        </a>
+      </div>
+      <div class="column">
+
+        <div class="text-wrapper">
+          <section>
+            <h2 class="title">Whitman, Alabama</h2>
+            <div class="body richtext" style="color:#3c6453;">
+              <p>Here is where we tell the story of Whitman, Alabama and what the project is about.  Since this is the first place they will land.  I think it would be good to have a link to a video about the project here as well.</p>
+            </div>
+            <a href="#" class="white btn">The Project</a>
+            <div id="st-trigger-effects">
+         <!--      <button >Open door</button> -->
+            </div>
+
+          </section>
+          <section>
+            <h2 class="title">Thomas Jones</h2>
+            <h4 class="subtitle">Florence, Alabama</h4>
+            <div class="body richtext">
+              <p>Here is a little bio on Thomas, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non porta tellus. Phasellus egestas elit quis diam rutrum rutrum. Donec ultricies iaculis est faucibus pharetra. Ut tempor justo nec diam semper consectetur. In hac habitasse platea dictumst. Vestibulum fermentum eget leo eu lobortis. Etiam quis lorem ac felis vulputate dapibus. In pulvinar dui quis ligula tempus euismod. Sed dapibus eros et neque tincidunt vehicula. Nam id lacus turpis. Sed ex purus.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="title">Heart of Heroes</h2>
+            <h4 class="subtitle">Verse 7, Song of Myself</h4>
+            <div class="body richtext serif">
+              <p>I UNDERSTAND the large hearts of heroes,<br />
+The courage of present times and all times, <br />
+How the skipper saw the crowded and rudderless wreck of the steamship, and Death chasing it up and down the storm, <br />
+How he knuckled tight and gave not back an inch, and was faithful of days and faithful of nights, <br />
+And chalked in large letters on a board, Be of good cheer, we will not desert you; <br />
+How he followed with them and tacked with them three days and would not give it up</p>
+            </div>
+            <a href="#" class="white btn">Watch Verse 7</a>
+          </section>
+
+        </div>
+
+        <% if false %>
+<!--         <div class="badge-holder" style="background-image:url(<%= asset_path 'whitman/images/flower.jpg' %>);">
+          <div class="overlay">
+            <div class="table">
+              <div class="table-cell">
+                <img src="<%= asset_path 'whitman/images/badge.png' %>" alt="Whitman" width="200" height="277" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-holder">
+          <div class="table">
+            <div class="table-cell">
+
+            <div id="st-trigger-effects" class="column">
+       
+                <button data-effect="st-effect-12">Open door</button>
+              </div>
+
+              <h2>heart of heroes</h2>
+              <p>I UNDERSTAND the large hearts of heroes,<br />
+                The courage of present times and all times, <br />
+                How the skipper saw the crowded and rudderless wreck of the steamship, and Death chasing it up and down the storm,  <br />
+                How he knuckled tight and gave not back an inch, and was faithful of days and faithful of nights, <br />
+                And chalked in large letters on a board, Be of good cheer, we will not desert you;  <br />
+                How he followed with them and tacked with them three days and would not give it up<br />
+              </p>
+              <a href="#" class="black btn">Watch</a>
+            </div>
+          </div>
+        </div> -->
+        <% end %>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      $(".video-bg").vide("http://cabooseit.s3.amazonaws.com/assets/whitman/images/people");
+    });
+  </script>
+<% end %>

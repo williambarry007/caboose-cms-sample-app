@@ -1,0 +1,17 @@
+<% if @sale_categories %>
+	<%= render :partial => "caboose/blocks/specialevents/product_sales" %>
+<% elsif @product %>
+	<%= render :partial => "caboose/blocks/specialevents/product_details" %>
+<% elsif @category %>
+	<% if @category.id == 273 %>
+		<%= render :partial => "caboose/blocks/specialevents/product_sales", :locals => { :site => site } %>
+	<% elsif params[:vendor_id] %>
+		<%= render :partial => "caboose/blocks/specialevents/vendor_products", :locals => { :vendor_id => params[:vendor_id] } %>
+	<% elsif params[:query]  %>
+		<%= render :partial => "caboose/blocks/specialevents/search_results", :locals => { :query => params[:query] } %>
+	<% else %>
+		<%= render :partial => "caboose/blocks/specialevents/product_index" %>
+	<% end %>
+<% else %>
+	<p>Invalid product.</p>
+<% end %>

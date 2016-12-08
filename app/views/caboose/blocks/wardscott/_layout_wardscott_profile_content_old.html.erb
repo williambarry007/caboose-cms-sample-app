@@ -1,0 +1,168 @@
+
+
+
+<% if params[:project_id] && !params[:project_id].blank? %>
+
+	<% p = Caboose::Block.where(:id => params[:project_id]).first %>
+
+	<% if p %>
+
+		<div class="single-project-wrapper">
+			<nav>
+				<a href="/portfolio" class="btn"><span class="arrows">&#10094;&#10094;</span>Back to Portfolio</a>
+			</nav>
+			<div class="wrapper constrain">
+				<h2 class="title"><%= p.child_value('title') %></h2>
+		    <p class="date">Date Completed: <%= p.child_value('date_completed') %></p>
+		    <p class="sq-ft">Sq. Footage: <%= p.child_value('square_footage') %></p>
+
+		    <% images = p.children.where(:block_type_id => 716).order(:sort_order).all %>
+		  	<% img = p.child_value('photo') %>
+		  	<% if img && !img.url.include?('placehold') %>
+		  		<div class="big-image" id="big-image-<%= p.id %>" style="background-image:url(<%= img.url(:huge) %>);"></div>
+		  	<% end %>
+		    <ul class="thumbnails">
+		    	<% if images.count > 0 %>
+		    		<li style="display:inline-block;background-image:url(<%= img.url(:tiny) %>);" class="thumb"></li>
+			    	<% images.each do |i| %>
+			    		<% next if !i.image || i.image.url.include?('placehold') %>
+							<li style="display:inline-block;background-image:url(<%= i.image.url(:tiny) %>);" id="thumb-<%= i.id %>" class="thumb"></li>
+						<% end %>
+					<% end %>
+		    </ul>
+
+
+		    <div class="description">
+		    <h1>Description</h1>
+					<%== p.child_value('description') %>
+		    </div>
+			</div>
+		</div>
+
+		<% content_for :js do %>
+			<script>
+				 $(".thumbnails .thumb").each(function() {
+			    	$(this).click(function() {
+	    				var href = $(this).first().css("background-image").replace("tiny","huge");
+			    		$(this).parent().parent().find(".big-image").css("background-image",href);
+			    	});
+			    });
+			</script>
+		<% end %>
+	<% else %>
+		<p style="padding:50px;text-align:center;">Sorry, that project could not be found.</p>
+	<% end %>
+
+<% else %>
+
+	<% profile_images = block.children.where(:block_type_id => 582).order(:sort_order).all %>
+
+	<div class="content_wrapper" id='block_<%= block.id %>'>          
+	  <div class="content_body profile">    
+	    
+			<!-- The searching text field -->
+	<!-- 		<input type="text" id="search" class="media-boxes-search" placeholder="Search By Title"> -->
+			 
+			 
+		<% if !editing %>
+			<!-- The filter bar -->
+		<div class="profile-header">
+			<div class="constrain">
+				<ul class="media-boxes-filter" id="filter">
+				  <li><a class="selected" href="#" data-filter="*">all</a></li>
+				  <!-- <li><a href="#" id="filter-commercial" data-filter=".commercial">commercial</a></li> -->
+				  <li><a href="#" id="filter-healthcare" data-filter=".healthcare">healthcare</a></li>
+				  <li><a href="#" id="filter-education" data-filter=".education">education</a></li>
+				  <li><a href="#" id="filter-municipal" data-filter=".municipal">municipal</a></li>
+				  <li><a href="#" id="filter-financial" data-filter=".financial">financial</a></li>
+				  <li><a href="#" id="filter-housing" data-filter=".housing">housing</a></li>
+				  <li><a href="#" id="filter-religious" data-filter=".religious">religious</a></li>
+				</ul>
+			</div>
+		</div>
+		<% end %>
+			 
+
+			 <% if editing %>
+					<% profile_images.each do |p| %>
+						<h5 id="block_<%= p.id %>" style="text-align:center;padding:10px 0;"><%= p.child_value('title') %></h5>
+					<% end %>
+			 <% else %>
+				<!-- The grid with media boxes -->
+				<div id="project-grid">
+			    <% profile_images.each_with_index do |p,i| %>
+				    <div class="media-box <%= p.child_value('category').downcase %>" id="block_<%= p.id %>">
+				    	<div class="media-box-image">
+				        <div class="image-wrap" data-thumbnail="<%= p.child_value('photo').url(:large) %>" data-width="250px" data-height="250px" style="background-image:url(<%= p.child_value('photo').url(:large) %>);"></div>
+		<!-- 		        <div data-type="inline" data-popup="#details-popup-<%= p.id %>"></div> -->
+				        <div class="thumbnail-overlay">
+				        	<h4 class="project-title"><%= p.child_value('title') %></h4>
+			            <a class="icon-search mb-open-popup" href="/portfolio?project_id=<%= p.id %>"></a>
+			        	</div>
+					    </div>
+				    </div>
+				   	<% if i == 5 %>
+							<div class="media-box education financial municipal healthcare" id="block_<%= p.id %>">
+					    	<div class="media-box-image">
+									<div class="image-wrap" data-thumbnail="http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg" data-width="250px" data-height="250px" style="background-image:url(http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg);background-size:contain;"></div>
+						    </div>
+					    </div>
+				   	<% end %>
+				   	<% if i == 15 %>
+							<div class="media-box education financial municipal healthcare" id="block_<%= p.id %>">
+					    	<div class="media-box-image">
+									<div class="image-wrap" data-thumbnail="http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg" data-width="250px" data-height="250px" style="background-image:url(http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg);background-size:contain;"></div>
+						    </div>
+					    </div>
+				   	<% end %>
+				   	<% if i == 25 %>
+							<div class="media-box healthcare" id="block_<%= p.id %>">
+					    	<div class="media-box-image">
+									<div class="image-wrap" data-thumbnail="http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg" data-width="250px" data-height="250px" style="background-image:url(http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg);background-size:contain;"></div>
+						    </div>
+					    </div>
+				   	<% end %>
+				   	<% if i == 35 %>
+							<div class="media-box" id="block_<%= p.id %>">
+					    	<div class="media-box-image">
+									<div class="image-wrap" data-thumbnail="http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg" data-width="250px" data-height="250px" style="background-image:url(http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg);background-size:contain;"></div>
+						    </div>
+					    </div>
+				   	<% end %>
+				 	<% end %>
+				</div>
+			<% end %>
+	  </div>
+
+	  <% content_for :js do %>
+
+	<% if !editing %>
+			<script>
+		    
+			    $('#project-grid').mediaBoxes({
+			        boxesToLoadStart: 48,
+			        boxesToLoad: 8,
+			        search: '#search',
+			        horizontalSpaceBetweenBoxes: 1,
+			        verticalSpaceBetweenBoxes: 1,
+	        		searchTarget: '.media-box-title'
+			    });
+
+
+			    $(window).load(function() {
+			    	var full_url = document.URL; // Get current url
+						var url_array = full_url.split('#') // Split the string into an array with / as separator
+						var last_segment = url_array[url_array.length-1];  // Get the last part of the array (-1)
+						if (full_url.indexOf("#") >= 0) {
+							$("#filter-" + last_segment).trigger("click"); 
+						}
+			    });
+			    
+			</script>
+
+			<% end %>
+
+	  <% end %>
+	</div>
+
+<% end %>

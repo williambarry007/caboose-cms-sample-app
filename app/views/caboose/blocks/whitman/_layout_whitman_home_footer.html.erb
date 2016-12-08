@@ -1,0 +1,27 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+  	<div class="grid-row">
+  		<div class="unit1of3 left">
+  			<section class="nine">
+		      <span>project loved and created by:</span>
+		      <a href="http://www.al.com" target="_blank">
+		      	<img src="<%= asset_path 'whitman/images/alcom.png' %>" alt="AL.com" class="alcom" width="60" />
+		      </a>
+		      <a href="http://www.nine.is" target="_blank">
+		        <%= render 'svg/nine' %>
+		      </a>
+		    </section>
+  		</div>
+  		<div class="unit1of3 center">
+  			<h1>Whitman, Alabama</h1>
+  			<ul class="links">
+	        <li><a href="#">about the project</a></li>
+	        <li><a href="#">read the poem</a></li>
+	      </ul>
+  		</div>
+  		<div class="unit1of3 right">
+  			<%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+  		</div>
+  	</div>
+  </div>
+</footer>

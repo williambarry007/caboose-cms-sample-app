@@ -1,0 +1,70 @@
+<%
+d1 = block.child_value('date_created_gte').blank? ? '' : (Date.parse(block.child_value('date_created_gte')).strftime("%F"))
+d2 = block.child_value('date_created_lte').blank? ? '' : (Date.parse(block.child_value('date_created_lte')).strftime("%F"))
+d3 = block.child_value('date_modified_gte').blank? ? '' : (Date.parse(block.child_value('date_modified_gte')).strftime("%F"))
+d4 = block.child_value('date_modified_lte').blank? ? '' : (Date.parse(block.child_value('date_modified_lte')).strftime("%F"))
+title = block.child_value('title')
+pager = Caboose::PageBarGenerator.new(params, {
+  'name'               => '', 
+  'acreage_gte'        => block.child_value('acreage_gte'       ),
+  'acreage_lte'        => block.child_value('acreage_lte'       ),
+  'current_price_gte'  => block.child_value('current_price_gte' ),
+  'current_price_lte'  => block.child_value('current_price_lte' ),
+  'bedrooms_gte'       => block.child_value('bedrooms_gte'      ),
+  'bedrooms_lte'       => block.child_value('bedrooms_lte'      ),
+  'prop_type'          => block.child_value('prop_type'         ),
+  'tot_heat_sqft_gte'  => block.child_value('tot_heat_sqft_gte' ),
+  'tot_heat_sqft_lte'  => block.child_value('tot_heat_sqft_lte' ),
+  'elem_school'        => block.child_value('elem_school'       ),
+  'middle_school'      => block.child_value('middle_school'     ),
+  'high_school'        => block.child_value('high_school'       ),
+  'la_code'            => block.child_value('la_code'           ),
+  'lo_code'            => block.child_value('lo_code'           ),
+  'remarks_like'       => block.child_value('remarks_like'      ),
+  'waterfront'         => block.child_value('waterfront'        ),
+  'ftr_lotdesc_like'   => block.child_value('ftr_lotdesc_like'  ),
+  'mls_acct'           => block.child_value('mls_acct'          ),
+  'subdivision'        => block.child_value('subdivision'       ),
+  'foreclosure_yn'     => block.child_value('foreclosure_yn'    ),
+  'address_like'       => '',        
+  'street_name_like'   => block.child_value('street_name_like'  ),
+  'street_num_like'    => block.child_value('street_num_like'   ),
+  'date_created_gte'   => d1,
+  'date_created_lte'   => d2,
+  'date_modified_gte'  => d3,
+  'date_modified_lte'  => d4,
+  'status'             => 'Active',
+  'style'              => block.child_value('style')
+},{
+  'model'           => 'CabooseRets::ResidentialProperty',
+  'sort'            => CabooseRets::default_property_sort,
+  'desc'            => false,
+  'abbreviations'   => { 'address_like' => 'street_num_concat_street_name_like' },
+  'skip'            => ['status'],
+  'base_url'        => request.fullpath.split('?').first,
+  'items_per_page'  => block.child_value('results_per_page').to_i
+})
+properties = pager.items
+%>
+<div class="residential-index-wrapper" id="block_<%= block.id %>">
+ <div class="header">
+   <div class="constrain">
+     <h2><%= title.blank? ? "Residential Listings" : title %></h2>
+     <a class="btn" href="#" id="show-residential-search"><span id="text">Show Search</span> <span class="icon-search"></span></a> 
+   </div>
+ </div>
+ <%= block.partial('rets_residential_search_form', local_assigns) %>
+ <div class="properties-wrapper">
+   <div class="property-list">
+     <% properties = properties.reject{ |p| p.prop_type.blank? || p.mls_acct.blank? || p.street_num.blank? || p.street_name.blank? || p.nil? } %>
+     <% if properties.nil? || properties.count == 0 %>
+       <div class='no-results'>No results found</div>
+     <% else %>
+       <% properties.each do |p| %>            
+         <%= block.partial('rets_residential_row', local_assigns.merge({:p => p})) %>             
+       <% end %>
+       <%= pager.generate.html_safe %>
+     <% end %>
+   </div>
+ </div>
+</div>

@@ -1,0 +1,136 @@
+<% 
+  height = block.child_value("height").blank? ? "500px" : block.child_value("height")
+  if !height.include?("px")
+    height = height + "px"
+  end
+  lat = block.child_value('default_latitude').blank? ? 0.0 : block.child_value('default_latitude').to_f
+  lng = block.child_value('default_longitude').blank? ? 0.0 : block.child_value('default_longitude').to_f
+  zoom = block.child_value('default_zoom').blank? ? 12 : block.child_value('default_zoom').to_i
+%>
+
+<div class="real-estate-map-container loading" id="block_<%= block.id %>">
+	<div class="filter-bar">
+    <form id="map-filter-form">
+    	<div class="field text">
+    		<input type="text" id="address" name="address" placeholder="Address, City, ZIP code" />
+    		<label for="address">Location</label>
+    	</div>
+      <div class="field select">
+      	<select class="custom" name="radius" id="radius">
+      		<option value="1609">1 mile</option>
+      		<option value="3218">2 miles</option>
+      		<option value="4828" selected>3 miles</option>
+	        <option value="8046">5 miles</option>
+	        <option value="16093">10 miles</option>
+	        <option value="40233">25 miles</option>
+	        <option value="80467">50 miles</option>
+	        <option value="160934">100 miles</option>
+	      </select>
+	      <label for="radius">Distance</label>
+      </div>
+      <div class="field select">
+      	<select class="custom" name="min_price" id="min_price">
+	      	<option value="0" selected>Any</option>
+	      	<option value="10000">$10,000</option>
+	      	<option value="25000">$25,000</option>
+	      	<option value="50000">$50,000</option>
+	      	<option value="75000">$75,000</option>
+	      	<option value="100000">$100,000</option>
+	      	<option value="125000">$125,000</option>
+	      	<option value="150000">$150,000</option>
+	      	<option value="200000">$200,000</option>
+	      	<option value="300000">$300,000</option>
+	      	<option value="400000">$400,000</option>
+	      	<option value="500000">$500,000</option>
+	      	<option value="1000000">$1,000,000</option>
+	      </select>
+	      <label for="min_price">Min Price</label>
+      </div>
+      <div class="field select">
+      	<select class="custom" name="max_price" id="max_price">
+      		<option value="10000000000" selected>Any</option>
+	      	<option value="25000">$25,000</option>
+	      	<option value="50000">$50,000</option>
+	      	<option value="50000">$75,000</option>
+	      	<option value="100000">$100,000</option>
+	      	<option value="125000">$125,000</option>
+	      	<option value="150000">$150,000</option>
+	      	<option value="175000">$175,000</option>
+	      	<option value="200000">$200,000</option>
+	      	<option value="225000">$225,000</option>
+	      	<option value="250000">$250,000</option>
+	      	<option value="300000">$300,000</option>
+	      	<option value="350000">$350,000</option>
+	      	<option value="400000">$400,000</option>
+	      	<option value="450000">$450,000</option>
+	      	<option value="500000">$500,000</option>
+	      	<option value="750000">$750,000</option>
+	      	<option value="1000000">$1,000,000</option>
+	      	<option value="1250000">$1,250,000</option>
+	      	<option value="1500000">$1,500,000</option>
+	      </select>
+	      <label for="max_price">Max Price</label>
+      </div>
+      <div class="field select small">
+      	<select class="custom" name="min_bedrooms">
+	      	<option value="0" selected>Any</option>
+					<option value="2">2+</option>
+					<option value="3">3+</option>
+					<option value="4">4+</option>
+					<option value="5">5+</option>
+	      </select>
+	      <label for="min_bedrooms">Bedrooms</label>
+      </div>
+      <div class="field select small">
+      	<select class="custom" name="min_bathrooms">
+	      	<option value="0" selected>Any</option>
+					<option value="2">2+</option>
+					<option value="3">3+</option>
+					<option value="4">4+</option>
+					<option value="5">5+</option>
+	      </select>
+	      <label for="min_bathrooms">Baths</label>
+      </div>
+      <div class="field">
+      	<input type="submit" value="Search" class="alternate btn" />
+      	<label for="submit"><a href="#" id="clear-map-filter">Clear</a></label>
+      </div>
+    </form>
+  </div>
+  <div class="loading-screen"></div>
+  <div class="map-wrapper">
+  	<div class='map' id="map-<%= block.id %>" style="height:<%= height %>;"></div>
+  	<div id="filter-message"><p>Loading...</p></div>
+  </div>
+</div>
+
+<% content_for :js do %>
+  <%= javascript_include_tag "cluster.js" %>
+  <%= javascript_include_tag "residential_map_controller.js" %>
+  <%= javascript_include_tag "customSelect.js" %>
+  <script>
+    function init_map() {
+    	rmc = new ResidentialMapController({
+     		authenticity_token: '<%= form_authenticity_token %>',
+     		map_el: $("#map-<%= block.id %>"),
+     		protocol: "<%= request.protocol %>",
+     		site_slug: "<%= site.name %>",
+     		default_lat: <%= lat %>,
+     		default_lng: <%= lng %>,
+     		default_zoom: <%= zoom %>,
+     		marker_width: <%= block.child_value('marker_icon_width').blank? ? 30 : block.child_value('marker_icon_width').to_i %>,
+     		marker_height: <%= block.child_value('marker_icon_height').blank? ? 39 : block.child_value('marker_icon_height').to_i %>,
+     		cluster_font_color: "<%= block.child_value('cluster_font_color').blank? ? 'white' : block.child_value('cluster_font_color') %>",
+     		map_style: "<%= block.child_value('map_style') %>",
+     		image_base: "http://www.westalabamamls.com/ListitTuscaloosa/media/"
+     	});
+    }
+    function loadScript() {
+		  var script = document.createElement('script');
+		  script.type = 'text/javascript';
+		  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAjSs-Jq6hpuT35RG9wD6LuqaDFzYDCOPk&callback=init_map";
+		  document.body.appendChild(script);
+		}
+		window.onload = loadScript;
+  </script>
+<% end %>

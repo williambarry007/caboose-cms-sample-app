@@ -1,0 +1,8 @@
+<div class="team" id="block_<%= block.id %>">
+  <header>Our <strong>Team</strong></header>
+  
+  <ul>
+    <% block.children.each do |child| %><%= block.render(child, local_assigns) %><% end %>
+  </ul>
+</div>
+

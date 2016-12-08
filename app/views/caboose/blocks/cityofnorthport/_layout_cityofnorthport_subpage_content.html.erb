@@ -1,0 +1,21 @@
+<div class="content_wrapper" id='block_<%= block.id %>'>          
+  <div class="content_body subpage-content">    
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>    
+      <%= raw controller_view_content %>
+    <% elsif post && post.body %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <% block.children.each do |b| %><%= raw block.render(b, local_assigns) %><% end %>
+    <% else %>
+    	<% if editing %>
+	    	<p style="padding:10px;border:1px solid gray;">Empty content area. Click to add child blocks.</p>
+	    <% end %>
+    <% end %>
+    <% if page.id == 614 %>
+      <% jobs = block.children.where(:block_type_id => 776).count %>
+      <% if jobs < 1 %>
+        <div class="richtext-block"><h6><strong>There are no job openings at this time.</strong></h6></div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

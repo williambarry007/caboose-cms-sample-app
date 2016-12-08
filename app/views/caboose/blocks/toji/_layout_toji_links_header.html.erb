@@ -1,0 +1,25 @@
+<div class="header-wrapper" id="block_<%= block.id %>">
+
+<header class="main">
+  <div class="wrapper">
+    <a href="/">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/toji/images/main_logo.png" alt="TOJI" id="header-logo"/> 
+    </a>
+    
+    <nav>
+      <ul>
+        <li><a href="/"><span>Home</span></a></li>
+        
+        <% Caboose::Page.where(:parent_id => 14, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><a href="/<%= p.uri %>" class="<%= 'active' if p.uri == 'patients' %>"><span><%= p.title %></span></a></li>
+        <% end %>
+      </ul>
+      
+      
+    </nav>
+
+    <a class="icon-menu" href="#" id="show-menu"></a>
+  </div>
+</header>
+
+</div>

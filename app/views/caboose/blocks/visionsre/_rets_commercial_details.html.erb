@@ -1,0 +1,110 @@
+<div class="property-details-wrapper constrain">
+	<div class="main">
+		<% if property.images && property.images.count > 0 %>
+			<div class="gallery-wrapper">
+				<section>
+					<h2 class="section-title">Photo Gallery</h2>
+					<div class="image-holder">
+						<img src="<%= property.images.first.image_url(:large) %>" alt="Featured Image" />
+					</div>
+					<%= render :partial => "caboose/blocks/coastal/image_gallery", :locals => {:property => property} %>
+				</section>
+				
+				<section>
+					<h2 class="section-title">Property Details</h2>
+					<% if !property.remarks.blank? %>
+						<p class="remarks"><%= property.remarks %></p>
+					<% end %>
+					<br />
+	        <ul>
+	          <% if !property.tot_heat_sqft.blank? %><li><strong>Total Heated Sq. Ft.</strong>: <span id='square_footage'><%=h property.tot_heat_sqft %></span></li><% end %>
+	          <% if !property.price_sqft.blank? %><li><strong>Price/Sq. Ft.</strong>: <span id='square_footage'><%=h number_to_currency property.price_sqft %></span></li><% end %>
+	          <% if !property.acreage.blank? %><li><strong>Acreage</strong>: <%= property.acreage %></li><% end %>
+	        </ul>
+				</section>
+				<section>
+        	<h2 class="section-title">Features</h2>
+	        <ul>
+	          <% if !property.ftr_interior.blank? %><li><strong>Interior</strong>: <%=   property.ftr_interior %> </li><% end %>
+	          <% if !property.ftr_cooling.blank?  %><li><strong>Cooling</strong>: <%=    property.ftr_cooling  %> </li><% end %>
+	          <% if !property.ftr_heating.blank?  %><li><strong>Heating</strong>: <%=    property.ftr_heating  %> </li><% end %>
+	          <% if !property.year_built.blank?   %><li><strong>Year Built</strong>: <%= property.year_built   %> </li><% end %>
+	          <% if !property.prop_type.blank?   %><li><strong>Property Type</strong>: <%= property.prop_type   %> </li><% end %>
+	        </ul>
+        	<% if property.virtual_tour %><p class="vt"><a class="btn" href='<%= property.virtual_tour %>' target='_blank' title="Virtual Tour">Virtual Tour</a></p><% end %>
+				</section>
+			</div>
+		<% end %>
+	</div>
+	<aside class="sidebar">
+		<% if agent %>
+	    <section class="agent">
+	      <h4 class="section-title">Contact Info</h4>
+	      <p class="agent-name">Visions Real Estate</p>
+	      <a href="tel:2053451293">(205) 345-1293</a>
+	      <% office = CabooseRets::Office.where(:lo_code => property.lo_code).first %>
+	      <% if office %>
+	      	<p style="margin-top:10px;font-size:14px;">Listing courtesy of <%= office.lo_name ? office.lo_name.titleize : "Unknown" %></p>
+	      <% end %>
+	    </section>
+	  <% end %>
+		<section>
+			<h4 class="section-title">Quick Facts</h4>
+			<address>
+	      <% if !property.unit_num.nil? && property.unit_num.strip.length > 0 %>Unit <%= property.unit_num %>, <% end %>
+	      <%= property.street_num %> <%= property.street_name.titleize %><br />
+	      <%= property.city.titleize %>, <%= property.state %> <%= property.zip %>
+	    </address>
+	    <p class="current-price">
+	    	<%= number_to_currency(property.current_price, :precision => 0) %>
+	    </p>
+	    <p class="mls-number">MLS #<%= property.mls_acct %></p>
+		</section>
+		<section>
+			<h4 class="section-title">Directions</h4>
+			<% if property.latitude && property.longitude %>
+				<div class="property-map" id="map-<%= property.id %>" data-lat="<%= property.latitude %>" data-lng="<%= property.longitude %>" data-address="<%= property.street_num %> <%= property.street_name.titleize %>"></div>
+			<% end %>
+	  	<p class="directions"><%= property.directions %></p>
+		</section>
+	  <section>
+	  	<h4 class="section-title">Neighborhood Information</h4>
+		  <ul>
+		    <li><strong>Area</strong>: <%= property.area.titleize %></li>
+		    <% if property.subdivision %><li><strong>Subdivision</strong>: <%= property.subdivision.titleize %></li><% end %>
+		    <li><strong>County</strong>: <%= property.county.titleize %></li>
+		  </ul>
+	  </section>
+	  <% page_ids = Caboose::Page.where(:site_id => site.id).pluck(:id).to_s.gsub("[","").gsub("]","") %>
+	  <% cf = Caboose::Block.where("block_type_id = 401 OR block_type_id = 2045").where("page_id in (#{page_ids})").first %>
+	  <% if cf %>
+	  	<% bid = cf.id %>
+		  <section>
+		  	<h4 class="section-title">Information Request</h4>        
+			  <form id="property-contact-form">
+			    <input type="hidden" name='form_name' value="Property Info Request">
+			    <input type='hidden' name='mls_number' id='mls_number' value='<%= property.mls_acct %>' />
+			    <input type="hidden" name="block_id" value="<%= bid %>">
+					<input type='text'   name='name'     id="name"     value='' placeholder="Name"    maxlength="150" />
+					<input type='text'   name='email_required'    id="email_required"    value='' placeholder="Email"   maxlength="150" />
+					<input type="hidden" name="subject" value="Property Information Request" />
+					<textarea            name='message_required'     id="message_required"              placeholder="Message" rows="4"></textarea>
+				  <p><a href="#" id="submit-property-contact-form" class="btn">Submit</a></p>
+				</form>
+				<div id="message"></div>
+		  </section>
+	  <% end %>
+	</aside>
+</div>
+
+<script>
+var property_map_id = "map-<%= property.id %>";
+var photo_gallery_id = "gallery-<%= property.id %>";
+
+function loadScript() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAjSs-Jq6hpuT35RG9wD6LuqaDFzYDCOPk&callback=show_property_map";
+  document.body.appendChild(script);
+}
+</script>

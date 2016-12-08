@@ -1,0 +1,40 @@
+<%
+url_block = block.child('url')
+code_block = block.child('code')
+
+if url_block.nil? || code_block.nil?
+  block.create_children
+end
+
+if editing 
+%>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>Admin</title>    
+    <meta name="viewport" content="width=device-width" />    
+    <%= raw css %>
+    <%= raw csrf_meta_tags %>
+  </head>  
+  <body>
+    <div class='container wrap'>
+      <h1>Code Insertion Layout</h1>
+      <p>This layout is used to insert a block of code onto an existing page.</p><br />
+      <p>URL:</p>
+      <div id='block_<%= url_block.id %>'><p><% if url_block.value %><%= url_block.value %><% else %>[Empty]<% end %></p></div><br />
+      <p>Code:</p>
+      <div id='block_<%= code_block.id %>'><% if code_block.value %><code><pre><%= raw html_escape(code_block.value) %></pre></code><% else %><p>[Empty]</p><% end %></div>
+    </div>
+  <%= raw js %>
+  </body>
+</html>
+<%
+elsif url_block.value   
+  resp = HTTParty.get(url_block.value)
+  body = resp.body
+  body = body.gsub('</body>', "#{code_block.value}</body>") if code_block.value
+  %><%= raw body %><%
+end
+%>

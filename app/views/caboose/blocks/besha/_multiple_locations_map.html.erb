@@ -1,0 +1,113 @@
+<% 
+  height = block.child_value("height").blank? ? "500px" : block.child_value("height")
+  if !height.include?("px")
+    height = height + "px"
+  end
+  style = block.child_value("style").blank? ? "Normal" : block.child_value("style")
+  icon = block.child_value('marker_icon').url(:original)
+  show_search_form = block.child_value('show_search_form')
+  search_form_position = block.child_value('search_form_position')
+  form_title = block.child_value('search_form_title')
+  markers = block.children.where(:block_type_id => 1373).all
+%>
+
+<% if modal %>
+
+  <% if block.child("height") %>
+    <div id="block_<%= block.child('height').id %>" style="text-decoration:underline;cursor:pointer;">
+      Height: <%= height %>
+    </div>
+  <% end %>
+  <% if block.child("style") %>
+    <div id="block_<%= block.child('style').id %>" style="text-decoration:underline;cursor:pointer;">
+      Style: <%= block.child_value('style') %>
+    </div>
+  <% end %>
+  <% if block.child("marker_icon") %>
+    <div id="block_<%= block.child('marker_icon').id %>" style="text-decoration:underline;cursor:pointer;">
+      Marker Icon: Click to Edit
+    </div>
+  <% end %>
+  <% if block.child("search_form_position") %>
+    <div id="block_<%= block.child('search_form_position').id %>" style="text-decoration:underline;cursor:pointer;">
+      Search Form Position: <%= block.child_value('search_form_position') %>
+    </div>
+  <% end %>
+  <% if block.child("show_search_form") %>
+    <div id="block_<%= block.child('show_search_form').id %>" style="text-decoration:underline;cursor:pointer;">
+      Show Search Form: <%= block.child_value('show_search_form') %>
+    </div>
+  <% end %>
+  <% if block.child("search_form_title") %>
+    <div id="block_<%= block.child('search_form_title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Search Form Title: <%= block.child_value('search_form_title') %>
+    </div>
+  <% end %>
+  <p>Markers:</p>
+  <ul>
+    <% markers.each_with_index do |s,i| %>
+      <% name = s.child_value('title') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Marker #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new marker!</a>
+  <% elsif block.post %>
+    <a href='/admin/pages/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new marker!</a>
+  <% end %>
+
+<% else %>
+  <div class="locations-map-container loading" id="block_<%= block.id %>">
+    <div class="loading-screen"></div>
+    <% if show_search_form == "Yes" %>
+      <div class="search-form <%= search_form_position %>" id="map-filter-form">
+        <h5 class="form-title"><%= form_title %></h5>
+        <form>
+          <input type="text" id="address" name="address" placeholder="Enter Your ZIP Code" />
+          <select name="radius" id="radius">
+            <option value="8046">5 miles</option>
+            <option value="16093">10 miles</option>
+            <option value="40233">25 miles</option>
+            <option value="80467">50 miles</option>
+            <option value="160934">100 miles</option>
+          </select>
+          <input type="submit" value="Search" class="btn" />
+        </form>
+        <div id="filter-message"></div>
+      </div>
+    <% end %>
+    <div class='map' id="map-<%= block.id %>" data-style="<%= style %>"></div>
+    <% content_for :css do %>
+      <style>
+        #map-<%= block.id %> {
+          height: <%= height %>;
+        }
+      </style>
+    <% end %>
+    <% content_for :js do %>
+      <script>
+        window.map_block_id = <%= block.id %>;
+        var protocol = "<%= request.protocol %>";
+      <% if !icon.include?('placehold') %>
+        var marker_icon_url = "<%= icon %>";
+      <% end %>
+      </script>
+      <%= javascript_include_tag "customSelect.js" %>
+      <script>
+        // $(document).ready(function() {
+        //   $("select").customSelect();
+        // });
+        // $(window).load(function() {
+        //   $("#map-filter-form").submit(function(event) {
+        //     event.preventDefault();
+        //     var zip = $(this).find("#address").val();
+        //     var radius = $(this).find("#radius").val();
+        //     filter_location_map(zip, radius);
+        //   });
+        // });
+      </script>
+    <% end %>
+  </div>
+<% end %>

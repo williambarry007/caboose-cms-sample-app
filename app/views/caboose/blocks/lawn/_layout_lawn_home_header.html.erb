@@ -1,0 +1,29 @@
+<%
+img = block.child_value('background_image').url(:huge)
+icon = block.child_value('icon').url(:large)
+tagline = block.child_value('tagline')
+%>
+
+<header class="main home" id="block_<%= block.id %>">
+  <div class="home-banner" style="background-image:url(<%= img %>);">
+    <img class="icon" src="<%= icon %>" alt="<%= site.description %>">
+    <h1 class="title"><%= site.description %></h1>
+    <div class="line"></div>
+    <h4 class="tagline"><%= tagline %></h4>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+  <div class="nav-holder reveal">
+    <div class="constrain">
+      <nav>
+        <ul>
+          <li><a class="local" href="#block_96239" title="About">About</a></li>
+          <li><a class="local" href="#block_96301" title="Services">Services</a></li>
+          <li><a class="local" href="#block_96401" title="Gallery">Gallery</a></li>
+          <li><a class="local" href="#block_96217" title="Contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,19 @@
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 2211, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

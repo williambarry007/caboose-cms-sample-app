@@ -1,0 +1,38 @@
+<%
+user = controller ? controller.logged_in_user : nil
+role = user ? Caboose::RoleMembership.where(:user_id => user.id).where("role_id in (346,349,350,351)").exists? : false
+%>
+
+<div class="delay-show">
+  <div id="mmenu">
+    <ul>
+      <li><a href="/" title="Home">Home</a></li>
+      <% Caboose::Page.where(:parent_id => 1641, :hide => false).order(:sort_order).all.each do |p| %>
+        <% next if p.id == 1643 %>
+        <li><%== ApplicationHelper.nav_link(p, editing, false) %>
+          <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+          <% if subpages.count > 0 %>
+            <ul class="submenu">
+              <% subpages.each do |s| %>
+                <li>
+                  <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                  <% if grandchildren.count > 0 %>
+                    <span><%= s.menu_title.blank? ? s.title : s.menu_title %></span>
+                    <ul>
+                      <% grandchildren.each do |g| %>
+                        <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <%== ApplicationHelper.nav_link(s, editing, false) %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </li>
+      <% end %>
+      <li><a href="/portal" title="Portal"><%= role ? 'Client Portal' : 'Client Login' %></a></li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<%
+name = block.child_value('name')
+photo = block.child_value('photo').url(:large)
+description = block.child_value('description')
+%>
+<div class="vessel-block constrain" id="block_<%= block.id %>">
+	<% if photo && !photo.include?('placehold') %>
+		<div class="image-wrapper">
+			<div class="image-holder" style="background-image:url(<%= photo %>);"></div>
+		</div>
+	<% end %>
+	<div class="text-wrapper">
+		<h5 class="name"><%= name %></h5>
+		<div class="description richtext">
+			<%== description %>
+		</div>
+	</div>
+</div>

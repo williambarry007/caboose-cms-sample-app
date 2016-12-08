@@ -1,0 +1,38 @@
+<div class="footer-wrapper subpage" id="block_<%= block.id %>">
+  <div class="waves"></div>
+  <footer class="main subpage">
+    <div class="constrain">
+      <div class="grid-row">
+        <div class="unit1of3 left">
+          <ul class="links">
+            <li><a href="/terms">TERMS &amp; CONDITIONS</a></li>
+            <li><a href="/returns">RETURN POLICY</a></li>
+            <li><a href="/privacy">PRIVACY POLICY</a></li>
+            <li><a href="/contact">CONTACT</a></li>
+          </ul>
+        </div>
+        <div class="unit1of3 center">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/uptownsociety/images/blue_logo.png" alt="<%= site.description %>" width="90" height="139" class="logo" />
+          <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+        </div>
+        <div class="unit1of3 right">
+          <ul class="links">
+            <li><a href="/about">ABOUT</a></li>
+            <li><a href="/products/shirts">SHIRTS</a></li>
+            <li><a href="/products/hats">HATS</a></li>
+            <li><a href="/products/accessories">ACCESSORIES</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bottom">
+        <h4><span>SOUTHERN HERITAGE</span></h4>
+        <section class="nine">
+          <span>Designed and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,57 @@
+<%
+course = block.child_value('course')
+month = block.child_value('month') 
+day = block.child_value('day') 
+year = block.child_value('year') 
+date = "#{month} #{day}, #{year}"
+location = block.child_value('location')
+instructor = block.child_value('instructor')
+cost = block.child_value('cost')
+img = "//alabamarealtors.s3.amazonaws.com/uploads/GRI_#{course}.png"
+title = course
+if course == "Accountability"
+	title = "Accountability &amp; Development"
+elsif course == "Buyers"
+	title = "Working with Buyers"
+elsif course == "Sellers"
+	title = "Working with Sellers"
+end
+link = ""
+if course == "Accountability"
+	link = "/gri/courses/gri-core-accountability--development---6-gri-hours"
+elsif course == "Contracts"
+	link = "/gri/courses/gri-core-contracts---6-gri-hours"
+elsif course == "Professionalism"
+	link = "/gri/courses/gri-core-professionalism---6-gri-hours"
+elsif course == "Technology"
+	link = "/gri/courses/gri-core-technology---6-gri-hours"
+elsif course == "Buyers"
+	link = "/gri/courses/gri-core-working-with-buyers---6-gri-hours"
+elsif course == "Sellers"
+	link = "/gri/courses/gri-core-working-with-sellers---6-gri-hours"
+end
+%>
+
+<div class="course-event-block clearfix" id="block_<%= block.id %>">
+	<div class="image-wrapper">
+		<div class="image-holder" style="background-image:url(<%= img %>);">
+		</div>
+	</div>
+	<div class="text-wrapper">
+		<h3 class="title"><span>GRI CORE:</span> <%== title %></h3>
+		<% if !location.blank? %><h4 class="location"><a href="/gri/courses/location/<%= location.downcase %>"><%= location %></a></h4><% end %>
+		<% if !date.blank? %><h4 class="date"><%= date %></h4><% end %>
+		<% if !cost.blank? %><h4 class="cost">Cost: <%= cost %></h4><% end %>
+		<% if !instructor.blank? %><h4 class="instructor">Instructor: <%= instructor %></h4><% end %>
+		<a href="<%= link %>" title="<%= title %>">Course Details</a>
+	</div>
+	<div class="cal-wrapper">
+		<div class="cal-icon">
+			<div class="month"><%= month %></div>
+			<div class="day-wrapper">
+				<span class="day"><%= day %></span>
+			</div>
+		</div>
+		<a href="<%= block.child_value('register_url').blank? ? '/gri/register' : block.child_value('register_url') %>" class="btn">Register Now</a>
+	</div>
+</div>

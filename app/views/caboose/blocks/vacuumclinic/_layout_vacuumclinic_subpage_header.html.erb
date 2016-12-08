@@ -1,0 +1,64 @@
+<%
+hh = Caboose::Block.where(:block_type_id => 3002).last
+%>
+
+<div class="header-wrapper subpage" id="block_<%= block.id %>">
+  <div class="top">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <h1><%= site.description %></h1>
+      </a>
+      <div class="right reveal">
+        <p class="phone">
+          <span class="icon-phone-2"></span>
+          <span class="number"><%= hh.child_value("phone_number") %></span>
+        </p>
+        <%== ApplicationHelper.social_links(site.id, "icon", "colored") %>
+      </div>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </div>
+  <div class="bottom reveal">
+    <div class="constrain">
+      <nav>
+        <ul>
+          <li class="top-li"><a href="/" title="Home">Home</a></li>
+          <% pages = Caboose::Page.where(:parent_id => 2411, :hide => false).order(:sort_order).all %>
+          <% pages.each_with_index do |p,i| %>
+            <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+            <li class="top-li">
+              <% if subpages.count > 0 %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+                <div class="dropdown <%= (pages.count - i < 3) ? 'right' : '' %>">
+                  <div class="contain">
+                    <ul class="level-2">
+                      <% subpages.each do |s| %>
+                        <li class="li-2">
+                          <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                          <% if grandchildren.count > 0 %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                            <ul class="level-3">
+                              <% grandchildren.each do |g| %>
+                                <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                              <% end %>
+                            </ul>
+                          <% else %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% else %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

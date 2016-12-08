@@ -1,0 +1,68 @@
+<div class="contact-form-block clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="text">
+			<h3 class="section-title"><%= block.child_value('title') %></h3>
+			<div class="content"><%== block.child_value('description') %></div>
+		</div>
+		<form id="contact_form">
+			<input type="hidden" name="block_id" value="<%= block.id %>" />
+			<input type="hidden" name="form_name" value="Contact Form" />
+			
+			<div class="field clearfix">
+				<label for="first_name_required" class="required">First Name</label>
+				<input type="text" id="first_name_required" name="first_name_required" />
+			</div>
+			<div class="field clearfix">
+				<label for="last_name_required" class="required">Last Name</label>
+				<input type="text" id="last_name_required" name="last_name_required" />
+			</div>
+			<div class="field clearfix">
+				<label for="email_address_required" class="required">Email Address</label>
+				<input type="email" id="email_address_required" name="email_address_required" />
+			</div>
+			<div class="field clearfix">
+				<label for="phone_number_required" class="required">Phone Number</label>
+				<input type="text" id="phone_number_required" name="phone_number_required" />
+			</div>
+			<div class="field clearfix">
+				<label for="company_required" class="required">Company</label>
+				<input type="text" id="company_required" name="company_required" />
+			</div>
+			<div class="field clearfix">
+				<label for="state_required" class="required">State</label>
+				<input type="text" id="state_required" name="state_required" />
+			</div>
+			<% if block.child_value('show_captcha') && block.child_value('show_captcha') == "Yes" %>
+				<div class="recaptcha clearfix">
+					<div style="margin:10px 0;" class="g-recaptcha clearfix" data-sitekey="6LcOOQATAAAAAK0PVSzlqmm0X_RggYhM7GMuot4X"></div>
+				</div>
+			<% end %>
+			<div class="bottom clearfix">
+				<a href="#" class="btn" id="submit-contact-form">Learn More</a>
+			</div>
+		</form>
+		<div id="message"></div>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		.g-recaptcha > div > div {
+			float: right;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<%= javascript_include_tag "form_submit" %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-contact-form").click(function(event) {
+				event.preventDefault();
+				submit_form("contact_form"); 
+				return false;
+			});
+		});
+	</script>
+<% end %>

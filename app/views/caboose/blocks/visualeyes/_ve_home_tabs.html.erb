@@ -1,0 +1,60 @@
+<%
+tabs = block.children.where(:block_type_id => 2811).order(:sort_order).all
+%>
+
+<div class="home-tabs-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<h1 class="title"><%= block.child_value('title') %></h1>
+		<div class="line"></div>
+		<% if tabs.count > 1 %>
+			<ul class="tabs">
+				<% tabs.each_with_index do |t,i| %>
+					<li data-id="<%= t.id %>" <% if i == 0 %>class="active"<% end %>><%= t.child_value('tab_title') %></li>
+				<% end %>
+			</ul>
+		<% end %>
+		<div class="tabs-holder">
+			<% tabs.each_with_index do |tab, index| %>
+				<div class="tab" id="tab-<%= tab.id %>" <% if index > 0 %>style="display:none;"<% end %>>
+					<div class="grid-row">
+						<% if tab.child_value('alignment') == 'left' %>
+							<div class="unit1of2 image">
+								<img src="<%= tab.child_value('featured_image').url(:huge) %>" alt="<%= tab.child_value('tab_title') %>" />
+							</div>
+							<div class="unit1of2 text">
+								<h3 class="top-line"><%= tab.child_value('title_line_1') %></h3>
+								<h4 class="bottom-line"><%= tab.child_value('title_line_2') %></h4>
+								<div class="line"></div>
+								<div class="richtext body"><%== tab.child_value('body') %></div>
+								<a href="<%= tab.child_value('button_url') %>" class="gray-outline btn"><%= tab.child_value('button_text') %></a>
+							</div>
+						<% else %>
+							<div class="unit1of2 text">
+								<h3 class="top-line"><%= tab.child_value('title_line_1') %></h3>
+								<h4 class="bottom-line"><%= tab.child_value('title_line_2') %></h4>
+								<div class="line"></div>
+								<div class="richtext body"><%== tab.child_value('body') %></div>
+								<a href="<%= tab.child_value('button_url') %>" class="gray-outline btn"><%= tab.child_value('button_text') %></a>
+							</div>
+								<div class="unit1of2 image">
+								<img src="<%= tab.child_value('featured_image').url(:huge) %>" alt="<%= tab.child_value('tab_title') %>" />
+							</div>
+						<% end %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<% content_for :js do %>
+	<script>
+		$("#block_<%= block.id %> .tabs li").click(function(event) {
+			var id = $(this).data("id");
+			$("#block_<%= block.id %> .tabs li").removeClass("active");
+			$(this).addClass("active");
+			$("#block_<%= block.id %> .tab").hide();
+			$("#block_<%= block.id %> .tab#tab-" + id).show();
+		});
+	</script>
+<% end %>

@@ -1,0 +1,118 @@
+<% color = rand(5) %>
+<div class="footer main home color-<%= color %>" id="block_<%= block.id %>">
+  <div class="overlay"></div>
+  <div class="constrain">
+    <div class="grid-row buttons">
+      <div class="unit1of3">
+        <a href="/media" class="btn" title="Media">Media</a>
+      </div>
+      <div class="unit1of3">
+        <a href="/contact" class="btn" title="Contact">Contact</a>
+      </div>
+      <div class="unit1of3">
+        <a href="/give" class="btn" title="Give">Give</a>
+      </div>
+    </div>
+    <div class="grid-row content">
+      <div class="unit1of3 site-navigation">
+        <h4 class="unit-header">Site Navigation</h4>
+        <ul class="links">
+          <li><a href="/" title="Home">Home</a></li>
+          <% Caboose::Page.where(:parent_id => 774, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="unit1of3 newsletter">
+        <h4 class="unit-header">Subscribe to Our Newsletter</h4>
+        <p>By subscribing to our mailing list, you will stay up to date with the latest news and prayer requests from The Grain Game.</p>
+        <form id="newsletter-form">
+          <input type="hidden" name="capture_name" value="yes" />
+          <div class="grid-row">
+            <div class="unit1of2">
+              <input type="text" name="first_name" id="first_name" placeholder="First Name" />
+            </div>
+            <div class="unit1of2">
+              <input type="text" name="last_name" id="last_name" placeholder="Last Name" />
+            </div>
+          </div>
+          <input type="email" name="email" id="email" placeholder="Email Address" />
+          <a href="#" class="btn" id="submit-newsletter-form">Submit</a>
+        </form>
+        <div id="message" style="margin:0 auto;text-align:center;"></div>
+      </div>
+      <div class="unit1of3 contact">
+        <h4 class="unit-header">Contact Us</h4>
+        <div class="mailing-address">
+          <p>
+            PO Box 1435<br />
+            Northport, AL 35476
+          </p>
+        </div>
+      <!--   <div class="meta">
+          <span>T. 205.792.9819</span>
+        </div>
+        <br /> -->
+        <div class="meta">
+          <span>E. <a href="mailto:info@thegraingame.org">info@thegraingame.org</a></span>
+        </div>
+      </div>
+    </div>
+    <div class="grid-row info">
+      <div class="unit1of2">
+        <div class="copyright">
+          &copy; <%= DateTime.now.strftime("%Y") %> TheGrainGame.org
+        </div>
+      </div>
+      <div class="unit1of2">
+        <div class="nine">
+          <span>site built and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      function submit_newsletter(form_id) {
+        var mess = $("#" + form_id).next("#message");
+        mess.html("<p class='note loading'>Submitting form... </p>");
+        var form = $("#" + form_id); 
+        form.find("input, textarea").each(function() {
+          if ( $(this).attr("placeholder") == $(this).val() ) {
+            $(this).val("");
+          }
+        });
+        $.ajax({
+          url: '/mailchimp/subscribe',
+          type: 'post',
+          data: form.serialize(),
+          success: function(resp) {
+            if(resp.error) {
+              form.find("input, textarea").each(function() {
+                if ( $(this).val() == "" ) {
+                  $(this).val( $(this).attr("placeholder") );
+                }
+              });
+              mess.html("<p class='note error'>" + resp.error + "</p>");
+            } 
+            if(resp.success) {
+              form.slideUp(); 
+              mess.html("<p class='note success'>" + resp.success + "</p>");
+            }
+          }
+        });
+      }
+      $("#submit-newsletter-form").click(function(event) {
+        event.preventDefault();
+        submit_newsletter("newsletter-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

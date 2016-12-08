@@ -1,0 +1,84 @@
+<% 
+  height = block.child_value("height").blank? ? "400px" : block.child_value("height")
+  if !height.include?("px")
+    height = height + "px"
+  end
+  style = block.child_value("style").blank? ? "Normal" : block.child_value("style")
+  icon = block.child_value('marker_icon').url(:original)
+  show_search_form = block.child_value('show_search_form')
+  search_form_position = block.child_value('search_form_position')
+  form_title = block.child_value('search_form_title')
+  markers = block.children.where(:block_type_id => 1373).all
+  default_zoom = block.child_value('default_zoom').blank? ? 15 : block.child_value('default_zoom')
+  begin 
+    style_id = block.child_value('style').to_i
+  rescue
+    style_id = 0
+  end
+  lat = block.child_value('default_latitude')
+  lng = block.child_value('default_longitude')
+%>
+
+<% if modal %>
+
+<% else %>
+  <div class="locations-map-container loading" id="block_<%= block.id %>">
+    <div class="loading-screen"></div>
+    <% if show_search_form == "Yes" %>
+      <div class="search-form <%= search_form_position %>" id="map-filter-form">
+        <h5 class="form-title"><%= form_title %></h5>
+        <form>
+          <input type="text" id="address" name="address" placeholder="Address or ZIP" />
+          <p class="within">within</p>
+          <select name="radius" id="radius">
+            <option value="8046">5 miles</option>
+            <option value="16093">10 miles</option>
+            <option value="40233">25 miles</option>
+            <option value="80467">50 miles</option>
+            <option value="160934">100 miles</option>
+          </select>
+          <input type="submit" value="Search" class="alternate btn" />
+        </form>
+        <div id="filter-message"></div>
+      </div>
+    <% end %>
+    <div class='map' id="map-<%= block.id %>" data-style="<%= style %>" data-lat="<%= lat %>" data-lng="<%= lng %>"></div>
+    <% content_for :css do %>
+      <style>
+        #map-<%= block.id %> {
+          height: <%= height %>;
+        }
+      </style>
+    <% end %>
+    <% content_for :js do %>
+      <script>
+        window.map_block_id = <%= block.id %>;
+        var protocol = "<%= request.protocol %>";
+        var default_zoom = <%= default_zoom %>;
+        var map_style_code = '';
+        <% if style_id && style_id != 0 %>
+          <% ms = MapStyle.find(style_id) %>
+          map_style_code = <%== ms.code %>;
+        <% end %>
+      <% if !icon.include?('placehold') %>
+        var marker_icon_url = "<%= icon %>";
+      <% end %>
+      </script>
+      <%= javascript_include_tag "multiple_maps.js" %>
+      <%= javascript_include_tag "customSelect.js" %>
+      <script>
+        $(document).ready(function() {
+          $("select").customSelect();
+        });
+        $(window).load(function() {
+          $("#map-filter-form").submit(function(event) {
+            event.preventDefault();
+            var zip = $(this).find("#address").val();
+            var radius = $(this).find("#radius").val();
+            filter_location_map(zip, radius);
+          });
+        });
+      </script>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,72 @@
+<% 
+api_key = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_api_key').exists?
+list_id = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_list_id').exists?
+%>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="top">
+    <div class="constrain">
+      <div class="mailchimp clearfix">
+        <% if api_key && list_id %>
+          <form id="newsletter-form">
+            <label for="#">STAY UP TO DATE</label>
+            <input type="text" name="first_name" placeholder="First Name" />
+            <input type="text" name="last_name" placeholder="Last Name" />
+            <input type="hidden" name="capture_name" value="yes" />
+            <input type="email" name="email" placeholder="Email Address" />
+            <a href="#" class="btn white-outline" id="submit-newsletter-form">SUBSCRIBE</a>
+          </form>
+          <div id="message"></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="constrain">
+      <div class="copyright">
+        <p>&copy; <%= DateTime.now.strftime('%Y') %> Colonnade Group</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      function submit_newsletter(form_id) {
+        var mess = $("#" + form_id).next("#message");
+        mess.html("<p class='note loading'>Submitting form... </p>");
+        var form = $("#" + form_id); 
+        form.find("input, textarea").each(function() {
+          if ( $(this).attr("placeholder") == $(this).val() ) {
+            $(this).val("");
+          }
+        });
+        $.ajax({
+          url: '/mailchimp/subscribe',
+          type: 'post',
+          data: form.serialize(),
+          success: function(resp) {
+            if(resp.error) {
+              form.find("input, textarea").each(function() {
+                if ( $(this).val() == "" ) {
+                  $(this).val( $(this).attr("placeholder") );
+                }
+              });
+              mess.html("<p class='note error'>" + resp.error + "</p>");
+            } 
+            if(resp.success) {
+              form.slideUp(); 
+              mess.html("<p class='note success'>" + resp.success + "</p>");
+            }
+          }
+        });
+      }
+      $("#submit-newsletter-form").click(function(event) {
+        event.preventDefault();
+        submit_newsletter("newsletter-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

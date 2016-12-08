@@ -1,0 +1,92 @@
+<div class="instagram-feed-block clearfix" id="block_<%= block.id %>">
+	<%
+		sc = Caboose::SocialConfig.where(:site_id => site.id).last
+    un = sc ? sc.instagram_username : ''
+    un = un.blank? ? '' : un.downcase
+		cols = block.child_value('columns').blank? ? 5 : block.child_value('columns').to_i
+		rows = block.child_value('rows').blank? ? 1 : block.child_value('rows').to_i
+	  limit = cols * rows
+	  caption = block.child_value('show_caption').blank? ? "None" : block.child_value('show_caption')
+	  title = block.child_value('section_title').blank? ? "Instagram Feed" : block.child_value('section_title')
+		ig = InstagramCache.where(:username => un).order("date_created DESC").take(limit)
+	%>
+	<div class="feed-wrapper clearfix">
+		<% if ig && ig.count > 0 %>
+			<% if !title.blank? %><h2 class="social-title"><%== title %></h2><% end %>
+			<% ig.each do |i| %>
+				<% if caption == "Overlay" || caption == "Hover" %>
+					<% if !editing %>
+						<a class="image-wrapper" href="<%= i.link_url %>" target="_blank">
+					<% else %>
+						<div class="image-wrapper">
+					<% end %>
+						<div class="image-holder overlay <%= caption == 'Hover' ? 'hover' : '' %>" style="background-image:url(<%= i.image_url %>);">
+							<% if !i.caption.blank? %>
+								<div class="caption-overlay">
+									<p><%= i.caption %></p>
+								</div>
+							<% end %>
+						</div>
+					<% if !editing %>
+						</a>
+					<% else %>
+						</div>
+					<% end %>
+				<% else %>
+					<div class="image-holder">
+						<% if !editing %><a href="<%= i.link_url %>" target="_blank" class="instagram-link"><% end %>
+							<img src="<%= i.image_url %>" class="instagram-image" alt="Follow <%= un %> on Instagram" />
+						<% if !editing %></a><% end %>
+						<% if caption == "Below Image" %>
+							<div class="caption-below">
+								<p><%= i.caption %></p>
+							</div>
+						<% end %>
+					</div>
+				<% end %>
+			<% end %>
+		<% else %>
+			<% if editing %>
+				<p style="padding:10px;background:#fff;border:1px solid gray;text-align:center;">Empty Instagram feed. Please make sure username is correct in Social Media settings and allow 10 minutes for the feed to refresh.</p>
+			<% end %>
+		<% end %>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		<% if caption == "Overlay" || caption == "Hover" %>
+			#block_<%= block.id %> .image-wrapper {
+				display: block;
+				text-decoration: none;
+				<% if cols == 2 %>
+					width: 50%;
+				<% elsif cols == 3 %>
+					width: 33.33333%;
+				<% elsif cols == 4 %>
+					width: 25%;
+				<% else %>
+					width: 20%;
+				<% end %>
+			}
+			#block_<%= block.id %> .image-holder.overlay {
+				padding-bottom: 100%;
+			}
+		<% else %>
+			#block_<%= block.id %> .image-holder {
+				text-align: center;
+				float: left;
+				<% if cols == 2 %>
+					width: 50%;
+				<% elsif cols == 3 %>
+					width: 33.33333%;
+				<% elsif cols == 4 %>
+					width: 25%;
+				<% else %>
+					width: 20%;
+				<% end %>
+			}
+		<% end %>
+	</style>
+<% end %>
+

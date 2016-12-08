@@ -1,0 +1,13 @@
+<div class="search-bar home" id="block_<%= block.id %>">
+  <div class="grid-row constrain">
+  	<div class="unit unit1of2">
+  		<h4><%== block.child_value('main_text') %></h4>
+  	</div>
+    <div class="unit unit1of2 reveal" id="right">
+      <form action="/search" method="get" id="search">
+        <input type="text" name="q" id="q" placeholder="Enter Keywords">
+        <input type="submit" value="Search" class="btn">
+      </form>
+    </div>
+  </div>
+</div>

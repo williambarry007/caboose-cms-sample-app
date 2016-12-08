@@ -1,0 +1,53 @@
+<div class="patient-form-block clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+			<% if params[:success].blank? %>
+		<div class="text">
+			<h3 class="section-title">Submit Form</h3>
+			<div class="content">Please use the form below to submit your COMPLETED new patient form.</div>
+		</div>
+
+			<form id="patient-form" action="toji/patient" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="block_id" value="<%= block.id %>" />
+				<input type="hidden" name="form_name" value="New Patient Form" />
+				<div class="grid-row">
+					<div class="unit1of2" style="padding-right:2%;">
+						<input type="text" id="name_required" name="name_required" placeholder="Your Name" <% if !params[:name].blank? %>value="<%= params[:name] %>"<% end %>>
+					</div>
+					<div class="unit1of2" style="padding-left:2%;">
+						<input type="email" id="email_required" name="email_required" placeholder="Email Address" <% if !params[:email].blank? %>value="<%= params[:email] %>"<% end %>>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="unit1of1">
+						<input type="file" name="application" accept=".pdf" />
+					</div>
+				</div>
+				<div class="bottom clearfix">
+					<input type="submit" value="Submit" class="btn" id="submit-patient-form" />
+				</div>
+			</form>
+		<% end %>
+		<div id="message">
+			<% if params[:error] && !params[:error].blank? %>
+				<p class="note error"><%= params[:error] %></p>
+			<% elsif params[:success] && !params[:success].blank? %>
+				<p class="note success"><%= params[:success] %></p>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<% content_for :js do %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-patient-form").click(function(event) {
+				if ( $("#name_required").val() == "" || $("#name_required").val() == "Your Name")
+					$("#message").html("<p class='note error'>Name is required.</p>");
+				else if ( $("#email_required").val() == "" || $("#email_required").val() == "Email Address")
+					$("#message").html("<p class='note error'>Email is required.</p>");
+				else
+					$("#message").html("<p class='note loading'>Submitting form...</p>");
+			});
+		});
+	</script>
+<% end %>

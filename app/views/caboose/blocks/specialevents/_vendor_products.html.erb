@@ -1,0 +1,100 @@
+<div class="product-index">          
+	<div class="constrain">  
+
+		<div class="product-navigation">
+			<input type="text" id="search" class="media-boxes-search" placeholder="Filter by Keyword">
+			<div class="breadcrumbs">
+        <ul>
+          <% @category.ancestry.each do |c| %>
+            <li><a href="<%= c.url %>" title="<%= c.name %>"><%= c.name %></a></li>
+          <% end %>
+          <% if defined?(vendor_id) && !vendor_id.blank? && Caboose::Vendor.where(:id => vendor_id, :site_id => @site.id, :status => "Active").exists? %>
+          	<% v = Caboose::Vendor.where(:id => vendor_id, :site_id => @site.id, :status => "Active").first %>
+          	<li><a href="/brands" title="Brands">Brands</a></li>
+						<li><a href="/products?vendor_id=<%= v.id %>" title="<%= v.name %>"><%= v.name %></a></li>
+         	<% end %>
+        </ul>
+      </div>
+		</div>
+
+    <% if defined?(vendor_id) && !vendor_id.blank? && Caboose::Vendor.where(:id => vendor_id, :site_id => @site.id, :status => "Active").exists?  # list products belonging to given vendor    %>
+
+      <% @vendor = Caboose::Vendor.where(:id => vendor_id, :site_id => @site.id, :status => "Active").first %>
+      <% if @vendor.products.count > 0 %>
+        <div class="media-grid" id="product-grid">
+          <% @vendor.products.each do |p| %>
+            <% if p.categories.count > 0 %>
+              <% cats = p.categories.last.ancestry.collect{|a| a.slug} %>
+              <% cats = cats.join(' ') %>
+            <% else %>
+              <% cats = "" %>
+            <% end %>
+            <div class="media-box <%= cats %>" id="product-<%= p.id %>">
+              <% if p.on_sale %><div class="product-sale">SALE</div><% end %>
+              <div class="media-box-image">
+                <% img = p.featured_image ? (p.featured_image.url(:large).include?('placehold') ? '//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg' : p.featured_image.url(:large)) : ('//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg') %>
+                <div class="image-wrap" data-width="250px" data-height="250px" data-thumbnail="<%= img %>" style="background-image:url(<%= img %>);"></div>
+                <div class="thumbnail-overlay">
+                  <% min_price = number_to_currency(p.price_range[0]) %>
+                  <% max_price = number_to_currency(p.price_range[1]) %>
+                  <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+                  <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+                    <span class="product-price"><%= display_price %></span>
+                  <% end %>
+                </div>
+              </div>
+              <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+                <div class="product-mobile-price conceal"><%= display_price %></div>
+              <% end %>
+              <div class="product-title"><%= p.title %></div> 
+            </div>
+          <% end %>
+        </div>
+
+        <% content_for :js do %>
+          <script>
+            // Initialize the product grid
+            $('#product-grid').mediaBoxes({
+              boxesToLoadStart: 20,
+              boxesToLoad: 8,
+              search: '#search',
+              horizontalSpaceBetweenBoxes: 10,
+              verticalSpaceBetweenBoxes: 10,
+              searchTarget: '.product-title',
+              noMoreEntriesWord: "No more products"
+            });
+            $("#product-grid .media-box, #product-grid .media-box-hidden").each(function() {
+              $(this).click(function(event) {
+                window.location = "/products/" + $(this).attr("id").replace("product-","");
+              });
+            });
+          </script>
+        <% end %>
+      <% else  #  No products for given vendor %>
+
+        <div class="no-products">
+          <p>Sorry, no products were found.</p>
+        </div>
+
+      <% end %>
+
+    <% else  #  Invalid vendor  %>
+
+      <div class="no-products">
+        <p>Sorry, that vendor does not exist.</p>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>
+
+<% content_for :js do %>
+  <script>
+    // Fix the placeholder bug
+    $(window).load(function() {
+      $("#search").val("");
+      $("#search").change();
+    });
+  </script>
+<% end %>

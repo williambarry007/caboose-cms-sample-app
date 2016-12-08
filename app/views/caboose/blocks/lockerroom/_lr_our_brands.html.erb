@@ -1,0 +1,19 @@
+<% vendors = Caboose::Vendor.where(:site_id => @site.id, :status => "Active", :featured => true).order("random()").take(12) %>
+<% if vendors.count > 0 || editing %>
+	<div class="our-brands" id="block_<%= block.id %>">
+		<div class="constrain">
+			<h3 class="section-title"><%= block.child_value('section_title') %></h3>
+			<% vendors.each do |v| %>
+				<div class="image-unit">
+					<div class="table">
+						<div class="table-cell">
+							<a href="/products?vendor_id=<%= v.id %>" title="<%= v.name %>">
+								<img src="<%= v.image.url(:thumb) %>" alt="<%= v.name %>" />
+							</a>
+						</div>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	</div>
+<% end %>

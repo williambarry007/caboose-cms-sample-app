@@ -1,0 +1,149 @@
+<% side = page ? page.custom_field_value('show_sidebar') : 0 %>
+<% sidebar = side && (side == 1 || side == '1' || side == true) ? true : false %>
+<% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").limit(2) %>
+<% 
+api_key = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_api_key').exists?
+list_id = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_list_id').exists?
+header = Caboose::Block.where(:block_type_id => 2121, :page_id => page.id).first
+bi = header ? header.child_value('banner_image') : false
+bi_url = bi && !bi.url.include?('placehold') ? bi.url(:huge) : '/assets/eandateam/images/construction.jpg'
+spb = header ? header.child_value('show_page_banner') : 'No'
+%>
+
+<div class="content_wrapper subpage clearfix" id='block_<%= block.id %>'>
+  
+  <% if sidebar && !post %>
+    <div class="sidebar-bg"></div>
+    <aside class="subpage-sidebar">
+      <section>
+        <h4 class="title">About E &amp; A Team</h4>
+        <div class="about">
+          <p>E&amp;A Team, Inc. has been providing quality inspections, Fair Housing Training, and products to the multifamily housing industry since 1992</p>
+        </div>
+      </section>
+      <% if posts.count > 0 && false %>
+      <section>
+        <h4 class="title">Recent News</h4>
+        <ul class="post-list">
+          <% posts.each do |p| %>
+            <li>
+              <a href="<%= p.uri %>" class="title"><%= p.title %></a>
+              <p class="date"><%= p.created_at.strftime("%B %-d, %Y") %></p>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+      <% end %>
+      <section class="newsletter-form">
+        <h4 class="title">Newsletter Sign-up</h4>
+        <form id="newsletter-form">
+          <div class="grid-row name-row">
+            <div class="unit1of2 left">
+              <input type="text" name="first_name" placeholder="First Name" />
+            </div>
+            <div class="unit1of2 right">
+              <input type="text" name="last_name" placeholder="Last Name" />
+            </div>
+          </div>
+          <input type="hidden" name="capture_name" value="yes" />
+          <input type="email" name="email" placeholder="Email Address" />
+          <a href="#" class="btn" id="submit-newsletter-form">Submit</a>
+        </form>
+        <div id="message"></div>
+      </section>
+      <section>
+        <h4 class="title">Follow Us</h4>
+        <%== ApplicationHelper.social_links(site.id, "circle", "colored") %>
+      </section>
+    </aside>
+
+
+    <% content_for :js do %>
+      <script>
+        $(document).ready(function() {
+          function submit_newsletter(form_id) {
+            var mess = $("#" + form_id).next("#message");
+            mess.html("<p class='note loading'>Submitting form... </p>");
+            var form = $("#" + form_id); 
+            form.find("input, textarea").each(function() {
+              if ( $(this).attr("placeholder") == $(this).val() ) {
+                $(this).val("");
+              }
+            });
+            $.ajax({
+              url: '/mailchimp/subscribe',
+              type: 'post',
+              data: form.serialize(),
+              success: function(resp) {
+                if(resp.error) {
+                  form.find("input, textarea").each(function() {
+                    if ( $(this).val() == "" ) {
+                      $(this).val( $(this).attr("placeholder") );
+                    }
+                  });
+                  mess.html("<p class='note error'>" + resp.error + "</p>");
+                } 
+                if(resp.success) {
+                  form.slideUp(); 
+                  mess.html("<p class='note success'>" + resp.success + "</p>");
+                }
+              }
+            });
+          }
+          $("#submit-newsletter-form").click(function(event) {
+            event.preventDefault();
+            submit_newsletter("newsletter-form"); 
+            return false;
+          });
+        });
+      </script>
+    <% end %>
+
+  <% end %>
+
+  <div class="content_body subpage-content <%= sidebar && !post ? 'sidebar' : '' %>">
+
+    <% if header && spb && spb == "Yes" %>
+      <div class="subpage-banner" style="background-image:url(<%= bi_url %>);">
+        <div class="overlay"></div>
+        <h2 class="title"><%= page.title %></h2>
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/logo.png" alt="E & A Team" class="logo">
+      </div>
+    <% end %>
+
+
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>
+      <% if block.constrain == true %><div class='constrain'><% end %>
+      <%= raw controller_view_content %>
+      <% if block.constrain == true %></div><% end %>
+    <% elsif post %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <%
+      constrain_all = block.constrain_all
+      outer_header = block.constrain == true ? (constrain_all ? "<div class='constrain'>" : '') : ''
+      outer_footer = block.constrain == true ? (constrain_all ? "</div>" : '') : ''
+      inner_header = block.constrain == true ? (constrain_all ? '' : "<div class='constrain'>") : ''
+      inner_footer = block.constrain == true ? (constrain_all ? '' : "</div>") : ''
+      %>
+      <%= raw outer_header %>
+      <% block.children.each do |b| %>
+        <% if block.constrain && !b.full_width %><%= raw inner_header %><% end %>
+        <%= raw block.render(b, local_assigns) %>
+        <% if block.constrain && !b.full_width %><%= raw inner_footer %><% end %>
+      <% end %>
+      <%= raw outer_footer %>
+    <% else %>
+      <% if editing %>
+        <p style="border:1px dashed gray;padding:10px;">Empty content area. Click to add child blocks.</p>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<% if page %>
+  <% content_for :css do %>
+  <style>
+  .subpage-content { padding: <%= page.custom_field_value('vertical_padding') %> 0;}
+  </style>
+  <% end %>
+<% end %>

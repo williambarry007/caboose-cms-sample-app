@@ -1,0 +1,44 @@
+<%
+padding = block.child_value('padding')
+padding = '0' if padding.blank?
+bg_color = block.child_value('background_color')
+bg_color = 'transparent' if bg_color.blank?
+bg_image = block.child_value('background_image').url(:large)
+text_align = block.child_value('text_align')
+width = block.child_value('width')
+width = 'auto' if width.blank?
+vcc = block.child_value('vertically_center_content') == '1' ? true : false
+%>
+
+<div class="flex-grid-unit" id="block_<%= block.id %>">
+	<% if vcc %><div class="table"><div class="table-cell"><% end %>
+		<% block.children.where(:name => nil).each do |b| %>
+	    <%== block.render(b, local_assigns) %>
+	  <% end %>
+	<% if vcc %></div></div><% end %>
+</div>
+
+<% content_for :css do %>
+<style>
+#block_<%= block.id %> {
+	padding: <%= padding %>;
+	background-color: <%= bg_color %>;
+	text-align: <%= text_align %>;
+	-webkit-box-flex: 0 1 <%= width %>;
+  -moz-box-flex: 0 1 <%= width %>;
+  -webkit-flex: 0 1 <%= width %>;
+  -ms-flex: 0 1 <%= width %>;
+  flex: 0 1 <%= width %>;
+	<% if bg_image && !bg_image.include?('placehold') %>
+		background-image: url('<%= bg_image %>');
+	<% end %>
+}
+<% if block.children.where(:name => nil).count == 0 && bg_image && !bg_image.include?('placehold') # no content, background image %>
+	@media all and (max-width: 800px) {
+		#block_<%= block.id %> {
+			height: 300px;
+		}
+	}
+<% end %>
+</style>
+<% end %>

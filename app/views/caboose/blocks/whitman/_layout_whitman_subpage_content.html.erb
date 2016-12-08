@@ -1,0 +1,128 @@
+<div class="content_wrapper" id='block_<%= block.id %>'>
+  <div class="content_body subpage-content">
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>
+      <% if block.constrain == true %><div class='constrain'><% end %>
+      <%= raw controller_view_content %>
+      <% if block.constrain == true %></div><% end %>
+    <% elsif post %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <%
+      constrain_all = block.constrain_all
+      outer_header = block.constrain == true ? (constrain_all ? "<div class='constrain'>" : '') : ''
+      outer_footer = block.constrain == true ? (constrain_all ? "</div>" : '') : ''
+      inner_header = block.constrain == true ? (constrain_all ? '' : "<div class='constrain'>") : ''
+      inner_footer = block.constrain == true ? (constrain_all ? '' : "</div>") : ''
+      %>
+      <%= raw outer_header %>
+      <% block.children.each do |b| %>
+        <% if block.constrain && !b.full_width %><%= raw inner_header %><% end %>
+        <%= raw block.render(b, local_assigns) %>
+        <% if block.constrain && !b.full_width %><%= raw inner_footer %><% end %>
+      <% end %>
+      <%= raw outer_footer %>
+    <% else %>
+      <% if editing %>
+        <p style="border:1px dashed gray;padding:10px;width:94%;margin:0 auto;text-align:center;cursor:pointer;">Empty content area. Click to add child blocks.</p>
+      <% end %>
+    <% end %>
+
+
+    <div class="body-border top"></div>
+    <div class="body-border bottom"></div>
+
+
+    <div class="video-page-wrapper">
+
+    <a href="#" id="show-menu" data-effect="st-effect-12">
+          <span class="icon-menu-4"></span>
+          <span class="text">MENU</span>
+        </a>
+
+      <div class="overlay"></div>
+      <div class="table">
+        <div class="table-cell">
+          <div class="intro-text">
+            <h1 class="title">Virginia Mae Schmitt</h1>
+            <div class="line"></div>
+            <div class="preview"><p>I celebrate myself, and sing myself, and what I assume you shall assume, for every atom belonging to me as good belongs to you.</p></div>
+          </div>
+          <div class="scroll-text">
+            <span class="text">Scroll to continue</span>
+            <span class="icon-down-big"></span>
+          </div>
+        </div>
+      </div>
+      <div class="verse-text">
+        <h2 class="verse-title">Verse 1</h2>
+        <div class="line"></div>
+        <div class="body">
+      <p>
+I celebrate myself, and sing myself,<br />
+And what I assume you shall assume,<br />
+For every atom belonging to me as good belongs to you<br />
+I loafe and invite my soul,<br />
+I lean and loafe at my ease observing a spear of summer grass<br />
+My tongue, every atom of my blood, form’d from this soil, this air,<br />
+Born here of parents born here from parents the same, and their parents the same,<br />
+I, now thirty-seven years old in perfect health begin,<br />
+Hoping to cease not till death<br />
+Creeds and schools in abeyance,<br />
+Retiring back a while sufficed at what they are, but never forgotten,<br />
+I harbor for good or bad, I permit to speak at every hazard,<br />
+Nature without check with original energy<br /></p>
+        </div>
+      </div>
+      <div class="video-wrapper">
+        <video id='home-video' src="http://cabooseit.s3.amazonaws.com/assets/whitman/images/people.mp4" poster="http://cabooseit.s3.amazonaws.com/assets/whitman/images/people.jpg"></video>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<% if page %>
+  <% content_for :css do %>
+  <style>
+  /* .subpage-content { padding: <%= page.custom_field_value('vertical_padding') %> 0;} */
+  </style>
+  <% end %>
+<% end %>
+
+<% content_for :js do %>
+<script>
+  $('.st-content').scroll(function() {
+   // var voff = $(window).height$('#home-video').offset().top;
+    var offset = $('.st-content').scrollTop();
+    if ( offset > 0 && offset < 100 ) {
+      var opacity = (100 - offset) / 100;
+      $('.scroll-text').css('opacity',opacity);
+    }
+    if ( offset > 0 && offset < 150 ) {
+      $('.intro-text .line').css('width',(200 - offset));
+    }
+    if (offset >= 100) {
+      $('.scroll-text').css('opacity',0);
+    }
+    if ( offset > 100 && offset < 400) {
+      var opacity = (offset / 650);
+      $('.video-page-wrapper .overlay').css('opacity',opacity);
+    }
+    if ( $(window).height() >= $('#home-video').offset().top ) {
+      var fromBottom = $('.st-content-inner').height() - ($('.st-content').scrollTop() + $('.st-content').height());
+      var vidHeight = $('#home-video').height() + 10;
+      var factor = (vidHeight - fromBottom) / vidHeight * 100;
+      if ( factor > 80 ) {
+        var vid = document.getElementById("home-video");
+        vid.play(); 
+      }
+      else {
+        var vid = document.getElementById("home-video");
+        vid.pause(); 
+      }
+      $('#home-video').css('width',(factor + '%'));
+    //  console.log(factor);
+    }
+  });
+</script>
+<% end %>

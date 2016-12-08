@@ -1,0 +1,93 @@
+<%
+tagline = block.child_value('tagline')
+images = Caboose::Media.where(:media_category_id => 1337).order(:sort_order).all
+%>
+
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main subpage" id="block_<%= block.id %>">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/gamedaytents/images/elephant.png" alt="<%= site.description %>" width="62" height="51" />
+      </a>
+      <nav class="reveal">
+        <ul>
+          <li class="top-li"><a href="/" title="Home">Home</a></li>
+          <% pages = Caboose::Page.where(:parent_id => 2141, :hide => false).order(:sort_order).all %>
+          <% pages.each_with_index do |p,i| %>
+            <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+            <li class="top-li">
+              <% if subpages.count > 0 %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+                <div class="dropdown <%= (pages.count - i < 3) ? 'right' : '' %>">
+                  <div class="contain">
+                    <ul class="level-2">
+                      <% subpages.each do |s| %>
+                        <li class="li-2">
+                          <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                          <% if grandchildren.count > 0 %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                            <ul class="level-3">
+                              <% grandchildren.each do |g| %>
+                                <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                              <% end %>
+                            </ul>
+                          <% else %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% else %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+      <div class="menu-wrapper conceal">
+        <span class="text">MENU</span>
+        <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx" href="#mmenu" title="Menu">
+          <span>toggle menu</span>
+        </a>
+      </div>
+    </div>
+  </header>
+  <div class="home-banner">
+    <div class="overlay"></div>
+    <% if images && images.count > 0 %>
+      <div class='slide' id='slide0' style="background-image:url('<%= images.first.image.url(:huge) %>');"></div>
+    <% end %>
+    <div class="constrain">
+      <div class="content">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/gamedaytents/images/main_logo.png" alt="Game Day Tents" width="400" height="269" />
+        <h2 class="tagline"><%= tagline %></h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      <% if images && images.count > 1 %>
+        <% images.each_with_index do |m,index| %>
+          <% next if index == 0 %>
+          $("<div class='slide' id='slide<%= index %>' style='background-image:url(<%= m.image.url(:huge) %>);display:none;'></div>").insertAfter("#slide<%= index - 1 %>");
+        <% end %>
+      <% end %>
+      var $imgs = $(".home-banner").find(".slide"),
+        i = 0;
+      function changeImage(){
+          var next = (++i % $imgs.length);
+          $($imgs.get(next - 1)).fadeOut(700);
+          $($imgs.get(next)).fadeIn(700);
+      }
+      if ( $(window).width() > 700 ) {
+        var interval = setInterval(changeImage, 5000);
+      }
+    });
+  </script>
+<% end %>

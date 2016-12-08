@@ -1,0 +1,51 @@
+<div class="facebook-feed-block" id="block_<%= block.id %>">
+	<% 	
+		limit = block.child_value('posts_to_show')
+  	limit = limit.blank? ? 8 : limit.to_i
+    sc = Caboose::SocialConfig.where(:site_id => site.id).last
+    pid = sc ? sc.facebook_page_id : ''
+		posts = FacebookCache.where(:page_id => pid).order("date_created DESC").take(limit) 
+	%>
+  <% if !posts.blank? %>
+  	<h2 class="social-title">Facebook Feed</h2>
+    <% posts.each do |p| %>
+    	<%
+	    	message = p.message.nil? ? "" : p.message.truncate(300)
+        story = p.story.nil? ? "" : p.story.truncate(300)
+        description = p.description.nil? ? "" : p.description.truncate(300)
+        name = p.name.blank? ? "" : p.name
+		    picture = p.picture
+        link = p.link
+	    %>
+      <div class="fb-post clearfix">
+      	<div class="image-holder">
+          <% if p.profile_img %>
+            <img src="<%= p.profile_img %>" class="profile-pic" alt="<%= p.page_name %>">
+          <% end %>
+      	</div>
+      	<div class="text-wrapper">
+      		<h5 class="page-name"><%= p.page_name %> <span class="date"><%= time_ago_in_words(p.date_created) %> ago</span></h5>
+<!--       		<h6 class="date"><%= time_ago_in_words(p.date_created) %> ago</h6> -->
+          <div class="body-wrapper">
+            <% if !picture.blank? %>
+              <img src="<%= picture %>" class="post-image" alt="<%= p.page_name %>" />
+            <% end %>
+            <% if !story.blank? && name.blank? %><p class="post-story"><%== story %></p><% end %>
+            <% if !name.blank? %>
+              <% if !link.blank? %><a href="<%= link %>" target="_blank" class="post-link"><% end %>
+                <p class="post-name"><%== name %></p>
+              <% if !link.blank? %></a><% end %>
+            <% end %>
+            <% if !description.blank? %><p class="post-description"><%== description %></p><% end %>
+            <% if !message.blank? && !message.starts_with?('http') %><p class="post-body"><%== message %></p><% end %>
+            <!-- <a href='<%= p.post_url %>' target='_blank' class='post-link'>View Post</a> -->
+          </div>
+      	</div>
+      </div>
+    <% end %>
+  <% else %>
+    <% if editing %>
+      <p style="padding:10px;background:#fff;border:1px solid gray;text-align:center;">Empty Facebook feed. Please make sure page ID is correct in Social Media settings and allow 10 minutes for the feed to refresh.</p>
+    <% end %>
+  <% end %>
+</div>

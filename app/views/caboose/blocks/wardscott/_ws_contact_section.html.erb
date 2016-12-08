@@ -1,0 +1,68 @@
+<section class="contact-block clearfix" id="block_<%= block.id %>">
+	<img src="//d9hjv462jiw15.cloudfront.net/assets/wardscott/images/icons/up_arrow.png" id="arrow" />
+	<div class="constrain">
+		<div class="text-wrapper">
+			<h2 class="top-text"><%= block.child_value('top_text') %></h2>
+			<h6 class="bottom-text"><%= block.child_value('bottom_text') %></h6>
+		</div>
+		<div class="grid-row">
+			<div class="unit1of2 unit-info">
+				<div class="description">
+					<%== block.child_value('description') %>
+				</div>
+				<div class="contact-info">
+					<div class="field">
+						<span class="icon-phone"></span>
+						<span class="contact-title">call us</span>
+						<span class="contact-value"><%= block.child_value('phone_number') %></span>
+					</div>
+					<div class="field">
+						<span class="icon-location"></span>
+						<span class="contact-title">office</span>
+						<span class="contact-value"><%= block.child_value('office_address') %></span>
+					</div>
+					<div class="field">
+						<span class="icon-mail"></span>
+						<span class="contact-title">information</span>
+						<span class="contact-value"><a href="mailto:<%= block.child_value('email_address') %>"><%= block.child_value('email_address') %></a></span>
+					</div>
+					<div class="field">
+				<!-- 		<span class="contact-value">you can also follow us via</span> -->
+						<%== ApplicationHelper.social_links(site.id, "icon") %>
+					</div>
+				</div>
+			</div>
+			<div class="unit1of2 unit-form">
+				<form id="contact-form">
+					<input type="hidden" name="form_name" value="Contact Form" />
+					<input type="hidden" name="block_id" value="<%= block.id %>" />
+					<div class="grid-row">
+						<div class="unit1of2">
+							<input type="text" name="name_required" placeholder="your name" />
+						</div>
+						<div class="unit1of2">
+							<input type="email" name="email_required" placeholder="your email" />
+						</div>
+					</div>
+					<div class="field">
+						<textarea name="message_required" cols="30" rows="5" placeholder="tell us now!"></textarea>
+					</div>
+					<a class="red btn" id="submit-contact-form">send</a>
+				</form>
+				<div id="message"></div>
+			</div>
+		</div>
+	</div>
+	<% content_for :js do %>
+		<%= javascript_include_tag 'form_submit.js' %>
+		<script>
+			$(document).ready(function() {
+        $('#submit-contact-form').click(function(event) {
+          event.preventDefault(); 
+          submit_form("contact-form");
+          return false;
+        });
+      });
+		</script>
+	<% end %>
+</section>

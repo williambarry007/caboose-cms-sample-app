@@ -1,0 +1,33 @@
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="copyright">
+      <p>Your savings federally insured to at least $250,000 and backed by the full faith and credit of the United States Government.<br />
+        (205) 759-1595 or (800) 225-0110<br />
+        Alabama One Credit Union &copy; <%= DateTime.now.strftime('%Y') %>, All Rights Reserved
+      </p>
+    </div>
+    <ul class="links">
+      <li><a href="http://d9hjv462jiw15.cloudfront.net/media/17657_ao-privacy-notice-2015.pdf" target="_blank" title="Privacy Notice">Privacy Notice</a></li>
+      <li><a href="/secure" title="Privacy and Security">Privacy &amp; Security</a></li>
+      <li><a href="/disclosures" title="Disclosures">Disclosures</a></li>
+    </ul>
+    <div class="image-links">
+      <a href="http://portal.hud.gov/hudportal/HUD?src=/program_offices/fair_housing_equal_opp" target="_blank" title="Equal Housing Lender">
+        <img class="equal" src="<%= asset_path 'alabamaone/images/equal.png' %>" alt="Equal Housing Lender" width="130" height="35" class='equal' />
+      </a>
+      <a href="https://www.ncua.gov/" target="_blank" title="NCUA">
+        <img class="ncua" src="<%= asset_path 'riverfall/images/ncua.png' %>" alt="NCUA" width="130" height="61" class='ncua' />
+      </a>
+      <a href="http://www.cusc-al.com/" target="_blank">
+        <img src="<%= asset_path 'alabamaone/images/cusc.jpg' %>" alt="CU Service Centers" width="140" height="40" class='cusc' />
+      </a>
+    </div>
+    <% # ApplicationHelper.social_links(site.id, "icon", "white") %>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

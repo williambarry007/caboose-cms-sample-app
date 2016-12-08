@@ -1,0 +1,230 @@
+<%
+title = block.child_value('title')
+coords_northern = [66,23,79,41,68,143,233,149,328,148,356,184,368,166,382,165,385,126,387,119,398,117,453,59,458,47,454,21,101,19]
+coords_jsb = [329,156,318,160,312,178,298,192,285,211,268,216,256,229,256,239,245,251,242,266,221,281,216,295,203,304,246,345,258,375,273,386,272,375,313,375,324,384,332,367,326,357,350,330,344,297,338,291,326,269,312,257,319,249,321,260,311,242,337,235,352,217,346,210,357,185]
+coords_central = [123,363,75,382,70,393,43,392,23,600,27,632,82,631,82,623,73,614,89,579,148,581,149,601,159,607,270,609,272,649,279,660,302,665,304,762,572,757,568,735,554,726,553,707,554,671,560,654,547,614,547,588,557,578,558,540,572,528,580,522,567,509,567,474,558,466,535,414,532,409,524,367,333,368,323,386,311,375,272,379,270,423,205,422,189,417,189,391,141,389,126,384]
+coords_southern = [83,632,25,634,35,872,59,875,71,889,93,815,94,806,108,794,102,803,112,845,106,848,110,867,132,889,130,895,100,897,95,903,102,909,166,897,163,885,172,889,175,882,195,870,195,864,183,849,194,830,181,817,157,792,162,779,161,763,304,761,300,664,279,659,271,650,270,609,159,609,162,603,151,602,150,581,87,578,70,611,83,622]
+coords_north_central = [68,146,41,391,68,396,74,385,123,362,123,383,189,391,187,414,205,420,270,423,270,377,256,376,248,361,248,345,234,339,222,334,205,307,347,307,349,333,329,354,331,366,398,371,494,369,523,366,460,44,450,62,401,117,388,121,386,141,384,164,370,166,356,183,346,205,342,232,328,236,319,252,326,275,339,297,346,305,207,305,209,305,221,279,241,269,246,253,255,243,255,230,281,213,303,190,318,170,329,157,327,149,228,152,102,149]
+def get_coords(array, ratio)
+	array.map{ |c| (c * ratio).to_i }.join(',').gsub('[','').gsub(']','')
+end
+%>
+
+<% regions = block.children.where("block_type_id != 1930 AND block_type_id != 2014").order(:sort_order).all %>
+
+<% if modal %>
+	<% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+  <% if block.child("show_associations") %>
+    <div id="block_<%= block.child('show_associations').id %>" style="text-decoration:underline;cursor:pointer;">
+      Show Associations: <%= block.child_value('show_associations') %>
+    </div>
+  <% end %>
+  <% if block.child_value('show_associations') != "Yes" %>
+	<p>Regions:</p>
+  <ul>
+    <% regions.each_with_index do |s,i| %>
+      <% name = s.name.gsub("_"," ").titleize %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%== name.blank? ? ("Region #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <% end %>
+<% else %>
+
+		<div class="regional-map-block clearfix" id="block_<%= block.id %>">
+			<% if !title.blank? %> <h3 class="map-title"><%= title %></h3><% end %>
+			<div class="map-wrapper">
+
+				<div class="map-container">
+					<div class="layer" id="background">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/map/background.png" usemap="#region-map">
+					</div>
+					<div class="layer region" id="northern">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/map/northern.png" usemap="#region-map">
+					</div>
+					<div class="layer region" id="southern">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/map/southern.png" usemap="#region-map">
+					</div>
+					<div class="layer region" id="north-central">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/map/north_central.png" usemap="#region-map">
+					</div>
+					<div class="layer region" id="jefferson-shelby-blount">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/map/jefferson_shelby_blount.png" usemap="#region-map">
+					</div>
+					<div class="layer region" id="central">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/map/central.png" usemap="#region-map">
+					</div>
+				</div>
+
+				<map name="region-map" id="region-map">
+					<area href="#" id="northern" title="Northern Region" shape="poly" coords="<%= get_coords(coords_northern, 0.5) %>" target="_blank" />
+					<area href="#" id="north-central" title="North Central Region" shape="poly" coords="<%= get_coords(coords_north_central, 0.5) %>" target="_blank" />
+					<area href="#" id="jefferson-shelby-blount" title="Jefferson Shelby Blount Region" shape="poly" coords="<%= get_coords(coords_jsb, 0.5) %>" target="_blank" />
+					<area href="#" id="central" title="Central Region" shape="poly" coords="<%= get_coords(coords_central, 0.5) %>" target="_blank" />
+					<area href="#" id="southern" title="Southern Region" shape="poly" coords="<%= get_coords(coords_southern, 0.5) %>" target="_blank" />
+				</map>
+<!-- 
+				<map name="region-map-small" id="region-map-small">
+					<area href="#" id="northern" title="Northern Region" shape="poly" coords="<%= get_coords(coords_northern, 0.4) %>" target="_blank" />
+					<area href="#" id="north-central" title="North Central Region" shape="poly" coords="<%= get_coords(coords_north_central, 0.4) %>" target="_blank" />
+					<area href="#" id="jefferson-shelby-blount" title="Jefferson Shelby Blount Region" shape="poly" coords="<%= get_coords(coords_jsb, 0.4) %>" target="_blank" />
+					<area href="#" id="central" title="Central Region" shape="poly" coords="<%= get_coords(coords_central, 0.4) %>" target="_blank" />
+					<area href="#" id="southern" title="Southern Region" shape="poly" coords="<%= get_coords(coords_southern, 0.4) %>" target="_blank" />
+				</map> -->
+
+<!-- 				<div class="mobile-region-selector conceal">
+					<a href="#" class="btn mobile-region" id="northern" title="North America">Grain Game North America</a>
+					<a href="#" class="btn mobile-region" id="south-america" title="South America">Grain Game South America</a>
+					<a href="#" class="btn mobile-region" id="europe" title="Europe">Grain Game Europe</a>
+					<a href="#" class="btn mobile-region" id="asia" title="Asia">Grain Game Asia</a>
+					<a href="#" class="btn mobile-region" id="africa" title="Africa">Grain Game Africa</a>
+					<a href="#" class="btn mobile-region" id="australia" title="Australia">Grain Game Australia</a>
+				</div> -->
+
+<!-- 				<div class="instructions reveal">
+					<p>Click on each region to see what The Grain Game is doing there!</p>
+				</div> -->
+
+			</div>
+
+			<div class="body-wrapper">
+				<div class="constrain">
+
+
+					<div class="news-ads-wrapper clearfix">
+
+						<div class="news-wrapper">
+				
+			
+							<div class="news-list-wrapper">
+
+								<% regions.each_with_index do |r, i| %>
+
+									<% reg = r.name.gsub("_","-") %>
+									<% nam = r.name.gsub("-"," ").titleize %>
+
+									<div class="region-unit clearfix <%= reg %>" <%= i != 0 ? raw("style='display:none;'") : "" %> >
+
+										<% if block.child_value('show_associations') == "Yes" %>
+											
+											<h6 class="regions-title"><%= nam %></h6>
+
+											<% associations = Aar::Association.where(:region => nam).reorder(:name).all %>
+
+											<ul>
+												<% associations.each do |a| %>
+													<li>
+														<a href="/about/local-associations/<%= a.slug %>" title="<%= a.name %>"><%= a.name %></a>
+													</li>
+												<% end %>
+											</ul>
+
+										<% else %>
+
+											<% if r.children.count > 0 %>
+									      <% r.children.each do |b| %>
+									      	<% next if b.block_type_id == 1440 %>
+									      	<%= raw block.render(b, local_assigns) %>
+									      <% end %>
+									    <% end %>
+
+										<% end %>
+
+						        
+									</div>
+
+								<% end %>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+
+
+		<% content_for :js do %>
+			<script>
+				$("area").hover(function() {
+
+					var cont = $(this).attr("id");
+				//	console.log("hovering " + cont);
+					var width = $(window).width();
+					if ( width > 800 ) {
+						$(".region").hide();
+						$("#" + cont).show();
+					}
+				});
+				// $(".icon-globe#global").click(function() {
+				// 	var cont = $(this).attr("id");
+				// 	var cont_title = $(this).attr("title");
+				// 	$(".region-unit").hide();
+				// 	if ( cont_title == "Global" ) {
+				// 		$(".slider-title").text("The Global Church");
+				// 		$(".slider-title").attr("id","global");
+				// 	}
+				// 	else {
+				// 		$(".slider-title").text("Grain Game " + cont_title);
+				// 		$(".slider-title").attr("id",cont_title.replace(" ","-"));
+				// 	}
+				// 	$(".region-unit." + cont).fadeIn();
+				// });
+				$("area, .mobile-region").click(function(event) {
+					event.preventDefault();
+					var cont = $(this).attr("id");
+					var cont_title = $(this).attr("title");
+			//		$(".no-posts").hide();
+					$(".region-unit").hide();
+					// if ( cont_title == "Global" ) {
+					// 	$(".slider-title").text("The Global Church");
+					// 	$(".slider-title").attr("id","global");
+					// }
+					// else {
+					// 	$(".slider-title").text("Grain Game " + cont_title);
+					// 	$(".slider-title").attr("id",cont_title.replace(" ","-"));
+					// }
+					$(".region-unit." + cont + "-region").fadeIn();
+			//		console.log("size: " + $(".region-unit." + cont).length.toString());
+					// if ( $(".region-unit." + cont + "-region").length == 0 ) {
+					// 	$(".no-posts").show();
+					// }
+					// $(".slider-block-container").hide();
+					// $(".slider-block-container[data-region='" + cont + "']").fadeIn();
+				});
+				// $(window).resize(function() {
+				// 	var width = $(window).width();
+				// 	if ( width < 1000 && width > 800 ) {
+				// 		$(".layer img").attr("usemap","#region-map-small");
+				// 	}
+				// 	else if ( width < 800 ) {
+				// 		$(".layer img").attr("usemap","");
+				// 	}
+				// 	else {
+				// 		$(".layer img").attr("usemap","#region-map");
+				// 	}
+				// });
+				// $(window).load(function() {
+				// 	var width = $(window).width();
+				// 	if ( width < 1000 && width > 800 ) {
+				// 		$(".layer img").attr("usemap","#region-map-small");
+				// 	}
+				// 	else if ( width < 800 ) {
+				// 		$(".layer img").attr("usemap","");
+				// 	}
+				// 	else {
+				// 		$(".layer img").attr("usemap","#region-map");
+				// 	}
+				// });
+			</script>
+		<% end %>
+
+<% end %>

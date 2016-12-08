@@ -1,0 +1,49 @@
+<%
+align = block.child_value('text_align').blank? ? "center" : block.child_value('text_align')
+color = block.child_value('background_color').blank? ? "#fff" : block.child_value('background_color')
+height = block.child_value('height').blank? ? "auto" : block.child_value('height')
+if height != "auto" && !height.include?('px') 
+	height = height + "px"
+end
+width = block.child_value('width').blank? ? "25%" : block.child_value('width')
+text = block.child_value('text_overlay').blank? ? "" : block.child_value('text_overlay')
+image = block.child_value('background_image').blank? ? "" : block.child_value('background_image')
+%>
+
+
+<div class="grid-unit-block" id="block_<%= block.id %>">
+	<div class="contain">
+		<div class="table">
+			<div class="table-cell">
+				<div class="text-wrapper">
+					<div class="richtext">
+						<%== text %>
+						<% block.children.each do |b| %>
+							<% next if b.block_type_id == 1034 || b.block_type_id == 1035 || b.block_type_id == 1036 || b.block_type_id == 1037 || b.block_type_id == 1038 || b.block_type_id == 1039 %>
+							<%= raw block.render(b, local_assigns) %>
+						<% end %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		#block_<%= block.id %> {
+			width: <%= width %>;
+			height: <%= height %>;
+			text-align: <%= align %>;
+		}
+		#block_<%= block.id %> .contain {
+			background-color: <%= color %>;
+			<% if !image.blank? && !image.url.blank? && !image.url.include?('placehold') %>
+				background-image: url('<%= image.url(:large) %>');
+				background-size: cover;
+				background-position: center center;
+				-ms-behavior: url('/bg.htc');
+			<% end %>
+		}
+	</style>
+<% end %>

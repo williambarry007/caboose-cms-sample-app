@@ -1,0 +1,22 @@
+<div class="footer main" id="block_<%= block.id %>">
+  <div class="wrapper">
+    <div class="constrain">
+      <div id="TA_rated920" class="TA_rated"><ul id="nNnt1r" class="TA_links Ta4lTkw"><li id="iDxufhUJc" class="kyPZaE1Y"><a target="_blank" href="http://www.tripadvisor.com/"><img src="http://www.tripadvisor.com/img/cdsi/img2/badges/ollie-11424-2.gif" alt="TripAdvisor"/></a></li></ul></div><script src="http://www.jscache.com/wejs?wtype=rated&uniq=920&locationId=8416877&lang=en_US&display_version=2"></script>
+      <a href="/"><img src="//d9hjv462jiw15.cloudfront.net/assets/rivermarket/images/logo.png" width="100" /></a>
+      <%== ApplicationHelper.social_links(site.id, "circle") %>
+      <ul class="links">
+        <% pages = Caboose::Page.where(:parent_id => 26).where(:hide => false).order(:sort_order).all %>
+        <% pages.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p) %></li>
+        <% end %>
+      </ul>
+      <a href="http://www.usgulfcoaststatesgeotourism.com/content/tuscaloosa-river-market/gul3165DE4D00F460B59" target="_blank" title="Geotourism"><img src="//d9hjv462jiw15.cloudfront.net/assets/rivermarket/images/geotourism.png" alt="Geotourism" id="geotourism"></a>
+    </div>
+  </div>
+  <div class="nine">
+    <span>site built and loved by:</span>
+    <a href="http://www.nine.is" target="_blank" title="The Nine">
+      <%= render 'svg/nine' %>
+    </a>
+  </div>
+</div>

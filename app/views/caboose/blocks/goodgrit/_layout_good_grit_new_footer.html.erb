@@ -1,0 +1,48 @@
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="top">
+    <h1 class="title"><span class="good">Good</span><br /><span class="grit">Grit</span></h1>
+  </div>
+  <div class="bottom"></div>
+  <div class="constrain">
+
+  <span itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Good Grit Magazine">
+    <link itemprop="url" href="http://www.goodgritmag.com">
+    <ul class='social-links'>
+      <li><a itemprop="sameAs" href='https://www.facebook.com/GoodGritMagazine' target='_blank' title='Facebook' class='icon-circle-facebook white'></a></li>
+      <li><a itemprop="sameAs" href='https://www.twitter.com/goodgritmag' target='_blank' title='Twitter' class='icon-circle-twitter white'></a></li>
+      <li><a itemprop="sameAs" href='https://www.instagram.com/goodgritmag' target='_blank' title='Instagram' class='icon-circle-instagram white'></a></li>
+      <li><a itemprop="sameAs" href='http://www.goodgritmag.com/feed?format=rss' target='_blank' title='RSS' class='icon-circle-rss white'></a></li>
+    </ul>   
+  </span>
+
+    <div class="search-wrapper">
+      <a href="#" id="show-search" title="Search" class="icon-search"></a>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 879, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+        <li><a href="/terms" title="Terms and Conditions">Terms &amp; Conditions</a></li>
+      </ul>
+    </nav>
+    <% if false %>
+    <% user = controller ? controller.logged_in_user : nil %>
+    <p class="login-logout">
+      <% if user && user.id != 2 %>
+        <a href="/logout" title="Logout">Logout</a>
+      <% else %>
+        <a href="#" title="Login" class="show-login">Login</a>
+      <% end %>
+    </p>
+    <% end %>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

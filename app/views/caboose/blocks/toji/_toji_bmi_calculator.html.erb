@@ -1,0 +1,117 @@
+
+
+<div class="bmi-calculator" id="block_<%= block.id %>">
+
+<h3>BMI Calculator</h3>
+<div class="instructions">
+  Enter your weight in kilograms and your height in centimeters in the form below and press the "Let's see" button (Please read disclaimer below before using this form)
+</div>
+
+<form name="BMI" method="POST">
+
+  <div class="field">
+    <label>Your Weight (lb)</label>
+    <input type="TEXT" name="weight"  onFocus="this.form.weight.value=''">
+  </div>
+  <div class="field">
+    <label>Your Height (in)</label>
+    <input type="TEXT" name="height" onFocus="this.form.height.value=''">
+  </div>
+  <div class="field">
+    <label>Your BMI</label>
+    <p id="bmi">?</p>
+  </div>
+  <div class="field">
+    <p id="my_comment"></p>
+  </div>
+
+  <input type="button" class="btn" value="Calculate" onClick="computeform(this.form)">
+  <input type="reset"  class="btn" value="Reset" onClick="Clearform(this.form)">
+
+</form>
+
+<div id="message"></div>
+
+<% content_for :js do %>
+
+<script>
+
+function Clearform(form){
+
+    form.weight.value = "";
+    form.height.value = "";
+    $("#bmi").html("");
+    $("#message").html("");
+
+}
+
+function bmi(weight, height) {
+
+          bmindx=(weight/eval(height*height))*703.0704;
+          return bmindx;
+}
+
+function checkform(form) {
+
+       if (form.weight.value==null||form.weight.value.length==0 || form.height.value==null||form.height.value.length==0){
+            $("#message").html("<p class='note error'>Please complete the form first.</p>");
+            return false;
+       }
+
+       else if (parseFloat(form.height.value) <= 0||
+                parseFloat(form.height.value) >=500||
+                parseFloat(form.weight.value) <= 0||
+                parseFloat(form.weight.value) >=500){
+                $("#message").html("<p class='note error'>Please input valid values.</p>");
+                Clearform(form);
+                return false;
+       }
+       return true;
+
+}
+
+function computeform(form) {
+
+       if (checkform(form)) {
+
+       yourbmi=Math.round(bmi(form.weight.value, form.height.value));
+       $("#bmi").html(yourbmi);
+
+       if (yourbmi >40) {
+          $("#message").html("<p class='note success'>You are very obese.</p>");
+       }
+
+       else if (yourbmi >30 && yourbmi <=40) {
+          $("#message").html("<p class='note success'>You are obese.</p>");
+       }
+
+       else if (yourbmi >27 && yourbmi <=30) {
+          $("#message").html("<p class='note success'>You are overweight.</p>");
+       }
+
+       else if (yourbmi >22 && yourbmi <=27) {
+          $("#message").html("<p class='note success'>You are slightly overweight.</p>");
+       }
+
+       else if (yourbmi >=21 && yourbmi <=22) {
+          $("#message").html("<p class='note success'>Perfect!</p>");
+       }
+
+       else if (yourbmi >=18 && yourbmi <21) {
+          $("#message").html("<p class='note success'>You are too thin.</p>");
+       }
+
+       else if (yourbmi >=16 && yourbmi <18) {
+          $("#message").html("<p class='note success'>You are way too thin.</p>");
+       }
+
+       else if (yourbmi <16) {
+          $("#message").html("<p class='note success'>You are very undernourished.</p>");
+       }
+
+       }
+       return;
+}
+
+</script>
+<% end %>

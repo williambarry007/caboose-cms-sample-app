@@ -1,0 +1,138 @@
+<% images = block.children.where(:block_type_id => 911).order(:sort_order).all %>
+
+<% if modal %>
+
+  <% if block.child("line_1") %>
+    <div id="block_<%= block.child('line_1').id %>" style="text-decoration:underline;cursor:pointer;">
+      Line 1: <%= block.child_value('line_1') %>
+    </div>
+  <% end %>
+
+  <% if block.child("line_2") %>
+    <div id="block_<%= block.child('line_2').id %>" style="text-decoration:underline;cursor:pointer;">
+      Line 2: <%= block.child_value('line_2') %>
+    </div>
+  <% end %>
+
+  <p>Images:</p>
+  <ul>
+    <% images.each_with_index do |s,i| %>
+      <% name = s.child_value('alt_text') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Image #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new image!</a>
+
+<% else %>
+
+<% img = (images.count > 0 && images.first.child_value('image') && !images.first.child_value('image').url(:huge).include?('placehold')) ? images.first.child_value('image').url(:huge) : "http://d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/slides/slide_1.jpg" %>
+<% line_1 = block.child_value('line_1').blank? ? "welcome to" : block.child_value('line_1') %>
+<% line_2 = block.child_value('line_2').blank? ? "The City of Northport" : block.child_value('line_2') %>
+<div class="home-banner" id="block_<%= block.id %>">
+  <div class="slide" id="slide0" style="background-image:url(<%= img %>);"></div>
+  <div class="overlay"></div>
+  <div class="constrain">
+
+    <div class="sub-nav reveal">
+      <ul>
+<!--         <li><a href="/government">Government</a></li> -->
+        <li><a href="/job-openings" title="Job Openings">Job Openings</a></li>
+      <!--   <li><a href="/news">News</a></li> -->
+        <li><a href="/forms" title="Forms">Forms</a></li>
+        <li id="last"><a href="/contact-us" title="Contact Us">Contact Us</a></li>
+      </ul>
+    </div><!-- .sub-nav .reveal -->
+
+    <div class="social reveal">
+      <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+    </div>
+    
+    <div class="text">
+      <h2><%= line_1 %></h2>
+      <h1><%= line_2 %></h1>
+    </div>
+
+
+  </div><!-- .constrain -->
+
+  <div class="bottom">
+    <div class="banner-links reveal">
+      <div class="constrain">
+        <!-- navigation panel -->
+        <div class="grid-row reveal">
+
+          <div class="unit unit1of5">
+            <a href="/leadership" title="Leadership">
+              <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/leadership.png" alt="Leadership" class="icon">
+              <h3>Leadership</h3>
+            </a>
+          </div>
+
+          <div class="unit unit1of5">
+            <a href="/departments" title="Departments">
+              <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/departments.png" alt="Departments" class="icon">
+              <h3>Departments</h3>
+            </a>
+          </div>
+
+          <div class="unit unit1of5">
+            <a href="/visitors" title="Visitors">
+              <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/visitors.png" alt="Visitors" class="icon">
+              <h3>Visitors</h3>
+            </a>
+          </div>
+
+          <div class="unit unit1of5">
+            <a href="/residents" title="Residents">
+              <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/residents.png" alt="Residents" class="icon">
+              <h3>Residents</h3>
+            </a>
+          </div>
+
+          <div class="unit unit1of5">
+            <a href="/i-want-to" title="I Want To">
+              <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/retailers.png" alt="Retailers" class="icon">
+              <h3>I Want To...</h3>
+            </a> 
+          </div>
+
+        </div><!-- .grid-row .reveal -->
+
+        <div class="mobile_show_link beneath conceal">
+          <a href="#" id="show_banner_links" title="Show Menu">Show Menu</a>
+        </div>
+
+      </div><!-- .constrain -->
+    </div><!-- .banner-links -->
+  </div><!-- .bottom -->
+</div>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      // load other slides after page load
+      <% images.each_with_index do |i, index| %>
+        <% next if index == 0 %>
+        <% img = i.child_value('image').url(:huge) %>
+        <% next if img.include?('placehold') %>
+        $("<div class='slide' id='slide<%= index %>' style='display:none;background-image:url(<%= img %>);'></div>").insertAfter("#slide<%= index - 1 %>");
+      <% end %>
+
+      var $imgs = $(".home-banner").find(".slide"),
+        i = 0;
+
+      function changeImage(){
+          var next = (++i % $imgs.length);
+          $($imgs.get(next - 1)).fadeOut(700);
+          $($imgs.get(next)).fadeIn(700);
+      }
+      if ( $(window).width() > 700 ) {
+        var interval = setInterval(changeImage, 5000);
+      }
+    });
+  </script>
+<% end %>
+
+<% end %>

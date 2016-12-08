@@ -1,0 +1,69 @@
+<%
+  title      = block.child_value('title')
+  services   = block.children.where(:block_type_id => 3082).all
+  industries = services.collect { |s| s.child_value('industry') }.uniq
+%>
+
+<% if modal %>
+
+  <% if block.child("title") %>
+      <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+        Title: <%= block.child_value('title') %>
+      </div>
+  <% end %>
+  <ul style="list-style-type:none;">
+    <% industries.each_with_index do |industry, i| %>
+      <li>
+        <%= "#{industry}" %>
+      </li>
+      <% services.select { |s| s.child_value('industry') == industry }.each do |is| %>
+        <% service_title = is.child_value('title') %>
+        <li id="block_<%= is.id %>" style="text-decoration:underline;cursor:pointer;padding-left:10px;">
+          <%= service_title.blank? ? ("Service #{(i + 1).to_s}") : "  - #{service_title}" %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new service!</a>
+
+<% else %>
+
+  <div class="wd_services clearfix" id="block_<%= block.id %>">
+    <div class="constrain">
+      <h4><%= title %></h4>
+      <div id="industries">
+        <% industries.each_with_index do |industry, i| %>
+          <div class="industry industry-<%= i %> <% if i == 0 %>active"<% end %>" onclick="pager(<%= i %>)" ><%= industry %></div>
+        <% end %>
+      </div>
+      <div id="industry-page-container">
+        <% industries.each_with_index do |industry, i| %>
+          <div class="industry-page" id="industry-page-<%= i %>" <% if i != 0 %>style="display:none;"<% end %>>
+            <div class="grid-row">
+              <% is = services.select { |s| s.child_value('industry') == industry } %>
+              <% c = is.count %>
+              <% lc = c - (c % 4) %>
+              <% is.each_with_index do |service, j| %>
+                <div class="unit1of4" <% if j == lc %>style="margin-left:<%= 12.5 * (4 - (c % 4)) %>%;"<% end %> >
+                  <%= raw block.render(service, local_assigns) %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+<% end %>
+
+<% content_for :js do %>
+  <script>
+    function pager(page_number) {
+      $('.industry-' + page_number).siblings().removeClass("active");
+      $('.industry-' + page_number).addClass("active");
+      $('#industry-page-' + page_number).siblings().hide();
+      $('#industry-page-' + page_number).show();
+    }
+  </script>
+<% end %>

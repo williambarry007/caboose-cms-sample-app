@@ -1,0 +1,18 @@
+<header class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/tapp/images/main_logo.png" alt="<%= site.description %>" width="120" height="51" />
+    </a>
+    <div class="center-logo">
+      <a href="/" class="text-logo">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/tapp/images/text_logo.png" alt="<%= site.description %>" width="205" height="51" />
+      </a>
+    </div>
+    <div class="right">
+      <%== ApplicationHelper.social_links(site.id, "icon", "colored") %>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </div>
+</header>

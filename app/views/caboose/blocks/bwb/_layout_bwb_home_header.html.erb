@@ -1,0 +1,144 @@
+<% img = block.child_value('background_image') ? block.child_value('background_image').url(:huge) : "//d9hjv462jiw15.cloudfront.net/assets/bwb/images/brewing.jpg" %>
+
+<% 
+api_key = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_api_key').exists?
+list_id = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_list_id').exists?
+%>
+
+<div id="block_<%= block.id %>">
+  <header class="white">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="Home">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/bwb/images/main_logo.png" alt="Black Warrior Brewing Company" id="text">
+      </a>
+      <a class="show-menu-link" href="#" id="show-menu">
+        <span class="icon-menu-4"></span>
+        <p>Menu</p>
+      </a>
+    </div>
+  </header>
+
+  <div class="top-socials reveal">
+    <div class="constrain">
+      <ul class='social-links'>
+        <li><a href='https://www.facebook.com/304379426305946' target='_blank' title='Facebook' class='icon-facebook white'></a></li>
+        <li><a href='https://www.twitter.com/blackwarriorbc' target='_blank' title='Twitter' class='icon-twitter white'></a></li>
+        <li><a href='https://www.instagram.com/blackwarriorbrewing' target='_blank' title='Instagram' class='icon-instagram white'></a></li>
+        <li><a href="https://untappd.com/BlackWarriorBrewingCo" target="_blank" title="Untappd" class="icon-untappd white"></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="home-banner">
+    <div class="image-holder" style="background-image:url(<%= img %>);">
+<!--       <div class="overlay"></div> -->
+    </div>
+    <div class="constrain">
+      <div class="text">
+        <div class="top">
+          <h4>Location</h4>
+          <p>2216 University Blvd. | Tuscaloosa, Alabama 35401</p>
+          <a href="https://goo.gl/T871Pb" target="_blank" title="Directions" class="btn">Get Directions</a>
+        </div>
+        <div class="bottom">
+          <%== block.child_value('banner_text') %>
+        </div>
+
+        <div class="mailchimp-form-block">
+          <% if api_key && list_id %>
+
+              <div class="body">Sign up for our newsletter!</div>
+              <form id="newsletter-form">
+                <input type="email" name="email" placeholder="Email Address" />
+                <a href="#" class="btn" id="submit-newsletter-form">Submit</a>
+              </form>
+              <div id="message"></div>
+
+          <% elsif editing %>
+            <p style="border:1px dashed red;padding:10px;">MailChimp API Key and List ID must be set for this form to work.</p>
+          <% end %>
+        </div>
+
+      </div>
+
+
+
+
+
+    </div>
+  </section>
+
+  <header class="color">
+    <div class="constrain">
+      <div class="logo-link">
+        <a href="/" title="Home">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/bwb/images/dark_logo.png" alt="Black Warrior Brewing Company">
+        </a>
+      </div>
+      <a class="show-menu-link" href="#" id="show-menu">
+        <span class="icon-menu-4"></span>
+        <p>Menu</p>
+      </a>
+    </div>
+  </header>
+</div>
+
+<% content_for :css do %>
+<style>
+  .mailchimp-form-block {
+    color: #fff;
+    font-size: 15px;
+    padding: 0;
+    margin-top: 30px;
+  }
+  .mailchimp-form-block form {
+    margin: 8px auto 5px auto;
+    text-align: center;
+    max-width: 350px;
+  }
+  .mailchimp-form-block form .btn {
+    float: none;
+  }
+</style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      function submit_newsletter(form_id) {
+        var mess = $("#" + form_id).next("#message");
+        mess.html("<p class='note loading'>Submitting form... </p>");
+        var form = $("#" + form_id); 
+        form.find("input, textarea").each(function() {
+          if ( $(this).attr("placeholder") == $(this).val() ) {
+            $(this).val("");
+          }
+        });
+        $.ajax({
+          url: '/mailchimp/subscribe',
+          type: 'post',
+          data: form.serialize(),
+          success: function(resp) {
+            if(resp.error) {
+              form.find("input, textarea").each(function() {
+                if ( $(this).val() == "" ) {
+                  $(this).val( $(this).attr("placeholder") );
+                }
+              });
+              mess.html("<p class='note error'>" + resp.error + "</p>");
+            } 
+            if(resp.success) {
+              form.slideUp(); 
+              mess.html("<p class='note success'>" + resp.success + "</p>");
+            }
+          }
+        });
+      }
+      $("#submit-newsletter-form").click(function(event) {
+        event.preventDefault();
+        submit_newsletter("newsletter-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

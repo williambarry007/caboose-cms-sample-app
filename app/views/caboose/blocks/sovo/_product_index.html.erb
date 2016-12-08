@@ -1,0 +1,90 @@
+<%  
+has_categories = @category.children.where(:status => 'Active').count > 0
+has_products   = @category.active_products.count > 0
+%>
+<div class="product-index">          
+	<div class="constrain">  
+		<div class="product-navigation">
+			<div class="breadcrumbs">
+        <ul>
+          <% @category.ancestry.each do |c| %>
+            <li><a href="<%= c.url %>" title="<%= c.name %>"><%= c.name %></a></li>
+          <% end %>
+        </ul>
+      </div>
+		</div>
+		
+		<div class="product-grid" id="category-grid">
+		  <%
+		  if has_categories 
+		  %>		  
+		  	<% @category.children.where(:status => 'Active').reorder(:sort_order).each do |c| %>	
+		  		<% if c.active_products.count > 0 || c.children.count > 0 %>	  	  
+			  		<div class="product-unit">
+			  			<div class="contain">
+				      	<div class="image-holder" style="background-image:url(<%= ApplicationHelper.image_for_category(c.id) %>);"></div>
+			          <div class="overlay">
+			          	<div class="table">
+			          		<div class="table-cell">
+					          	<div class="text-wrapper">
+					            	<h3 class="category-name"><%= c.name %></h3>
+					            	<a href="<%= c.url %>" class="btn">View Category</a>
+					          	</div>
+					          </div>
+					        </div>
+			         	</div>
+		         	</div>
+			      </div>
+			    <% end %>
+		  	<% end %>		    
+		  <% end %>
+		  <%
+		  if has_products
+		  %> 
+		    <% @category.category_memberships.reorder(:sort_order).all.each do |cm| %>
+		      <% p = cm.product %>
+		      <% next if p.nil? %>
+		      <% next if p.status != Caboose::Product::STATUS_ACTIVE %>		      				
+					<% cats = p.categories.last.ancestry.collect{|a| a.slug} %>
+					<% cats = cats.join(' ') %>
+			    <div class="product-unit <%= cats %>">
+			    	<div class="contain">
+				    	<% if p.on_sale %><div class="product-sale">SALE</div><% end %>
+				    	<% img = p.featured_image ? (p.featured_image.url(:large).include?('placehold') ? '//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg' : p.featured_image.url(:large)) : ('//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg') %>
+				      <div class="image-holder" style="background-image:url(<%= img %>);"></div>
+			        <div class="overlay">
+			        	<div class="table">
+			        		<div class="table-cell">
+			        			<div class="text-wrapper">
+					        		<h3 class="product-title"><%= p.title %></h3>
+					            <% min_price = number_to_currency(p.price_range[0]) %>
+					            <% max_price = number_to_currency(p.price_range[1]) %>
+					            <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+					            <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+					            	<h4 class="product-price"><%= display_price %></h4>
+					            <% end %>
+					            <a href="<%= p.url %>" class="btn">View Product</a>
+				            </div>
+			        		</div>
+			        	</div>
+		        	</div>
+	        	</div>
+			    </div>
+		 		<% end %>						
+			<% end %>
+		</div>
+				
+		<% if has_categories || has_products %> 
+				
+		<% else %>
+			<div class="no-products">
+				<p>Sorry, no products were found.</p>
+			</div>
+		<% end %>
+
+  </div>
+</div>
+
+<% content_for :js do %>
+
+<% end %>

@@ -1,0 +1,110 @@
+<% 
+api_key = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_api_key').exists?
+list_id = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_list_id').exists?
+hf = Caboose::Block.where(:block_type_id => 3190).last
+address = hf.child_value('address').blank? ? '<p>2207 7th Street<br/>Tuscaloosa, AL 35401</p>' : hf.child_value('address')
+email = hf.child_value('email').blank? ? 'support@nine.is' : hf.child_value('email')
+phone = hf.child_value('phone').blank? ? '205-657-7728' : hf.child_value('phone')
+%>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="top">
+    <div class="constrain flexbox">
+      <section>
+        <h5 class="title">Site Map</h5>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <% pages = Caboose::Page.index_page(site.id) ? Caboose::Page.index_page(site.id).children.where(:hide => false).order(:sort_order).all : [] %>
+            <% pages.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </section>
+      <section>
+        <h5 class="title">Contact</h5>
+        <ul class='contacts'>
+          <li><span class="icon-marker"></span><div class="value"><%== address %></div></li>
+          <li><span class="icon-mail"></span><span class="value"><a href="mailto:<%= email %>"><%= email %></a></span></li>
+          <li><span class="icon-phone-2"></span><span class="value"><%= phone %></span></li>
+        </ul>
+      </section>
+      <section>
+        <h5 class="title">Office Hours</h5>
+        <ul class="hours">
+          <li><span class="icon-pending"></span><span class="time">Mon - 9-5pm</span></li>
+          <li><span class="icon-pending"></span><span class="time">Tues - 9-5pm</span></li>
+          <li><span class="icon-pending"></span><span class="time">Wed - 9-5pm</span></li>
+          <li><span class="icon-pending"></span><span class="time">Thurs - 9-5pm</span></li>
+          <li><span class="icon-pending"></span><span class="time">Fri - 9-5pm</span></li>
+          <li><span class="icon-pending"></span><span class="time">Sat - closed</span></li>
+          <li><span class="icon-pending"></span><span class="time">Sun - closed</span></li>
+        </ul>
+      </section>
+      <section>
+        <h5 class="title">Get Our Newsletter</h5>
+        <div class="mailchimp-form">
+          <% if api_key && list_id %>
+            <form id="newsletter-form">
+              <input type="email" name="email" placeholder="Email Address" />
+              <div class="button-holder">
+                <a href="#" class="btn" id="submit-newsletter-form">Submit</a>
+              </div>
+            </form>
+            <div id="message"></div>
+          <% end %>
+        </div>
+        <h6 class="subtitle">Follow Us On</h6>
+        <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+      </section>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="constrain">
+      <p class="copyright"><%= DateTime.now.strftime('%Y') %> &copy; PRN Roofing - All Rights Reserved</p>
+      <img src="<%= asset_path 'prnroofing/images/gray_logo.png' %>" alt="<%= site.description %>" width="100" height="31" />
+    </div>
+  </div>
+</footer>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      function submit_newsletter(form_id) {
+        var mess = $("#" + form_id).next("#message");
+        mess.html("<p class='note loading'>Submitting form... </p>");
+        var form = $("#" + form_id); 
+        form.find("input, textarea").each(function() {
+          if ( $(this).attr("placeholder") == $(this).val() ) {
+            $(this).val("");
+          }
+        });
+        $.ajax({
+          url: '/mailchimp/subscribe',
+          type: 'post',
+          data: form.serialize(),
+          success: function(resp) {
+            if(resp.error) {
+              form.find("input, textarea").each(function() {
+                if ( $(this).val() == "" ) {
+                  $(this).val( $(this).attr("placeholder") );
+                }
+              });
+              mess.html("<p class='note error'>" + resp.error + "</p>");
+            } 
+            if(resp.success) {
+              form.slideUp(); 
+              mess.html("<p class='note success'>" + resp.success + "</p>");
+            }
+          }
+        });
+      }
+      $("#submit-newsletter-form").click(function(event) {
+        event.preventDefault();
+        submit_newsletter("newsletter-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

@@ -1,0 +1,69 @@
+<% cat = Caboose::PostCategory.where(:id => block.child_value('post_category')).last %>
+<div class="news-ticker-block" id="block_<%= block.id %>">
+	<% if cat %>
+		<% posts = cat.posts.where(:published => true).order("created_at DESC").take(20) %>
+		<% if posts.count > 0 %>
+			<div class="breakingNews" id="ticker-<%= block.id %>">
+    		<div class="bn-title">
+    			<h2>RECENT NEWS</h2>
+    			<span></span>
+    		</div>
+      	<ul>
+					<% posts.each do |p| %>
+						<% ae_post = Caboose::PostCategoryMembership.where(:post_category_id => 128, :post_id => p.id).exists? %>
+						<% next if ae_post %>
+						<li>
+							<a href="<%= p.uri %>">
+								<%= p.title %> - 
+								<!-- <span class="date"><%= p.created_at.strftime("%B %-d") %></span> -->
+								<% if !p.preview.blank? %>
+									<span class="preview">
+										<% 
+			                html = Nokogiri::HTML( p.preview ) 
+			                text = html.at('body').inner_text
+			                words = text.blank? ? "" : text.split[0..20] 
+			              %>
+			              <% if !words.blank? && words.count > 19 %>
+			              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+			              <% else %>
+											<%= words.blank? ? "" : words.join(' ') %>
+			              <% end %>
+									</span>
+								<% end %>
+							</a>
+						</li>
+					<% end %>
+				</ul>
+      	<div class="bn-navi">
+      		<span></span>
+          <span></span>
+      	</div>
+    	</div>
+		<% elsif editing %>
+			<h3 style="color:red">Category has no posts.</h3>
+		<% end %>
+	<% elsif editing %>
+		<h3 style="color:red">Invalid post category.</h3>
+	<% end %>
+</div>
+
+<% content_for :css do %>
+	<style>
+		@import url("http://cabooseit.s3.amazonaws.com/assets/aar/css/breakingNews.css"); 
+	</style>
+<% end %>
+<% content_for :js do %>
+	<script src="http://cabooseit.s3.amazonaws.com/assets/aar/js/breakingNews.js"></script>
+	<script>
+		$(window).load(function(e) {
+
+		});
+		$("#ticker-<%= block.id %>").breakingNews({
+			effect		: "slide-v",
+			autoplay	: true,
+			timer		  : 6000,
+			border		: false
+		});
+
+	</script>
+<% end %>

@@ -1,0 +1,51 @@
+<% 
+  col = block.child_value("collapsible")
+  classes = []
+  if col == 1 || col == "1"
+    classes << "collapsible"
+  end
+  classes = classes.join(" ")
+  children = block.children.where("block_type_id = ? OR block_type_id = ?",1209,783).reverse_order.all
+ %>
+
+<% if modal %>
+  <% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+  <% if block.child("collapsible") %>
+    <div id="block_<%= block.child('collapsible').id %>" style="text-decoration:underline;cursor:pointer;">
+      Collapsible: <%= block.child_value('collapsible') == 1 ? "Yes" : "No" %>
+    </div>
+  <% end %>
+  <p>Files:</p>
+  <ul>
+    <% children.each_with_index do |s,i| %>
+      <% name = s.child_value('title').blank? ? s.child_value('date_of_meeting') : s.child_value('title') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("File #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new file!</a>
+<% else %>
+
+  <% title = block.child_value('title') %>
+  <div class="pdf-container-block <%= classes %>" id="block_<%= block.id %>">
+  <% if !title.blank? %><a id="container-<%= title.downcase.gsub(' ','-') %>"></a><% end %>
+    <% if children.count > 0 %>
+      <h3 class="section-title"><%= title %></h3>
+      <div class="pdf-ul">
+        <% children.each do |c| %>
+          <%= raw block.render(c, local_assigns) %>
+        <% end %>
+      </div>
+    <% else %>
+      <% if editing %>
+        <p style="padding:10px;border:1px solid gray;">Empty meeting container. Click to add meeting PDFs.</p>
+      <% end %>
+    <% end %>
+  </div>
+
+<% end %>

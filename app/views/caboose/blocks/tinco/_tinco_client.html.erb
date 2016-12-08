@@ -1,0 +1,5 @@
+<li class="col-md-3 col-sm-6 col-xs-12" id="block_<%= block.id %>">
+  <a href="<%= block.child_value('link') %>" class="thumbnail">
+    <img src="<%= block.child_value('photo').url(:large) %>" alt="<%= block.child_value('name') %>">
+  </a>
+</li>

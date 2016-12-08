@@ -1,0 +1,219 @@
+<% p = @product %>
+
+<div class="product-details">
+  <div class="constrain">
+
+    <% if p.product_images != [] %>
+      <div class="product-slider-wrapper">
+        <% if @category && @category.ancestry %>
+          <div class="breadcrumbs">
+            <ul>
+              <% @category.ancestry.each do |c| %>
+                <li><a href="<%= c.url %>" title="<%= c.name %>"><%= c.name %></a></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        <h2 class="product-title conceal"><%= p.title %></h2>
+        <div class="liquid-slider" id="product-<%= p.id %>-slider">
+          <% p.product_images.each_index do |i| %>
+            <div class="slider-slide" style="background-image:url(<%= p.product_images[i].url(:large) %>);">
+              <div class="title"><img id="thumb-<%= p.product_images[i].id %>" src="<%= p.product_images[i].url(:tiny) %>" /></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <div class="product-details-wrapper">
+      <h2 class="product-title reveal"><%= p.title %></h2>
+
+      <p class="product-meta">
+        <span id="variant_price"><%= number_to_currency(p.most_popular_variant ? p.most_popular_variant.price : '') %></span>
+        <span id="variant_qty"></span>
+      </h3>
+
+      <div class="product-options">
+        <% if p.option1 && p.option1.strip.length > 0 %>
+          <% default = p.default1 ? p.default1 : p.variants[0].option1 %>
+          <select name='option1' id='option1'>
+            <optgroup label="Select a <%= p.option1 %>">
+            <% p.variants.where(:status => 'Active').order(:option1_sort_order).collect{|v| v.option1}.reject{|str| str.nil? }.uniq.each do |v| %>
+              <option value="<%= v %>"<%= raw v == default ? " selected='true'" : '' %>><%= v %></option>
+            <% end %>                  
+            </optgroup>
+          </select>
+          <br>
+        <% end %>
+        <% if p.option2 && p.option2.strip.length > 0 %>
+          <% default = p.default2 ? p.default2 : p.variants[0].option2 %>
+          <select name='option2' id='option2'>
+            <optgroup label="Select a <%= p.option2 %>">
+            <% p.variants.where(:status => 'Active').order(:option2_sort_order).collect{|v| v.option2}.compact.uniq.each do |v| %>
+              <option value="<%= v %>"<%= raw v == default ? " selected='true'" : '' %>><%= v %></option>
+            <% end %>
+            </optgroup>
+          </select>
+          <br>
+        <% end %>
+        <% if p.option3 && p.option3.strip.length > 0 %>
+          <% default = p.default3 ? p.default3 : p.variants[0].option3 %>
+          <select name='option3' id='option3'>
+            <optgroup label="Select a <%= p.option3 %>">
+            <% p.variants.where(:status => 'Active').order(:option3_sort_order).collect{|v| v.option3}.reject{|str| str.nil?}.uniq.each do |v| %>
+              <option value="<%= v %>"<%= raw v == default ? " selected='true'" : '' %>><%= v %></option>
+            <% end %>
+            </optgroup>
+          </select>
+          <br>
+        <% end %>
+
+        <p id="add_cart_btn">
+          <a href="#" class="btn">Add to Cart</a>
+        </p>
+        <p id="sold_out_btn" class="btn" style="display:none;">
+          <span id='sold_out_btn_text'>Sold Out</span>
+        </p>
+
+      </div>
+
+      <div class="product-description">
+        <%= strip_tags(p.description) %>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<% content_for :js do %>
+<%= content_for :caboose_js do %>
+  <%= javascript_include_tag 'caboose_store/modules/cart' %>
+  <%= javascript_include_tag 'caboose_store/modules/product' %>
+<% end %>
+
+  <script>
+    $("#product-<%= p.id %>-slider").liquidSlider({
+      autoSlide: false,
+      autoHeight: false,
+      slideEaseFunction: "fade",
+      dynamicArrows: false,
+      dynamicTabsAlign: "center",
+      dynamicTabsPosition: "bottom"
+    });
+
+    var option1 = <%= raw p.option1 ? p.option1.to_json : false %>;
+    var option2 = <%= raw p.option2 ? p.option2.to_json : false %>;
+    var option3 = <%= raw p.option3 ? p.option3.to_json : false %>;
+    var default1 = <%= raw p.default1 ? p.default1.to_json : false %>;
+    var default2 = <%= raw p.default2 ? p.default2.to_json : false %>;
+    var default3 = <%= raw p.default3 ? p.default3.to_json : false %>;
+    var variants = <%= raw Caboose.json(p.variants.where(:status => 'Active')) %>;
+
+    var quantities = {};
+
+    function get_variant_for_options()
+    {
+      var v1 = option1 ? $('#option1').val() : false;
+      var v2 = option2 ? $('#option2').val() : false;
+      var v3 = option3 ? $('#option3').val() : false;
+      
+      var variant = false;
+      $.each(variants, function(i, v) {
+        if (v.option1 == v1 && (!option2 || (v.option2 == v2 && (!option3 || v.option3 == v3)))) 
+        {
+          variant = v; 
+          return false;
+        }
+      });
+      return variant;
+    }
+
+    function show_variant_image() {
+      var v = get_variant_for_options();
+      if (!v) return;
+
+      var rurl = "/variant-images/" + v.id;
+      $.ajax({
+        type: 'get',
+        url: rurl,
+        success: function(img) {
+          if(img) {
+            $("img#thumb-" + img.id).parent("a").trigger("click")
+          }
+        }
+      });
+    }
+
+    function set_status() 
+    {
+      var v = get_variant_for_options();
+
+      if (!v.quantity_in_stock) v.quantity_in_stock = 0;
+      
+      if (!v || v.status == 'Deleted') 
+      {
+        $("#variant_qty").html("Not For Sale").css("color","#981919");
+        $("#add_cart_btn").hide();
+        $("#sold_out_btn_text").html("Option Not For Sale");
+        $("#sold_out_btn").show();
+        if (v && v.price > 0) {
+          var price = parseFloat(v.price).toFixed(2);
+          $("#variant_price").html("$" + price);
+        }
+      }
+      else if (v.quantity_in_stock == 0 && !v.ignore_quantity)
+      {
+        $("#variant_qty").html("Sold Out").css("color","#981919");
+        $("#add_cart_btn").hide();
+        $("#sold_out_btn_text").html("Option Sold Out");
+        $("#sold_out_btn").show();
+        if (v && v.price > 0) {
+          var price = parseFloat(v.price).toFixed(2);
+          $("#variant_price").html("$" + price);
+        }
+      }
+      else 
+      {
+        $("#variant_qty").html("In Stock").css("color","green");
+        $("#add_cart_btn").show();
+        $("#sold_out_btn").hide();
+        if (v && v.price > 0) {
+          var price = parseFloat(v.price).toFixed(2);
+          $("#variant_price").html("$" + price);
+        }
+      }
+    }
+
+    function add_to_cart()
+    {
+      var v = get_variant_for_options();
+      if (!v) return;
+
+      $.ajax({
+        url: '/cart',
+        type: 'post',
+        data: { variant_id: v.id },
+        success: function(resp) {
+          if (resp.errors)
+            $('#message').html("<p class='note error'>" + resp.errors[0] + "</p>");
+          if (resp.success)
+            $('#message').html("<p class='note success'>The item has been added to your cart.</p>");
+        }
+      );        
+    }
+
+    $(document).ready(function() {
+      show_variant_image();
+      if (option1) $('#option1').change(function() { set_status(); show_variant_image(); });
+      if (option2) $('#option2').change(function() { set_status(); show_variant_image(); });
+      if (option3) $('#option3').change(function() { set_status(); show_variant_image(); });
+      set_status();  
+      $('#add_cart_btn a').click(function(e) {
+        e.preventDefault();
+        add_to_cart();
+      });
+    });
+
+  </script>
+<% end %>

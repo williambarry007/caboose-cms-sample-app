@@ -1,0 +1,11 @@
+<%
+pdf = block.child_value('pdf')
+date = block.child_value('date')
+%>
+<div id="block_<%= block.id %>">
+<% if pdf && date %>
+  <span class='cnn'><a href=<%= pdf.url || "" %>>Capitol News &amp; Notes - <%= date %></a></span>
+<% elsif editing %>
+  <p>Please enter the details.</p>
+<% end %>
+</div>

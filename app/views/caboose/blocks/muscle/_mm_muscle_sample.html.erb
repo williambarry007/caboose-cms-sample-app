@@ -1,0 +1,71 @@
+<%
+title = block.child_value('title')
+subtitle = block.child_value('subtitle')
+li = block.child_value('left_image').url(:large)
+ri = block.child_value('right_image').url(:large)
+lc = block.child_value('left_caption')
+rc = block.child_value('right_caption')
+sample = block.child_value('sample_image').url(:original)
+button_text = block.child_value('button_text')
+kind = block.page.id == 1456 ? "home" : "sample"
+link = request.path
+%>
+
+<% if !editing %>
+<img src='<%= li %>)' style='display: none;' />
+<img src='<%= ri %>)' style='display: none;' />
+<a href="<%= link %>" <% if kind == "sample" %> data-id="modal-<%= block.id %>" <% end %> class="muscle-sample-block <% if kind == 'sample' %>show-sample<% else %>p-link<% end %>" id="block_<%= block.id %>">
+<% else %>
+<div class="muscle-sample-block <% if kind == 'sample' %>show-sample<% else %>p-link<% end %>" id="block_<%= block.id %>">
+<% end %>
+  <div class="overlay"></div>
+  <div class="m-left">
+    <div class="image-holder" style="background-image:url(<%= li %>);"></div>
+    <span class="caption"><%= lc %></span>
+  </div>
+  <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/arrow.png" alt="Arrow" class="arrow" />
+  <div class="m-right">
+    <div class="image-holder" style="background-image:url(<%= ri %>);"></div>
+    <span class="caption"><%= rc %></span>
+  </div>
+  <div class="text-wrapper" id="upper">
+    <div class="table">
+      <div class="table-cell">
+        <h2 class="title <% if kind == 'home' %>move<% end %>"><%= title %></h2>
+        <% if !subtitle.blank? %><h4 class="subtitle"><%= subtitle %></h4><% end %>
+        <span class="btn white-outline"><%= button_text.blank? ? "See Sample" : button_text %>&nbsp;<img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/book.png" alt="Book"/></span>
+      </div>
+    </div>
+  </div>
+<% if !editing %></a><% else %></div><% end %>
+<br />
+
+<% if !editing %>
+<% content_for :js do %>
+<script>
+var pswpElement_<%= block.id %> = document.querySelectorAll('.pswp')[0];
+var items_<%= block.id %> = [
+  {
+    src: '<%= sample %>',
+    w: 914,
+    h: 1218,
+    title: '<%= title %>'
+  }
+];
+var options_<%= block.id %> = {
+  index: 0,
+  closeOnScroll: false,
+  getPageURLForShare: function(shareButtonData) { return 'http://www.memorizemuscles.net<%= link %>'; },
+  getImageURLForShare: function(shareButtonData) { return "<%= block.child_value('sample_image').url(:large) %>"; }
+};
+function show_gallery_<%= block.id %>() {
+  var gallery_<%= block.id %> = new PhotoSwipe( pswpElement_<%= block.id %>, PhotoSwipeUI_Default, items_<%= block.id %>, options_<%= block.id %>);
+  gallery_<%= block.id %>.init();
+}
+$("#block_<%= block.id %>").click(function(event) {
+  event.preventDefault();
+  show_gallery_<%= block.id %>()
+});
+</script>
+<% end %>
+<% end %>

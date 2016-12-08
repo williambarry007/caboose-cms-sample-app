@@ -1,0 +1,58 @@
+<%
+hf = Caboose::Block.where(:block_type_id => 2368).last
+ft = hf.child_value('footer_text')
+%>
+
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="info-wrapper">
+      <a href="/" title="RiverFall Credit Union">
+        <img class="logo" src="//d9hjv462jiw15.cloudfront.net/assets/riverfall/images/white_logo.png" alt="Riverfall Credit Union" width="224" height="89" />
+      </a>
+      <a href="http://portal.hud.gov/hudportal/HUD?src=/program_offices/fair_housing_equal_opp" target="_blank" title="Equal Housing Lender">
+        <img class="equal" src="//d9hjv462jiw15.cloudfront.net/assets/riverfall/images/equal2.png" alt="Equal Housing Lender" width="50" height="57" />
+      </a>
+      <a href="http://acua.alabama.gov/" target="_blank" title="ACUA">
+        <img class="acua" src="//d9hjv462jiw15.cloudfront.net/assets/riverfall/images/acua.png" alt="ACUA" width="50" height="43" />
+      </a>
+      <a href="https://www.ncua.gov/" target="_blank" title="NCUA">
+        <img class="ncua" src="//d9hjv462jiw15.cloudfront.net/assets/riverfall/images/ncua.png" alt="NCUA" width="130" height="61" />
+      </a>
+      <div class="footer-text richtext">
+        <%== ft %>
+      </div>
+      <section class="nine">
+        <span>Designed and loved by:</span>
+        <a href="http://www.nine.is" target="_blank">
+          <%= render 'svg/nine' %>
+        </a>
+      </section>
+    </div>
+    <div class="nav-wrapper">
+      <ul class="top">
+        <li><a href="/" title="Home">Home</a></li>
+        <li><a href="/rates" title="Rates">Rates</a></li>
+        <li><a href="/contact-us" title="Contact Us">Contact Us</a></li>
+      </ul>
+      <nav>
+        <ul class="l1">
+          <% pages = Caboose::Page.where(:parent_id => 2979, :hide => false).order(:sort_order).all %>
+          <% pages.each_with_index do |p,i| %>
+            <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+            <li>
+              <h5 class="section-title"><%= p.menu_title.blank? ? p.title : p.menu_title %></h5>
+              <ul class="l2">
+                <% subpages.each do |s| %>
+                  <li>
+                    <%== ApplicationHelper.nav_link(s, editing, false) %>
+                  </li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</footer>

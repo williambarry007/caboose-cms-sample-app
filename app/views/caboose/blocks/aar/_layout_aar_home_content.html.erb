@@ -1,0 +1,25 @@
+<div id="block_<%= block.id %>" class="body-content-wrapper">
+
+<% if controller_view_content && controller_view_content.strip.length > 0 %>
+      <% if block.constrain == true %><div class='constrain'><% end %>
+      <%= raw controller_view_content %>
+      <% if block.constrain == true %></div><% end %>
+    <% elsif post %>
+      <%= raw block.partial('post', local_assigns) %>
+
+      <% elsif block.children.count > 0 %>
+
+      <% block.children.each do |b| %>
+        <% if block.constrain && !b.full_width %><% end %>
+        <%= raw block.render(b, local_assigns) %>
+        <% if block.constrain && !b.full_width %><% end %>
+      <% end %>
+
+    <% else %>
+      <% if editing %>
+        <p style="border:1px dashed gray;padding:10px;">Empty content area. Click to add child blocks.</p>
+      <% end %>
+    <% end %>
+
+
+</div>

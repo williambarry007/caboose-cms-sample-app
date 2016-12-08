@@ -1,0 +1,17 @@
+<%
+cat = Caboose::MediaCategory.where(:id => 1308).first
+logos = cat ? cat.media : []
+%>
+
+<div class="logos-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<% if logos.count > 0 %>
+			<h3 class="title"><span><%= block.child_value('title') %></span></h3>
+			<div class="logos-wrapper">
+				<% logos.each do |l| %>
+					<div class="logo" style="background-image:url(<%= l.image.url(:thumb) %>);"></div>
+				<% end %>
+			</div>
+		<% end %>
+	</div>
+</div>

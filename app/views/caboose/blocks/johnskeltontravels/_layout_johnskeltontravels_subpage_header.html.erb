@@ -1,0 +1,82 @@
+<% cat = Caboose::MediaCategory.where(:id => 1108).first %>
+<% media = cat ? cat.media : [] %>
+
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main subpage">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <h1 class="site-name"><%= site.description %></h1>
+      </a>
+      <nav class="reveal">
+        <ul>
+<!--           <li><a href="/" title="Home">Home</a></li> -->
+          <% Caboose::Page.where(:parent_id => 1577, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+          <% end %>
+        </ul>
+      </nav>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </header>
+
+  <% img = block.child_value('banner_image') %>
+  <% text = block.child_value('banner_text') %>
+  <div class="page-banner" id="banner-<%= block.id %>">
+    <% if media.count > 0 %>
+      <% img = media.first.image.url(:huge) %>
+      <div class="slide" id="slide0" style="background-image:url(<%= img %>);"></div>
+    <% end %>
+    <div class="social">
+      <div class="constrain">
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+      </div>
+    </div>
+    <div class="overlay"></div>
+    <% if !text.blank? %>
+      <h2 class="banner-text"><%= text %></h2>
+    <% end %>
+  </div>
+</div>
+
+
+<% if media.count > 0 %>
+<% content_for :js do %>
+<script>
+  $(document).ready(function() {
+
+    <% media.each_with_index do |m, index| %>
+      <% next if index == 0 %>
+      <% i = m.image %>
+      <% img = i.url(:huge) %>
+      <% next if img.include?('placehold') %>
+      $("<div class='slide' id='slide<%= index %>' style='display:none;background-image:url(<%= img %>);'></div>").insertAfter("#slide<%= index - 1 %>");
+    <% end %>
+
+    var $imgs = $(".page-banner").find(".slide"),
+      i = 0;
+
+    function changeImage(){
+        var next = (++i % $imgs.length);
+        $($imgs.get(next - 1)).fadeOut(700);
+        $($imgs.get(next)).fadeIn(700);
+    }
+    if ( $(window).width() > 700 ) {
+      var interval = setInterval(changeImage, 5000);
+    }
+  });
+
+</script>
+<% end %>
+<% end %>
+
+<% if post %>
+<% content_for :css do %>
+  <style>
+    .page-banner {
+      padding: 50px 2%;
+    }
+  </style>
+<% end %>
+<% end %>

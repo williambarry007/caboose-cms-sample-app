@@ -1,0 +1,65 @@
+<% image   = block.child_value('image' ) %>
+<% width   = block.child_value('width' ) %>
+<% height  = block.child_value('height') %>
+<% img_url = (image.url && !image.url.include?("placehold")) ? image.url(:large) : '//d9hjv462jiw15.cloudfront.net/assets/shared/default_profile.png' %>
+
+<% if modal %>
+  <% if block.child("image") %>
+    <div id="block_<%= block.child('image').id %>" style="text-decoration:underline;cursor:pointer;">
+      <% block.child_value('image') %>
+    </div>
+  <% end %>
+  <% if block.child("text") %>
+    <div id="block_<%= block.child('text').id %>" style="text-decoration:underline;cursor:pointer;">
+      Text: <%= block.child_value('text') %>
+    </div>
+  <% end %>
+
+<% else %>
+
+  <div class="ve-team-member" id="block_<%= block.id %>">
+    <div class="image"></div>
+    <span class="text clearfix">
+      <%= raw block.render(block.child('text'), local_assigns) %>
+    </span>
+  </div>
+
+<% end %>
+
+<% content_for :css do %>
+  <style>
+    #block_<%= block.id %> {
+      height: 100%;
+      position: relative;
+    }
+
+    #block_<%= block.id %> > .image {
+      height: 250px;
+      width: 250px;
+      margin: 0 auto 0 auto;
+      position: relative;
+      background: url('<%= img_url %>') no-repeat center center;
+      background-size: cover;
+    }
+
+    #block_<%= block.id %> > .text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: whitesmoke;
+      color: #656565;
+      visibility: hidden;
+      opacity: 0;
+      padding: 10px;
+      transition: all 300ms linear;
+      width: 100%;
+    }
+
+    #block_<%= block.id %>:hover > .text {
+      visibility: visible;
+      opacity: 1;
+      box-shadow: 0px 0px 30px 0px rgba(106, 106, 106, 0.50);
+    }
+
+   </style>
+ <% end %>

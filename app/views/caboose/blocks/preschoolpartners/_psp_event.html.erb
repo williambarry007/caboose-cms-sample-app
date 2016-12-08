@@ -1,0 +1,22 @@
+<%
+title = block.child_value('title')
+dates = block.child_value('dates')
+location = block.child_value('location')
+desc = block.child_value('description')
+photo = block.child_value('photo')
+%>
+
+<div class="event-block clearfix" id="block_<%= block.id %>">
+	<div class="image-wrapper">
+		<% img_url = (photo.url && !photo.url.include?("placehold")) ? photo.url(:large) : false %>
+		<% if img_url %>
+			<img src="<%= img_url %>" alt="<%= title %>">
+		<% end %>
+	</div>
+	<div class="text-wrapper">
+		<h4 class="title"><%= title %></h4>
+		<% if !dates.blank? %><h5 class="dates"><%= dates %></h5><% end %>
+		<% if !location.blank? %><h5 class="location"><%= location %></h5><% end %>
+		<div class="description richtext"><%== desc %></div>
+	</div>
+</div>

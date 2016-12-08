@@ -1,0 +1,108 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <a href="/" class="logo-link" title="Home">
+      <img src="//cabooseit.s3.amazonaws.com/assets/osp/images/logo2.png" alt="Old State Pride" style="width:35px;" />
+    </a>
+    <nav>
+      <ul class="reveal">
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 807, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <a class="icon-menu-4 conceal" href="#" id="show-menu"></a>
+  </div>
+  
+  <div class="fullscreen-overlay" id="newsletter-modal">
+    <div class="table">
+      <div class="table-cell">
+        <div class="modal-wrapper">
+          <div class="modal homepage-form">
+            <a href="#" id="close-modal" class="icon-close"></a>
+            <div id="mc_embed_signup">
+              <form action="//oldstatepride.us10.list-manage.com/subscribe/post?u=67d809e8b4a9b7c0d9a9ea499&amp;id=150d6362bb" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <h3 class="title">I WANT TO BE THE FIRST TO HAVE IT</h3>
+                <h4 class="subtitle">10 percent off your first purchase</h4>
+                <div id="mc_embed_signup_scroll">
+                  <div class="clearfix" style="width:300px;margin:0 auto;">
+                    <div class="mc-field-group" style="width:145px;float:left;">
+                      <label for="mce-FNAME">First Name </label>
+                      <input type="text" value="" name="FNAME" class="" id="mce-FNAME" placeholder="First Name" style="width:100%;">
+                    </div>
+                    <div class="mc-field-group" style="width:145px;;float:right;">
+                      <label for="mce-LNAME">Last Name </label>
+                      <input type="text" value="" name="LNAME" class="" id="mce-LNAME" placeholder="Last Name" style="width:100%;">
+                    </div>
+                  </div>
+                  <div class="mc-field-group">
+                    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+                    </label>
+                    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Enter Your Email Address">
+                  </div>
+                  <div id="mce-responses" class="clear">
+                    <div class="response" id="mce-error-response" style="display:none"></div>
+                    <div class="response" id="mce-success-response" style="display:none"></div>
+                  </div>
+                  <div style="position: absolute; left: -5000px;"><input type="text" name="b_67d809e8b4a9b7c0d9a9ea499_150d6362bb" tabindex="-1" value=""></div>
+                  <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<% content_for :css do %>
+  <style>
+    @media all and (max-width: 800px) {
+      .logo-link img {
+        width: 25px !important;
+      }
+    }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+    function setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+d.toUTCString();
+      document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+    function getCookie(cname) {
+      var name = cname + "=";
+      var ca = document.cookie.split(';');
+      for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+      }
+      return "";
+    }
+    function checkCookie() {
+      var subscribed = getCookie("osp_subscribed");
+      if (subscribed == "") {
+        $("#newsletter-modal").fadeIn();
+      }
+    }
+    $(document).ready(function() {
+      checkCookie();
+    });
+    $("#close-modal").click(function(event) {
+      event.preventDefault();
+      setCookie("osp_subscribed", true, 365);
+      console.log("set cookie");
+      $(".fullscreen-overlay").fadeOut();
+    });
+    $("#mc-embedded-subscribe-form").submit(function() {
+      setCookie("osp_subscribed", true, 365);
+      console.log("set cookie");
+      $(".fullscreen-overlay").fadeOut();
+    });
+  </script>
+<% end %>

@@ -1,0 +1,19 @@
+<%
+  title = block.child_value("title")
+  text = block.child_value("text")
+%>
+
+<% if !title.blank? && !text.blank? %>
+  <div class="caterer-unit" id="block_<%= block.id %>">
+    <h1 class="title"><%= title %></h1>
+    <div class="text">
+      <%= raw text %>
+    </div>
+  </div>
+<% elsif editing %>
+  <div id="block_<%= block.id %>">
+    <p style="padding:10px;text-align:center;background:#fff;color:#000;">
+      Empty caterer block. Click to edit.
+    </p>
+  </div>
+<% end %>

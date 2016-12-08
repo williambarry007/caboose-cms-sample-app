@@ -1,0 +1,63 @@
+<% images = block.children.where(:block_type_id => 911).order(:sort_order).all %>
+<% if modal %>
+
+	 <% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+
+  <% if block.child("description") %>
+    <div id="block_<%= block.child('description').id %>" style="text-decoration:underline;cursor:pointer;">
+      Description: Click to Edit
+    </div>
+  <% end %>
+
+  <ul>
+    <% images.each_with_index do |s,i| %>
+      <% name = s.child_value('alt_text') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Image #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new image!</a>
+
+<% else %>
+			
+<div class="gallery-block clearfix" id="block_<%= block.id %>">
+			
+			
+
+		<div class="gallery">
+			
+						
+						
+						<h2><%= block.child_value('title') %></h2>
+
+						<%== block.child_value('description') %>
+				
+						<ul class="thumbs">
+			
+
+						<% images.each do |i| %>
+							<% src = i.child_value('image') %>
+							<% alt = i.child_value('alt_text') %>
+							<% next if src.blank? || src.url(:large).include?('placehold') %>
+							<li>
+						<% if !editing %>		<a rel="colorbox1" href="<%= i.child_value('image').url(:huge) %>"><% end %>
+									<img src="<%= i.child_value('image').url(:tiny) %>" alt="<%= alt %>">
+					<% if !editing %>			</a> <% end %>
+							</li>
+
+						<% end %>
+						
+						</ul>
+					
+					</div>
+			
+		
+
+				</div>
+
+<% end %>

@@ -1,0 +1,50 @@
+<% img_url = block.child_value('background_image').url(:huge) %>
+
+<div class="search-banner" id="block_<%= block.id %>" style="background-image:url(<%= img_url %>);">
+	<div class="form-wrapper">
+		<form id="search-banner-form" method="get" action="/residential/search">
+			<div class="grid-row">
+				<div class="unit1of5" id="col1">
+					<div class="logo-wrapper">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/grantdickey/images/visions.png" alt="Visions Real Estate">
+					</div>
+				</div>
+				<div class="unit3of5" id="col2">
+					<div class="field text">
+		    		<input type="text" id="query" name="query" autocomplete="off" placeholder="Type any Area, Address, ZIP, School, etc" />
+		    		<div class="results-dropdown"></div>
+		    	</div>
+				</div>
+				<div class="unit1of5" id="col3">
+					<div class="field">
+						<input type="submit" value="Search" class="btn" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="search-text">
+		<p><%== block.child_value('search_text') %></p>
+	</div>
+	<% fp = Caboose::Page.where(:title => 'Favorites', :site_id => site.id).first %>
+	<% if fp %>
+		<div class="buttons">
+			 <% fp.children.where(:hide => false).order(:sort_order).each do |p| %>
+	      <div class="button-block-wrapper">
+	      	<a href="/<%= p.uri %>" title="<%= p.title %>" class="btn"><%= p.title %></a>
+	      </div>
+	    <% end %>
+		</div>
+	<% end %>
+</div>
+
+<% content_for :js do %>
+<script>
+var sc = false;
+$(document).ready(function() {
+	sc = new SearchController({
+ 		authenticity_token: '<%= form_authenticity_token %>'
+ 	});
+});
+</script>
+<% end %>

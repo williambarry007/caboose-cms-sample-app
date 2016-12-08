@@ -1,0 +1,22 @@
+<%
+date = block.child_value('date_of_meeting')
+agenda = block.child_value('agenda')
+minutes = block.child_value('minutes')
+%>
+<div class="meeting-pdf clearfix" id="block_<%= block.id %>">
+	<span class="date"><%= date %></span>
+	<% if minutes && minutes.url && !minutes.url.include?('missing') %>
+		<% if ( block.child('minutes') && block.child('minutes').id < 27942 && block.child('minutes').file_upload_name.blank? && block.child('minutes').media_id.blank? ) %>
+			<a href="http://cabooseit.s3.amazonaws.com/northport_files/<%= block.child('minutes').file_file_name %>" class="btn minutes" target="_blank">Minutes</a>
+		<% else %>
+			<a href="<%= minutes.url %>" class="btn minutes" target="_blank">Minutes</a>
+		<% end %>
+	<% end %>
+	<% if agenda && agenda.url && !agenda.url.include?('missing') %>
+		<% if ( block.child('agenda') && block.child('agenda').id < 27942 && block.child('agenda').file_upload_name.blank? ) && block.child('agenda').media_id.blank? %>
+			<a href="http://cabooseit.s3.amazonaws.com/northport_files/<%= block.child('agenda').file_file_name %>" class="btn agenda" target="_blank">Agenda</a>
+		<% else %>
+			<a href="<%= agenda.url %>" class="btn agenda" target="_blank">Agenda</a>
+		<% end %>
+	<% end %>
+</div>

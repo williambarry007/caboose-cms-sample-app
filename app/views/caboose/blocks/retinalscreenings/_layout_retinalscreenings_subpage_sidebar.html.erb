@@ -1,0 +1,87 @@
+<div id="block_<%= block.id %>">
+
+<% menu_text = block.child_value('menu_text') %>
+<% form_code = block.child_value('form_code') %>
+
+<% b_children = Caboose::Block.where(:parent_id => block.id).where("block_type_id != ? AND block_type_id != ?", 1269, 1270).all %>
+
+<% if modal %>
+
+  <% if block.child("menu_text") %>
+    <div id="block_<%= block.child('menu_text').id %>" style="text-decoration:underline;cursor:pointer;">
+      Menu Text: Click to Edit
+    </div>
+  <% end %>
+
+  <% if block.child("form_code") %>
+    <div id="block_<%= block.child('form_code').id %>" style="text-decoration:underline;cursor:pointer;">
+      Form Code: Click to Edit
+    </div>
+  <% end %>
+
+  <% b_children.each do |b| %>
+    <%= raw block.render(b, local_assigns) %>
+  <% end %>
+
+  <br />
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new child block!</a>
+
+<% else %>
+
+  <div class="sidebar-custom-content-wrapper">
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>    
+      <%= raw controller_view_content %>    
+    
+    <% elsif b_children && b_children.count > 0 %>
+      <% b_children.each do |b| %>
+        <%= raw block.render(b, local_assigns) %>
+      <% end %>
+    <% else %>
+      <% if editing %>
+        <p style="border:1px dashed gray;padding:10px;">Empty sidebar area. Click to add child blocks.</p>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if block.child("menu_text") %>
+    <%== menu_text %>
+
+  <% else %>
+
+  <div class="roundedBox">
+    <h3>Ways to Learn More</h3>
+    <ul>
+      <li><a href="/contact-us/"  >Request an IRIS demonstration</a></li>
+      <li><a href="/resources/iris-news"    >Read recent news about IRIS</a></li>
+      <li><a href="/resources/gallery"      >Photo/Video Gallery</a></li>
+      <li><a href="/contact-us/faq"         >Read FAQs</a></li>
+      <li><a href="/resources/case-studies" >Review IRIS Case Studies</a></li>
+      <li><strong>Call IRIS: 1-888-535-2574</strong></li>
+    </ul>
+    <p>&nbsp;</p>
+    <p class="alignCenter"><a href="/contact-us/" class="button">Contact Us</a></p>
+    <p>&nbsp;</p>
+  </div>
+
+  <% end %>
+
+  <% if block.child('form_code') %>
+    <%== form_code %>
+  <% else %>
+
+  <div class="roundedBox" style="display:table">
+    <h3>Get IRIS Updates:</h3>
+    <script charset="utf-8" src="//js.hsforms.net/forms/current.js"></script>
+    <script>
+      hbspt.forms.create({ 
+        portalId: '464109',
+        formId: '89bf9063-14d3-40ef-a351-4143c4fce35d'
+      });
+    </script>
+  </div>
+
+  <% end %>
+
+<% end %>
+
+</div>

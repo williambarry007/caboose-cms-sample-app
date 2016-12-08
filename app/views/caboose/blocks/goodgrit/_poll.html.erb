@@ -1,0 +1,113 @@
+<%
+question = block.child_value("question")
+answers = block.children.where(:block_type_id => 2055).order(:sort_order).all
+responses = PollResponse.where(:poll_block_id => block.id).where(:site_id => site.id).all
+percent_count = 0
+user = controller ? controller.logged_in_user : false
+admin = (user && Caboose::RoleMembership.where(:user_id => user.id, :role_id => 113).exists?) ? true : false
+%>
+
+
+<div class="poll-block" id="block_<%= block.id %>">
+	<h5 class="question richtext"><%== question %></h5>
+	<form id="poll-<%= block.id %>">
+		<input type="hidden" name="poll_id" value="<%= block.id %>">
+		<% answers.each do |a| %>
+			<div class="field">
+				<input type="radio" name="answer_id" value="<%= a.id %>" />
+				<span class="value"><%= a.child_value("answer") %></span>
+			</div>
+		<% end %>
+		<a href="#" class="btn" id="submit-poll-<%= block.id %>">Submit</a>
+ 		<!-- <a href="#" class="results" id="show-results-<%= block.id %>">See Results</a> -->
+ 		<% if admin %><span class="results">Admin users cannot vote.</span><% end %>
+	</form>
+	<div id="message"></div>
+	<% if admin %>
+	<div class="results-chart" id="results-<%= block.id %>" style="display:block;">
+		<h5 style="margin-top:40px;">Results</h5>
+		<% answers.each_with_index do |a,i| %>
+			<% count = PollResponse.where(:poll_block_id => block.id, :poll_answer_block_id => a.id, :site_id => site.id).count %>
+			<% width = responses.count == 0 ? 0 : ((count.to_f / responses.count.to_f) * 100).round %>
+			<% if i == (answers.count - 1) && responses.count > 0 %>
+				<% width = 100 - percent_count.round %>
+			<% else %>
+				<% percent_count += width %>
+			<% end %>
+			<div class="poll-answer" data-percent="<%= width %>" data-count="<%= count %>" data-answer="<%= a.id %>">
+				<p class="value"><%= a.child_value('answer') %></p>
+				<div class="bar">
+					<div class="fill" style="width:<%= width %>%;">
+						<span class="count"><%= count %></span>
+					</div>
+				</div>
+				<span class="percentage"><%= width %>%</span>
+			</div>
+		<% end %>
+	</div>
+	<% else %>
+	<div class="results-chart" id="results-<%= block.id %>">
+<!-- 		<p>Please check back soon to see poll results.</p> -->
+	</div>
+	<% end %>
+</div>
+
+<% content_for :js do %>
+<script>
+var poll_count_<%= block.id %> = <%= responses.count %>;
+var admin = <%= admin %>;
+function update_results_<%= block.id %>(answer_id) {
+	poll_count_<%= block.id %> += 1;
+	$.each( $("#block_<%= block.id %> .poll-answer"), function() {
+		var a = $(this);
+		var old_count = parseInt(a.data("count"));
+		var new_count = old_count;
+		if ( a.data("answer") == answer_id ) {
+			new_count += 1;
+			a.find(".count").text(new_count);
+		}
+		var new_percentage = (new_count / poll_count_<%= block.id %>) * 100;
+		a.find(".percentage").text( Number(new_percentage.toFixed(1)) + "%");
+		a.find(".fill").css("width",( Number(new_percentage.toFixed(3)) + "%"));
+	});
+}
+<% if admin %>
+$("#show-results-<%= block.id %>").click(function(event) {
+	event.preventDefault();
+	$("#poll-<%= block.id %>").hide();
+	$("#block_<%= block.id %> #message").hide();
+	$("#results-<%= block.id %>").show();
+});
+$("#submit-poll-<%= block.id %>").click(function(event) {
+	event.preventDefault();
+	$("#poll-<%= block.id %>").hide();
+	$("#block_<%= block.id %> #message").hide();
+	$("#results-<%= block.id %>").show();
+});
+<% else %>
+$("#submit-poll-<%= block.id %>").click(function(event) {
+	event.preventDefault();
+	var mess = $("#poll-<%= block.id %>").next("#message");
+	var answer_id = $("#poll-<%= block.id %> input[name='answer_id']:checked").first().val();
+	$.ajax({
+		url: '/api/polls/<%= block.id %>',
+		type: 'post',
+		data: $('#poll-<%= block.id %>').serialize(),
+		success: function(resp) {
+		  if (resp.error) mess.html("<p class='note error'>" + resp.error + "</p>");
+		  if (resp.success) {
+		  	$("#poll-<%= block.id %>").hide();
+		  	mess.html("<p class='success'>" + resp.success + "</p>");
+		  	update_results_<%= block.id %>(answer_id);
+		  	$("#results-<%= block.id %>").show();
+		  }
+		},
+		error: function() {	
+			mess.html("<p class='note error'>Error submitting form.</p>");			
+		}
+	});
+});
+<% end %>
+
+</script>
+<% end %>

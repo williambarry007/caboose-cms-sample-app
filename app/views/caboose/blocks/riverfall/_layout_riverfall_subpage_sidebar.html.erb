@@ -1,0 +1,10 @@
+<% val = Caboose::Block.where(:id => 74680).first %>
+<div class="sidebar-bg"></div>
+<aside class="subpage-sidebar" id="block_<%= block.id %>">
+	<% if val %>
+		<div class="richtext"><%== val.child_value('main_text') %></div>
+	<% end %>
+
+		<script src="https://tether.netteller.com/riverfall/login.js"></script>
+
+</aside>

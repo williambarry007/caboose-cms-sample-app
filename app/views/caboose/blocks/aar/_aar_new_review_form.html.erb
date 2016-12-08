@@ -1,0 +1,78 @@
+<div class="new-review-form" id="block_<%= block.id %>">
+	<form action="/aar-reviews/new" method="post" id="review-form">
+		<div class="field">
+			<label for="first_name">First Name</label>
+			<input type="text" name="first_name" />
+		</div>
+		<div class="field">
+			<label for="last_name">Last Name</label>
+			<input type="text" name="last_name" />
+		</div>
+		<div class="field">
+			<label for="email">Email Address</label>
+			<input type="email" name="email" />
+		</div>
+		<div class="field">
+			<label for="course">Course Name</label>
+			<input type="text" name="course" />
+		</div>
+		<div class="field">
+			<label for="instructor">Instructor Name</label>
+			<input type="text" name="instructor" />
+		</div>
+		<div class="field">
+			<label for="stars">How would you rate this course?</label>
+			<div id="course-rating" class="rateit"></div>
+		</div>
+		<div class="field">
+			<label for="content">Please describe your experience.</label>
+			<textarea name="content" rows="10"></textarea>
+		</div>
+		<input type="hidden" id="input-stars" name="stars" value="5" />
+		<input type="submit" value="Submit" class="btn" />
+	</form>
+	<div id="message"></div>
+</div>
+
+<% content_for :css do %>
+	<%= stylesheet_link_tag "rateit.css" %>
+<% end %>
+<% content_for :js do %>
+	<%= javascript_include_tag "rateit.js" %>
+	<script>
+		function submit_form(form_id) {
+		  var mess = $("#" + form_id).next("#message");
+		  mess.html("<p class='note loading'>Submitting form... </p>");
+		  var form = $("#" + form_id); 
+		  form.find("input, textarea").each(function() {
+		    if ( $(this).attr("placeholder") == $(this).val() ) {
+		      $(this).val("");
+		    }
+		  });
+		  $.ajax({
+		    url: '/aar-reviews/user/new',
+		    type: 'put',
+		    data: form.serialize(),
+		    success: function(resp) {
+		      if(resp.error) {
+		        form.find("input, textarea").each(function() {
+		          if ( $(this).val() == "" ) {
+		            $(this).val( $(this).attr("placeholder") );
+		          }
+		        });
+		        mess.html("<p class='note error'>" + resp.error + "</p>");
+		      } 
+		      if(resp.success) {
+		        form.slideUp(); 
+		        mess.html("<p class='note success'>Thanks for your review! After being approved, it will be added to our Course Reviews page.</p>");
+		      }
+		    }
+		  });
+		}
+		$("#review-form").submit(function(event) {
+			event.preventDefault();
+			$("#input-stars").attr("value",$("#course-rating").rateit("value"));
+			submit_form("review-form");
+		});
+	</script>
+<% end %>

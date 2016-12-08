@@ -1,0 +1,33 @@
+<% offset = block.child_value('offset').blank? ? 0 : block.child_value('offset') %>
+<% products = Caboose::Product.where(:site_id => site.id, :status => "Active", :featured => true).offset(offset).take(3) %>
+<% if products.count > 0 %>
+	<div class="featured-products" id="block_<%= block.id %>">
+		<div class="constrain">
+			<h3 class="section-title"><span><%= block.child_value('section_title') %></span></h3>
+			<div class="grid-row">
+				<% products.each do |p| %>
+					<div class="unit1of3">
+						<div class="product-container">
+							<% img = p.featured_image ? (p.featured_image.url(:large).include?('placehold') ? '//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg' : p.featured_image.url(:large)) : ('//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg') %>
+							<a href="<%= p.url %>" title="<%= p.title %>" class="product-link">
+								<img src="<%= img %>" alt="<%= p.title %>" />
+							</a>
+							<h5 class="product-name"><%= p.title %></h5>
+							<% if !p.caption.blank? %><h6 class="product-subtitle"><%= p.caption %></h6><% end %>
+							<% min_price = number_to_currency(p.price_range[0]) %>
+	            <% max_price = number_to_currency(p.price_range[1]) %>
+	            <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+	            <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+	            	<a href="<%= p.url %>" title="<%= p.title %>" class="btn"><%= display_price %></a>
+	            <% end %>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+<% else %>
+	<% if editing %>
+		<p style="padding:15px;border:1px solid gray;text-align:center;" id="block_<%= block.id %>">There are no featured products.</p>
+	<% end %>
+<% end %>

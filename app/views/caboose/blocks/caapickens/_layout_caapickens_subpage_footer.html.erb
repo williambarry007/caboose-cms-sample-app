@@ -1,0 +1,36 @@
+<%
+hf = Caboose::Block.where(:block_type_id => 3339).last
+%>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="flexbox">
+      <div class="left">
+        <img src="<%= asset_path 'caapickens/images/white_logo.png' %>" alt="<%= site.description %>" width="130" height="67" />
+        <section class="nine">
+          <span>Loved and Cared for by</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+      <div class="left-text richtext">
+        <%== hf.child_value('left_text') %>
+      </div>
+      <div class="right-text richtext">
+        <%== hf.child_value('right_text') %>
+      </div>
+      <div class="right">
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <% pages = Caboose::Page.index_page(site.id) ? Caboose::Page.index_page(site.id).children.where(:hide => false).order(:sort_order).all : [] %>
+            <% pages.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>

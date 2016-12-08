@@ -1,0 +1,64 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of2 left">
+        <div class="contact-form-block footer clearfix">
+          <form id="footer_contact_form">
+            <input type="hidden" name="block_id" value="<%= block.id %>" />
+            <input type="hidden" name="form_name" value="Contact Form" />
+            <input type="hidden" name="subject" value="Request" />
+            <div class="field">
+              <input type="email" name="email_required" placeholder="EMAIL ADDRESS">
+            </div>
+            <div class="field">
+              <input type="text" name="name" placeholder="NAME">
+            </div>
+            <div class="field">
+              <textarea name="message_required" placeholder="MESSAGE" rows="4"></textarea>
+            </div>
+            <div class="bottom clearfix">
+              <a href="#" class="btn white" id="submit-footer-contact-form">Send</a>
+            </div>
+          </form>
+          <div id="message"></div>
+        </div>
+      </div>
+      <div class="unit1of2 right">
+        <h3 class="unit-title">Contact</h3>
+        <div class="line"></div>
+        <p class="option">
+          <span class="icon-mail"></span>
+          <a href="mailto:<%= block.child_value('email_address') %>" class="value" title="Email"><%= block.child_value('email_address') %></a>
+        </p>
+        <p class="option">
+          <span class="icon-phone-2"></span>
+          <span class="value"><%= block.child_value('phone_number') %></span>
+        </p>
+        <p class="option">
+          <span class="icon-marker"></span>
+          <span class="value"><%== block.child_value('address') %></span>
+        </p>
+      </div>
+    </div>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>
+
+
+<% content_for :js do %>
+  <%= javascript_include_tag "form_submit" %>
+  <script>
+    $(document).ready(function() {
+      $("#submit-footer-contact-form").click(function(event) {
+        event.preventDefault();
+        submit_form("footer_contact_form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

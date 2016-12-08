@@ -1,0 +1,13 @@
+<% e = Caboose::CalendarEvent.where(:id => params[:id]).first %>
+
+<div class="event-details constrain" id="block_<%= block.id %>">
+	<% if e %>
+		<h3 class="title"><%= e.name %></h3>
+		<h4 class="location">Location: <%= e.location %></h4>
+		<h4 class="date">Date: <%= e.begin_date.strftime("%B %-d, %Y") %></h4>
+		<h4 class="time">Time: <% if e.all_day %>TBD<% else %><%= e.begin_date.strftime("%l:%M%P") %><% end %></h4>
+		<div class="description richtext"><%== e.description %></div>
+	<% else %>
+		<p>Sorry, that event could not be found.</p>
+	<% end %>
+</div>

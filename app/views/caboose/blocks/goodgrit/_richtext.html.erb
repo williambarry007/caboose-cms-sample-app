@@ -1,0 +1,8 @@
+<%
+text = block.value
+text = "<p>#{empty_text}</p>" if editing && (text.nil? || text.strip.length == 0)
+width = block.full_width ? "one-column" : "two-column"
+%>
+<div id='block_<%= block.id %>' class='richtext-block <%= width %>'>
+	<%== text %>
+</div>

@@ -1,0 +1,42 @@
+<%
+hf = Caboose::Block.where(:block_type_id => 2480).last
+%>
+
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 2033, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <div class="grid-row">
+      <div class="unit1of3 left">
+        <div class="richtext"><%== hf.child_value('left_text') %></div>
+      </div>
+      <div class="unit1of3 center">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/specialevents/images/white_logo.png" alt="Special Events" width="50" height="55" />
+        <h1 class="logo-title">Special Events</h1>
+        <ul class="links">
+          <li><a href="/policies" class="policies" title="Policies">Policies</a></li>
+          <li><a href="/sem" title="Special Events Management">Special Events Management</a></li>
+        </ul>
+      </div>
+      <div class="unit1of3 right">
+        <div class="richtext"><%== hf.child_value('right_text') %></div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="constrain">
+      <section class="nine">
+        <span>Designed and loved by:</span>
+        <a href="http://www.nine.is" target="_blank">
+          <%= render 'svg/nine' %>
+        </a>
+      </section>
+    </div>
+  </div>
+</footer>

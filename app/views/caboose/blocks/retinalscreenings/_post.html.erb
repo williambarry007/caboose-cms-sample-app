@@ -1,0 +1,38 @@
+<div class="post-details" id="block_<%= block.id %>">
+	<% if post %>
+		<p><a href="/resources/iris-news">&laquo; IRIS News</a></p>
+		<h1 class="post-title"><%= post.title %></h1>
+		<% if !post.subtitle.blank? %><h2 class="post-subtitle"><%= post.subtitle %></h2><% end %>
+		<% if !post.author.blank? %><h5 class="post-author">by <%= post.author %></h5><% end %>
+		<% if post.image && !post.image.url.blank? && !post.image.url.include?('placehold') %>
+			<img src="<%= post.image.url(:large) %>" class="single-thumb" alt="<%= post.title %>">
+		<% end %>
+		<% if !post.body.blank? %>
+			<%== post.body %>
+		<% else %>
+			<% if editing && block.children.count == 0 %>
+				<p style="border:1px solid gray;padding:15px;">Empty post. Click to add content blocks.</p>
+			<% else %>
+				<% block.children.each do |b| %>
+					<%= raw block.render(b, local_assigns) %>
+				<% end %>
+			<% end %>
+		<% end %>
+	<% else %>
+		<p>Sorry, that post could not be found.</p>
+	<% end %>
+</div>
+
+<style>
+	.post-details .post-title {
+	  margin-bottom: 6px;
+	}
+	.post-details .post-subtitle {
+    margin-bottom: 8px;
+    color: #89898E;
+    font-style: italic;
+	}
+	.post-details .single-thumb {
+	  margin-top: 20px;
+	}
+</style>

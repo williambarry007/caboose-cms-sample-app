@@ -1,0 +1,35 @@
+<%
+if editing 
+%>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>Admin</title>    
+    <meta name="viewport" content="width=device-width" />    
+    <%= raw css %>
+    <%= raw csrf_meta_tags %>
+  </head>  
+  <body>
+    <div class='container wrap'>
+      <h1>Slate Code Insertion Layout</h1>      
+      <p>Use in the following way:</p>
+      <p>http://&lt;my-domain&gt;/&lt;my-page&gt;?slate=&lt;slate-id&gt;</p>      
+    </div>
+  <%= raw js %>
+  </body>
+</html>
+<%
+elsif request.params[:slate]
+  slate = request.params[:slate]
+  url = "https://slate.adobe.com/cp/#{slate}"    
+  resp = HTTParty.get(url)
+  body = resp.body
+  body = body.gsub("url(images", "url(#{url}/images")
+  body = body.gsub("src=\"images", "src=\"#{url}/images")  
+  body = body.gsub('</head>', "#{page.custom_css}</head>") if page.custom_css && page.custom_css.strip.length > 0
+  body = body.gsxub('</body>', "#{page.custom_js}</body>" ) if page.custom_js  && page.custom_js.strip.length  > 0        
+  %><%= raw body %><%
+end
+%>

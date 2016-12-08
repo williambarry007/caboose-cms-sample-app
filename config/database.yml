@@ -1,0 +1,35 @@
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: caboosecms_development
+  pool: 5
+  username: root
+  password:
+
+#development:
+#  adapter: postgresql
+#  encoding: unicode
+#  username: fixwsfkzakagql
+#  password: aZmx13GTPKFBD7HdeNxFUpah58
+#  host: ec2-54-163-255-191.compute-1.amazonaws.com
+#  port: 5432
+#  database: dciv1kupmj0u2u
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: caboosecms_test
+  pool: 5
+  username: root
+  password:
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  username: ucpnodgc14vkv4
+  password: p20cltitvui15dcheifbgfu8i8a
+  host: ec2-54-83-23-102.compute-1.amazonaws.com
+  port: 5502
+  database: dc64e5r2p246ab
+

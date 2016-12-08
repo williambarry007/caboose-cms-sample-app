@@ -1,0 +1,62 @@
+<section class="home-client-section clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="grid-row">
+			<div class="unit1of2">
+				<div class="text-wrapper">
+					<h3 class="section-title"><%= block.child_value('section_title') %></h3>
+					<h6 class="section-subtitle"><%= block.child_value('section_subtitle') %></h6>
+					<div class="text-content">
+						<%== block.child_value('text_content') %>
+					</div>
+				</div>
+			</div>
+			<div class="unit1of2">
+				<% testimonials = block.children.where(:block_type_id => 598).order(:sort_order).all %>
+				<% if testimonials.count > 0 %>
+					<div class="slider-container" id="slider-<%= block.id %>">
+						<div class="left-nav" id="nav-left-<%= block.id %>">
+		          <div class="arrow icon-left-big"></div>
+		        </div>
+						<div class="liquid-slider" id="testimonial-slider">
+							<% testimonials.each_with_index do |t,i| %>
+								<div class="testimonial slide">
+									<h4 class="client-name"><%= t.child_value('name') %></h4>
+									<h6 class="company-name"><%= t.child_value('company_name') %></h6>
+									<div class="quote">
+										<%== t.child_value('quote') %>
+									</div>
+								</div>
+							<% end %>
+						</div>
+						<div class="right-nav" id="nav-right-<%= block.id %>">
+		          <div class="arrow icon-right-big"></div>
+		        </div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+	<% content_for :js do %>
+		<script>
+			$(document).ready(function() {
+				$("#slider-<%= block.id %>").find("#testimonial-slider").liquidSlider({
+		      autoSlide: false,
+		      autoSlideInterval: 6000,
+		      autoHeight: true,
+		      slideEaseFunction: "easeInOutSine",
+		      dynamicArrows: false,
+		      dynamicTabs: false
+		    });
+		    var api = $.data( $('#slider-<%= block.id %>').find("#testimonial-slider")[0], 'liquidSlider');
+        $("#nav-left-<%= block.id %>").click(function() {
+          api.setNextPanel('left');
+          api.updateClass($(this)); 
+        });
+        $("#nav-right-<%= block.id %>").click(function() {
+          api.setNextPanel('right');
+          api.updateClass($(this)); 
+        });
+			});
+		</script>
+	<% end %>
+</section>

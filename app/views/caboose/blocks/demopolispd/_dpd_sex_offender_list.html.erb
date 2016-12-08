@@ -1,0 +1,76 @@
+<% offenders = Demopolis::Offender.where(:category => 'Sex Offender', :status => 'Active').order(:last_name).all %>
+
+<div class="offender-list sex" id="block_<%= block.id %>">
+	<h4>Sex Offender Database</h4>
+	<div class="table-wrapper">
+		<table class="display" width="100%" id="offenders">
+			<thead>
+				<th>Photo</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Residence</th>
+				<th>DOB</th>
+				<th>Height</th>
+				<th>Weight</th>
+				<th>Sex</th>
+				<th>Eyes</th>
+				<th>Hair</th>
+				<th>Offense</th>
+			</thead>
+			<tbody>
+				<% offenders.each do |o| %>
+					<tr>
+						<td class="image-td">
+							<% if o.image && !o.image.url.include?('placehold') %>
+								<img src="<%= o.image.url(:small) %>" alt="<%= o.first_name %> <%= o.last_name %>">
+							<% else %>
+								<img src="/assets/shared/default_profile.png" alt="<%= o.first_name %> <%= o.last_name %>">
+							<% end %>
+						</td>
+						<td><%= o.first_name %></td>
+						<td><%= o.last_name %></td>
+						<td><%= o.residence %></td>
+						<td><%= !o.dob.blank? ? o.dob.strftime("%-m/%-d/%y") : "" %></td>
+						<td><%= o.height %></td>
+						<td><%= o.weight %></td>
+						<td><%= o.sex == 'Male' ? 'M' : (o.sex == 'Female' ? 'F' : '') %></td>
+						<td><%= o.eyes %></td>
+						<td><%= o.hair %></td>
+						<td>
+							<span class="bold">Offense: </span>
+							<p><%= o.offense %></p>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+			<tfoot>
+				<th>Photo</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Residence</th>
+				<th>DOB</th>
+				<th>Height</th>
+				<th>Weight</th>
+				<th>Sex</th>
+				<th>Eyes</th>
+				<th>Hair</th>
+				<th>Offense</th>
+			</tfoot>
+		</table>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<%= stylesheet_link_tag("//cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css") %>
+<% end %>
+
+<% content_for :js do %>
+	<script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+	<script>
+		$(document).ready(function() {
+	    $('#offenders').DataTable({
+	    	"order": [[ 2, "asc" ]]
+	    });
+		});
+	</script>
+<% end %>

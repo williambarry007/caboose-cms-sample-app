@@ -1,0 +1,105 @@
+<% states = block.children.where(:block_type_id => 2765) %>
+<% title = block.child_value('title') %>
+
+<% if modal %>
+	<% if block.child("title") %>
+	    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+	      Title: <%= block.child_value('title') %>
+	    </div>
+	<% end %>
+	<ul>
+      <% states.each_with_index do |s,i| %>
+        <% abbreviation = s.child_value('abbreviation') %>
+        <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+          <%= abbreviation.blank? ? ("State #{(i + 1).to_s}") : abbreviation %>
+        </li>
+      <% end %>
+    </ul>
+	<a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new state!</a>
+<% else %>
+	<div class="cm-client-map-container" id="block_<%= block.id %>">
+		<h4 id="cm-client-map-title"><%= title %></h4>
+		<div id="map" style="width: 700px; height: 450px;"></div>
+		<div id="overlay">
+			<div id="overlay-content"></div>
+			<div id="overlay-close">&#10006;</div>
+		</div> 
+		
+		<div id="overlay-background"></div>
+	</div>
+<% end %>
+
+<% content_for :css do %>
+	<style>
+	#cm-client-map-title {
+		color: #949393;
+		text-align: center;
+		letter-spacing: 3px;
+		padding-top: 25px;
+		padding-bottom: 25px;
+	}	
+	#overlay {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		z-index: 110;
+		background: white;
+		transform: translate(-50%, -50%);
+		padding: 30px;
+		border-radius: 15px;
+		display: none;
+	}
+	#overlay-content {
+		display: inline-block;
+	}
+	#overlay-close {
+		font-size: 24px;
+		position: fixed;
+		top: 5px;
+		right: 10px;
+	}
+	#overlay-background {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: #000;
+		opacity: .6;
+		filter: alpha(opacity=60);
+		z-index: 105;
+		display: none;
+	}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+  	$(document).ready(function() {
+	    $('#map').usmap({
+	      includeTerritories: ['PR'],
+	      stateSpecificStyles: {
+	      	<% states.each do |s| %>
+	      	  '<%= s.child_value('abbreviation') %>': { fill: '#26479B' },
+	      	<% end %>
+	      },
+	      stateHoverStyles: {fill: '#808080'},
+	      clickState: {
+	      	<% states.each do |s| %>
+	      		'<%= s.child_value('abbreviation') %>' : function(event, data) {
+		    		$('#overlay-content').html("<%= raw block.render(s.child('client_list'), local_assigns).gsub("\n",'') %>");
+		    		$('#overlay, #overlay-background').fadeIn();
+		    		$('#overlay-close').click(function() { $('#overlay, #overlay-background').fadeOut(); });
+		    	},
+	      	<% end %>
+		  }
+	    });
+	});
+	$(window).load(function() {
+		$('#map').css("height", $('#map > svg').outerHeight(true));
+	});
+	$(window).on('resize', function(){
+		$('#map').css("height", $('#map > svg').outerHeight(true));
+	});
+  </script>
+ <% end %>

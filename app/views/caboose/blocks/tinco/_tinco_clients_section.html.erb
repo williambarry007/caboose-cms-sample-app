@@ -1,0 +1,73 @@
+<%
+# ideo = block.child_value('background_video_path')
+# video = "http://cabooseit.s3.amazonaws.com/assets/soma/images/soma2.mp4"
+color = block.child_value('overlay_color').blank? ? 'transparent' : block.child_value('overlay_color')
+%>
+
+<div id="block_<%= block.id %>">  
+  <div id="clients" class="section dark">
+    <div class="parallax"><img src="<%= block.child_value('background_image').url(:huge) %>"></div>
+    <div class="container">
+      <div class="content">
+        <div class="text-center">
+          <h2 class="title"><%= block.child_value('title') %></h2>            
+        </div>
+        <div class="row">
+          <div class="col-md-2 col-sm-2 col-xs-12"></div>
+          <div class="col-md-8 col-sm-8 col-xs-12">
+            <%== block.child_value('body') %>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xs-12"></div>
+        </div>
+      </div>
+      <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+          <div class="item active">
+            <ul class="row">
+              <% if block.children.count > 0 %>
+                <% block.children.each do |b| %>
+                  <% next if b.block_type_id != 2229 %>
+                  <%== block.render(b, local_assigns) %>
+                <% end %>
+              <% end %>
+            </ul>
+          </div>
+<!--           <div class="item">
+            <ul class="row">
+              <li class="col-md-3 col-sm-6 col-xs-12">
+                <a href="#" class="thumbnail">
+                  <img src="http://placehold.it/100x30" alt="">
+                </a>
+              </li>
+              <li class="col-md-3 col-sm-6 col-xs-12">
+                <a href="#" class="thumbnail">
+                  <img src="http://placehold.it/100x30" alt="">
+                </a>
+              </li>
+              <li class="col-md-3 col-sm-6 col-xs-12">
+                <a href="#" class="thumbnail">
+                  <img src="http://placehold.it/100x30" alt="">
+                </a>
+              </li>
+              <li class="col-md-3 col-sm-6 col-xs-12">
+                <a href="#" class="thumbnail">
+                  <img src="http://placehold.it/100x30" alt="">
+                </a>
+              </li>
+            </ul>
+          </div> -->
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+          <i class="fa fa-angle-left"></i>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+          <i class="fa fa-angle-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

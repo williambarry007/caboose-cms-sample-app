@@ -1,0 +1,19 @@
+<% videos = VimeoCache.where(:site_id => site.id).where("id != ?",21).order("uploaded_at DESC").take(5) %>
+<% section_title = block.child_value('section_title').blank? ? "Recent Videos" : block.child_value('section_title') %>
+<div class="video-grid-block" id="block_<%= block.id %>">
+	<h3 class="grid-title"><span><%== section_title %></span></h3>
+	<div class="grid-wrapper clearfix">
+		<% videos.each_with_index do |v, i| %>
+			<div class="video-unit" style="background-image:url(<%= v.thumbnail_url %>);">
+				<div class="overlay"></div>
+				<div class="table">
+					<div class="table-cell">
+						<h5 class="video-title"><%= v.title %></h5>
+						<a href="/videos?vid=<%= v.video_id %>" class="btn color-outline">Watch Now</a>
+					</div>
+				</div>
+			</div>
+		<% end %>
+	</div>
+	<a href="/discover" title="Discover" class="dark btn">See More</a>
+</div>

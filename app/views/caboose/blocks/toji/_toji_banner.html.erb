@@ -1,0 +1,8 @@
+<figure id="block_<%= block.id %>"class="banner" style="background-image: url(<%= block.child('background').image.url(:original) %>)">
+  <% if !block.child_value('heading').nil? && !block.child_value('heading').empty?  %>
+    <header><h1><%= block.child_value('heading') %></h1></header>
+  <% elsif !block.child_value('text').nil? && !block.child_value('text').empty? %>
+    <p><%= block.child_value('text') %></p>
+  <% end %>
+</figure>
+

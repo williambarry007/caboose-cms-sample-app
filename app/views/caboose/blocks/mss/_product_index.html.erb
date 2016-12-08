@@ -1,0 +1,214 @@
+<div id="fullscreen-overlay">
+	<div class="table">
+		<div class="table-cell">
+			<div class="modal-wrapper">
+				<div class="modal">
+					<a href="#" id="close-modal" class="icon-close"></a>
+					<h3 class="modal-title">Download Demo</h3>
+					<p class="details">Please provide your contact info before you download the FREE demo of <span id="product-title"></span>.</p>
+					<form id="demo-form">
+						<input type="hidden" name="form_name" value="Free Demo Form" />
+						<input type="hidden" name="block_id" value="<%= block.id %>" />
+						<input type="hidden" id="product-name" name="product_name" value="" />
+						<div class="grid-row" style="max-width:400px;margin:0 auto;">
+							<div class="unit1of2"><input type="text" name="first_name_required" placeholder="First Name" style="width:98%;margin-bottom:12px;" /></div>
+							<div class="unit1of2"><input type="text" name="last_name_required" placeholder="Last Name" style="width:98%;margin-bottom:12px;" /></div>
+						</div>
+						<input type="email" name="email_address_required" placeholder="Email Address" />
+						<a href="#" id="submit-demo-form" class="btn">Submit</a>
+					</form>
+					<div id="message"></div>
+					<a href="#" id="download-btn" target="_blank" class="btn">Download Demo</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="product-index">
+
+	<% @category.category_memberships.reorder(:sort_order).all.each do |cm| %>
+	<% p = cm.product %>
+	<div class="product-wrapper clearfix">
+		<div class="constrain">
+			<div class="left">
+			<!-- 	<h1 class="product-class">K-3</h1> -->
+				<div class="product-graphic-wrapper">
+					<div class="top">
+						<img src="//d9hjv462jiw15.cloudfront.net/assets/mss/images/main_logo.png" alt="Differentiated Visual Tools" class="main-logo" />
+					</div>
+					<div class="middle">
+						<p class="product-info">
+							<% topic = p.categories.where("store_categories.parent_id = ?",209).last %>
+							<% if topic %><%= topic.name %><br /><% end %>
+							<% grade = p.categories.where("store_categories.parent_id = ?",204).last %>
+							<% if grade %><%= grade.name %><% end %>
+							<% if topic.blank? && grade.blank? %>
+								<%= p.caption %>
+							<% end %>
+						</p>
+					</div>
+					<div class="bottom clearfix <% if !p.alternate_id.blank? %>three<% end %>">
+						<% if !p.alternate_id.blank? %>
+							<a href="<%= p.alternate_id %>" class="btn" target="_blank">Video Tour</a>
+						<% end %>
+						<% if !p.seo_title.blank? %>
+							<a href="#" data-file="<%= p.seo_title %>" data-title="<%= p.title %>" target="_blank" class="demo-btn btn">Free Demo</a>
+						<% end %>
+						<% v = p.most_popular_variant %>
+						<% if v %>
+							<a href="/products/<%= p.id %>" class="btn atc" data-variant="<%= v.id %>">Buy Now</a>
+							<div class="atc-message" style="display:none;" id="atc-<%= v.id %>"><p>Added to cart! <a href="/cart">Go to Cart</a></p></div>
+						<% end %>
+					</div>
+				</div>
+			</div>
+			<div class="right">
+				<h2 class="product-name">
+					<%= p.title %>
+				</h2>
+				
+				<% if p.id == 648 %>
+					<div class="lit-left">
+						<div class="product-meta">
+							<h3 class="product-price">
+								<% if p.on_sale %><span style="color:rgb(202, 70, 95);">SALE!</span><% end %>
+								<% min_price = number_to_currency(p.price_range[0]) %>
+		            <% max_price = number_to_currency(p.price_range[1]) %>
+		            <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+		            <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+		            	<%= display_price %>
+		            <% end %>
+							<span class="product-caption"><%= p.caption %></span></h3>
+						<% if p.most_popular_variant.downloadable %>
+							<h5 class="product-detail-text">for individual license</h5>
+							<h6 class="contact">contact us for multi-user license quote</h6>
+						<% end %>
+						</div>
+						<div class="buttons" style="margin-top:15px;">
+							<a href="/products/<%= p.id %>" class="info btn alternate">Product Information</a><br />
+							<% if !p.handle.blank? %><a href="<%= p.handle %>" target="_blank" class="icon-pdf btn alternate"><span>Print Flyer</span></a>
+							<% if false %>
+							<p class="flyer-text" style="margin-top:5px;font-size:0.9em;"><span>Idea!</span> Share with your Curriculum Coordinator</p><% end %><% end %>
+							<p class="lit-note">
+								<span class="red">NOTE:</span>Save $66 by purchasing complete program
+							</p>
+						</div>
+					</div>
+					<div class="lit-right">
+						<p class="lit-note">
+							<span class="red">NOTE:</span>Individual modules from the 9-10 DVTs for Literature program, each designed to teach specific Core Literacy Standards, may be purchased separately.
+						</p>
+						<p class="lit-red">Purchase individual downloadable modules from this program</p>
+						<ul class="subproduct-list">
+							<% subc = Caboose::Category.where(:id => 281).first %>
+							<% subc.products.each do |sp| %>
+								<% next if sp.id == 648 %>
+								<li>
+									<h5 class="sub-title"><%= sp.title.gsub("9-10 Literature DVTs: ","") %></h5>
+									<div class="sub-buttons">
+										<a href="/products/<%= sp.id %>" class="alternate info btn">Product Information</a>
+										<% if !sp.handle.blank? %><a href="<%= sp.handle %>" target="_blank" class="icon-pdf btn alternate"><span>Print Flyer</span></a><% end %>
+										<% v1 = sp.most_popular_variant %>
+										<% if v1 %>
+											<span class="sp-price"><%= number_to_currency(v1.price) %></span>
+											<a href="/products/<%= sp.id %>" class="btn alternate buy atc" data-variant="<%= v1.id %>">Buy Now</a>
+											<div class="atc-message" style="display:none;" id="atc-<%= v1.id %>"><p>Added to cart! <a href="/cart">Go to Cart</a></p></div>
+										<% end %>
+									</div>
+								</li>
+							<% end %>
+						</ul>
+					</div>
+					<div class="clearfix"></div>
+				<% else %>
+					<div class="product-meta">
+						<h3 class="product-price">
+							<% if p.on_sale %><span style="color:rgb(202, 70, 95);">SALE!</span><% end %>
+							<% min_price = number_to_currency(p.price_range[0]) %>
+	            <% max_price = number_to_currency(p.price_range[1]) %>
+	            <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+	            <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+	            	<%= display_price %>
+	            <% end %>
+						<span class="product-caption"><%= p.caption %></span></h3>
+					<% if p.most_popular_variant.downloadable %>
+						<h5 class="product-detail-text">for individual license</h5>
+						<h6 class="contact">contact us for multi-user license quote</h6>
+					<% end %>
+					</div>
+					<div class="buttons" style="margin-top:15px;">
+						<a href="/products/<%= p.id %>" class="info btn alternate">Product Information</a><br />
+						<% if !p.handle.blank? %><a href="<%= p.handle %>" target="_blank" class="icon-pdf btn alternate"><span>Print Flyer</span></a>
+						<% if false %><p class="flyer-text" style="margin-top:5px;font-size:0.9em;"><span>Idea!</span> Share with your Curriculum Coordinator</p><% end %><% end %>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+
+	<% end %>
+
+</div>
+
+
+
+<% content_for :js do %>
+	<script>
+		function submit_form(form_id) {
+		  var mess = $("#" + form_id).next("#message");
+		  mess.html("<p class='note loading'>Submitting form... </p>");
+		  var form = $("#" + form_id); 
+		  form.find("input, textarea").each(function() {
+		    if ( $(this).attr("placeholder") == $(this).val() ) {
+		      $(this).val("");
+		    }
+		  });
+		  $.ajax({
+		    url: '/form',
+		    type: 'post',
+		    data: form.serialize(),
+		    success: function(resp) {
+		      if(resp.error) {
+		        form.find("input, textarea").each(function() {
+		          if ( $(this).val() == "" ) {
+		            $(this).val( $(this).attr("placeholder") );
+		          }
+		        });
+		        mess.html("<p class='note error'>" + resp.error + "</p>");
+		        mess.show();
+		      } 
+		      if(resp.success) {
+		        form.slideUp(); 
+			      mess.html("<p class='note success'>Thank you!</p>");
+			      mess.show();
+			      $("#download-btn").addClass("shown");
+			      var title = $(".modal .details #product-title").html();
+			      $(".modal .details").html("Please use the link below to download <span id='product-title'>" + title + "</span>.");
+		      }
+		    }
+		  });
+		}
+		$(document).ready(function() {
+			$("#submit-demo-form").click(function(event) {
+				event.preventDefault();
+				submit_form("demo-form"); 
+				return false;
+			});
+		});
+		$(".demo-btn").click(function(event) {
+			event.preventDefault();
+			var title = $(this).data("title");
+			var file = $(this).data("file");
+			$("#fullscreen-overlay").find("#product-title").html(title);
+			$("#fullscreen-overlay").find("#product-name").attr("value",title);
+			$("#fullscreen-overlay").find("#download-btn").attr("href",file);
+			$("#fullscreen-overlay").fadeIn();
+		});
+		$("#close-modal").click(function(event) {
+			event.preventDefault();
+			$("#fullscreen-overlay").fadeOut();
+			$("#fullscreen-overlay").find("#message").hide();
+		});
+	</script>
+<% end %>

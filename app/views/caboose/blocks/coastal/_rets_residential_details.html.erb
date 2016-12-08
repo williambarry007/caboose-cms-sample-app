@@ -1,0 +1,114 @@
+<div class="residential-details-wrapper constrain">
+	<div class="main">
+		<% if property.images && property.images.count > 0 %>
+			<div class="gallery-wrapper">
+				<section>
+					<h2 class="section-title">Photo Gallery</h2>
+					<div class="image-holder">
+						<img src="<%= property.images.first.image_url(:large) %>" alt="Featured Image" />
+					</div>
+					<%= render :partial => "caboose/blocks/coastal/image_gallery", :locals => {:property => property} %>
+				</section>
+				<% if !property.remarks.blank? %>
+					<section>
+						<h2 class="section-title">Property Details</h2>
+						<p class="remarks"><%= property.remarks %></p>
+					</section>
+				<% end %>
+				<section>
+					<h2 class="section-title">Single Family Home</h2>
+	        <ul>
+	          <% if !property.tot_heat_sqft.blank? %><li><strong>Total Heated Sq. Ft.</strong>: <span id='square_footage'><%=h property.tot_heat_sqft %></span></li><% end %>
+	          <% if !property.price_sqft.blank? %><li><strong>Price/Sq. Ft.</strong>: <span id='square_footage'><%=h number_to_currency property.price_sqft %></span></li><% end %>
+	          <% if !property.bedrooms.blank? %><li><strong>Bedrooms</strong>: <%= property.bedrooms %></li><% end %>
+	          <% if !property.baths.blank? %><li><strong>Baths</strong>: <%= property.baths_full %> full <% if property.baths_half != "" && property.baths_half != "0" %> &amp; <%= property.baths_half %> half baths<% end %></li><% end %>
+	          <% if !property.acreage.blank? %><li><strong>Acreage</strong>: <%= property.acreage %></li><% end %>
+	        </ul>
+				</section>
+				<section>
+        	<h2 class="section-title">Features</h2>
+	        <ul>
+	          <% if !property.ftr_interior.blank? %><li><strong>Interior</strong>: <%=   property.ftr_interior %> </li><% end %>
+	          <% if !property.ftr_cooling.blank?  %><li><strong>Cooling</strong>: <%=    property.ftr_cooling  %> </li><% end %>
+	          <% if !property.ftr_heating.blank?  %><li><strong>Heating</strong>: <%=    property.ftr_heating  %> </li><% end %>
+	          <% if !property.year_built.blank?   %><li><strong>Year Built</strong>: <%= property.year_built   %> </li><% end %>
+	        </ul>
+        	<% if property.virtual_tour %><p class="vt"><a class="btn" href='<%= property.virtual_tour %>' target='_blank' title="Virtual Tour">Virtual Tour</a></p><% end %>
+				</section>
+			</div>
+		<% end %>
+	</div>
+	<aside class="sidebar">
+		<% if agent %>
+	    <section class="agent">
+	      <h4 class="section-title">Agent</h4>
+	      <% if agent.image_url(:thumb) %>
+	      	<img src="<%= agent.image_url(:thumb) %>" alt="<% if agent.meta.designation %><%= agent.meta.designation %> <% end %><%= agent.first_name %> <%= agent.last_name %>" />
+	      <% end %>
+	      <p class="agent-name"><%= agent.first_name %> <%= agent.last_name %></p>
+	      <a href="tel:<%= agent.car_phone %>"><%= agent.car_phone %></a>
+	    </section>
+	  <% end %>
+		<section>
+			<h4 class="section-title">Quick Facts</h4>
+			<address>
+	      <% if !property.unit_num.nil? && property.unit_num.strip.length > 0 %>Unit <%= property.unit_num %>, <% end %>
+	      <%= property.street_num %> <%= property.street_name.titleize %><br />
+	      <%= property.city.titleize %>, <%= property.state %> <%= property.zip %>
+	    </address>
+	    <p class="current-price">
+	    	<%= number_to_currency(property.current_price, :precision => 0) %>
+	      <% if property.foreclosure_yn == 'Y' %>
+	  			<span class='foreclosure'>(Foreclosure)</span>
+	      <% end %>
+	    </p>
+	    <p class="mls-number">MLS #<%= property.mls_acct %></p>
+	    <p class="office-name">
+	    	Listing Courtesy of <% if property.office && property.office.lo_name %> <%= property.office.lo_name.titleize %><% else %><%= property.lo_code %><% end %>
+		  </p>
+		</section>
+		<section>
+			<h4 class="section-title">Directions</h4>
+			<% if property.latitude && property.longitude %>
+				<div class="property-map" id="map-<%= property.id %>" data-lat="<%= property.latitude %>" data-lng="<%= property.longitude %>" data-address="<%= property.street_num %> <%= property.street_name.titleize %>"></div>
+			<% end %>
+	  	<p class="directions"><%= property.directions %></p>
+		</section>
+	  <section>
+	  	<h4 class="section-title">Neighborhood Information</h4>
+		  <ul>
+		    <li><strong>Area</strong>: <%= property.area.titleize %></li>
+		    <% if property.subdivision %><li><strong>Subdivision</strong>: <%= property.subdivision.titleize %></li><% end %>
+		    <% if property.elem_school %><li><strong>Elementary School</strong>: <%= property.elem_school.titleize %></li><% end %>
+		    <% if property.middle_school %><li><strong>Middle School</strong>: <%= property.middle_school.titleize %></li><% end %>
+		    <% if property.high_school %><li><strong>High School</strong>: <%= property.high_school.titleize %></li><% end %>
+		    <li><strong>County</strong>: <%= property.county.titleize %></li>
+		    <li><strong>Lot Size</strong>: <%= property.ftr_lotdesc %></li>
+		  </ul>
+	  </section>
+	  <section>
+	  	<h4 class="section-title">Contact the Agent</h4>        
+		  <form action='/contact/property' method='post' id="contact_form">
+		    <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token %>" />
+		    <input type='hidden' name='contact_mls_acct' id='contact_mls_acct' value='<%= property.mls_acct %>' />
+				<input type='text'   name='contact_name'     id="contact_name"     value='' placeholder="Name"    maxlength="150" />
+				<input type='text'   name='contact_email'    id="contact_email"    value='' placeholder="Email"   maxlength="150" />
+				<textarea            name='contact_body'     id="contact_body"              placeholder="Message" rows="4"></textarea>				  
+			  <div id='contact_message'></div>            
+			  <p><input class="btn" type="submit" value="Send" /></p>
+			</form>
+	  </section>
+	</aside>
+</div>
+
+<script>
+var property_map_id = "map-<%= property.id %>";
+var photo_gallery_id = "gallery-<%= property.id %>";
+
+function loadScript() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAjSs-Jq6hpuT35RG9wD6LuqaDFzYDCOPk&callback=show_property_map";
+  document.body.appendChild(script);
+}
+</script>

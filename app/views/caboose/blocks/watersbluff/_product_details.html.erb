@@ -1,0 +1,94 @@
+<% p = @product %>
+
+<div class="product-details loading" id="product" data-id="<%= p.id %>">
+
+  <div class="fullscreen-overlay" id="screen-loading">
+    <div class="table">
+      <div class="table-cell">
+        <div class="loader">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="display: none;">
+            <symbol id="wave">
+              <path d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z"></path>
+              <path d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z"></path>
+              <path d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z"></path>
+              <path d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z"></path>
+            </symbol>
+          </svg>
+          <div class="box">
+            <div class="percent">
+              <div class="percentNum" id="count">0</div>
+              <div class="percentB">%</div>
+            </div>
+            <div id="water" class="water">
+              <svg viewBox="0 0 560 20" class="water_wave water_wave_back">
+                <use xlink:href="#wave"></use>
+              </svg>
+              <svg viewBox="0 0 560 20" class="water_wave water_wave_front">
+                <use xlink:href="#wave"></use>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <h4 class="text">Loading...</h4>
+      </div>
+    </div>
+  </div>
+
+  <% if p.product_images.count > 0 %>   
+<!--     <div class="loading-text">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/osp/images/icons/loading.gif" width="35" height="35" />
+      <h3>Loading product...</h3>
+    </div> -->
+  <% end %>
+  <div class="constrain">
+    <% cat = @product.categories.first %>
+    <% if cat %>
+ <!--      <a href="<%= cat.url %>" id="back-button" class="btn" title="<%= cat.name %>"><span class="icon-left-big"></span>Back to <%= cat.name %></a> -->
+    <% end %>
+    <% if p.product_images.count > 0 %>
+      <div id="product-images"></div>
+    <% end %>
+    <div class="left-text-wrapper">
+      <h1 class="product-title"><%= @product.title %></h1>
+      <% unless @product.description.nil? or @product.description.empty? %>
+        <div class="box"><%= raw @product.description %></div>
+      <% end %>
+    </div>
+    <section class="product-details-wrapper">
+      <div id="product-price"></div>
+      <% if !@product.caption.blank? %>
+        <div class="caption">
+          <%= @product.caption %>
+        </div>
+      <% end %>
+      <div id="product-options"></div>
+      <div id="add-to-cart"></div>
+    </section>
+  </div>
+</div>
+
+<%= content_for :css do %>
+  <%= stylesheet_link_tag 'caboose/product_images' %>
+  <%= stylesheet_link_tag 'caboose/product_options' %>
+<% end %>
+
+<%= content_for :js do %>
+  <%= javascript_include_tag 'caboose/imageZoom' %>
+  <%= javascript_include_tag 'caboose/cart_old' %>
+  <%= javascript_include_tag 'caboose/product' %>
+
+  <script>
+    var cnt=document.getElementById("count"); 
+    var water=document.getElementById("water");
+    var percent=cnt.innerText;
+    var interval;
+    interval=setInterval(function(){ 
+      percent++; 
+      cnt.innerHTML = percent; 
+      water.style.transform='translate(0'+','+(100-percent)+'%)';
+      if(percent==100){
+        clearInterval(interval);
+      }
+    },1);
+  </script>
+<% end %>

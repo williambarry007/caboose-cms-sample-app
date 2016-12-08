@@ -1,0 +1,101 @@
+<%
+p1 = block.child_value('photo_1')
+t1 = block.child_value('title_1')
+l1 = block.child_value('link_1')
+p2 = block.child_value('photo_2')
+t2 = block.child_value('title_2')
+l2 = block.child_value('link_2')
+p3 = block.child_value('photo_3')
+t3 = block.child_value('title_3')
+l3 = block.child_value('link_3')
+p4 = block.child_value('photo_4')
+t4 = block.child_value('title_4')
+l4 = block.child_value('link_4')
+p5 = block.child_value('photo_5')
+t5 = block.child_value('title_5')
+l5 = block.child_value('link_5')
+%>
+
+<div class="home-photo-grid" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="grid-row top">
+
+			<div class="unit unit1of2 left">
+				<div class="wrapper">
+					<div class="image-holder" style="background-image:url('<%= p1.url(:huge) %>');"></div>
+					<div class="container">
+						<div class="box">
+							<a href="<%= l1 %>" class="link">
+								<h2 class="title"><%= t1 %></h2>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="unit unit1of2 right">
+				<div class="wrapper">
+					<div class="image-holder" style="background-image:url('<%= p2.url(:huge) %>');"></div>
+					<div class="container">
+						<div class="box">
+							<a href="<%= l2 %>" class="link">
+								<h2 class="title"><%= t2 %></h2>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="logo-holder reveal">
+			<div class="box">
+				<img src="//d9hjv462jiw15.cloudfront.net/assets/ellis/images/main_logo.png" alt="<%= site.description %>" />
+			</div>
+		</div>
+
+		<div class="grid-row bottom">
+
+			<div class="unit unit1of3 left">
+				<div class="wrapper">
+					<div class="image-holder" style="background-image:url('<%= p3.url(:huge) %>');"></div>
+					<div class="container">
+						<div class="box">
+							<a href="<%= l3 %>" class="link">
+								<h2 class="title"><%= t3 %></h2>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="unit unit1of3 middle">
+				<div class="wrapper">
+					<div class="image-holder" style="background-image:url('<%= p4.url(:huge) %>');"></div>
+					<div class="container">
+						<div class="box">
+							<a href="<%= l4 %>" class="link">
+								<h2 class="title"><%= t4 %></h2>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="unit unit1of3 right">
+				<div class="wrapper">
+					<div class="image-holder" style="background-image:url('<%= p5.url(:huge) %>');"></div>
+					<div class="container">
+						<div class="box">
+							<a href="<%= l5 %>" class="link">
+								<h2 class="title"><%= t5 %></h2>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+</div>

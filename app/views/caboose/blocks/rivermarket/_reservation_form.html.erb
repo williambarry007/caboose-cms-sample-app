@@ -1,0 +1,157 @@
+<div class="reservation-form" id="block_<%= block.id %>">
+
+  <div class="constrain content-wrapper form-wrapper">
+
+      <h1 class="form-title">Event Request Form</h1>
+      <p class="form-description">Please use the form below to request an event date. We will check our calendar and be in touch!</p>
+    
+      <form id="reservation-form" action="/form" method="post">
+<!-- <div class="grid-row"> -->
+        <div class="section">
+          
+          <h3 class="section-title">Event Info</h3>
+
+          <input type="hidden" value="Event Request Form" name="form_name">
+          <input type="hidden" value="<%= block.id %>" name="block_id">
+          <div class="field">
+            <label for="event_desired_date_required" class="required">Desired Date</label>
+            <input type="text" name="event_desired_date_required" class="date-input">
+          </div>
+
+          <div class="field">
+            <label for="event_end_date_required" class="required">End Date</label>
+            <input type="text" name="event_end_date_required" class="date-input">
+          </div>
+
+          <div class="field">
+            <label for="event_title" class="required">Event Title</label>
+            <input type="text" name="event_title_required">
+          </div>
+
+          <div class="field">
+            <label for="event_type_required" class="required">Event Type</label>
+            <select name='event_type_required' > 
+              <option value="">Select One</option> 
+              <option value="Athletic">Athletic</option> 
+              <option value="Banquet">Banquet</option> 
+              <option value="Charity">Charity</option> 
+              <option value="Concert">Concert</option> 
+              <option value="Fundraiser">Fundraiser</option> 
+              <option value="Meal">Meal</option> 
+              <option value="Meeting">Meeting</option> 
+              <option value="Other">Other</option> 
+              <option value="Party">Party</option> 
+              <option value="Presentation">Presentation</option> 
+              <option value="Reception">Reception</option> 
+              <option value="Speaker">Speaker</option> 
+              <option value="Wedding Reception">Wedding Reception</option> 
+            </select> 
+          </div>
+
+          <div class="field">
+            <label for="host_name" class="required">Host</label>
+            <input type="text" name="host_name_required">
+          </div>
+
+          <div class="field">
+            <label for="number_attending" class="required">Number Attending</label>
+            <input type="text" name="number_attending">
+          </div>
+
+        </div>
+        <div class="section">
+          <h3 class="section-title">Contact Info</h3>
+          <div class="field">
+            <label for="contact_name" class="required">Contact Name</label>
+            <input type="text" name="contact_name_required">
+          </div>
+
+          <div class="field">
+            <label for="contact_email" class="required">Contact Email</label>
+            <input type="email" name="contact_email_required">
+          </div>
+
+          <div class="field">
+            <label for="contact_address" class="required">Contact Address</label>
+            <input type="text" name="contact_address">
+          </div>
+
+          <div class="field">
+            <label for="contact_phone" class="required">Contact Phone</label>
+            <input type="text" name="contact_phone">
+          </div>
+
+
+        </div>
+        <div class="section clearfix">
+          <h3 class="section-title">Room Info</h3>
+
+          <div class="field">
+            <label for="special_requests">Special Requests</label>
+            <br>
+            <textarea name="special_requests" placeholder="" rows="5"></textarea>
+          </div>
+
+          <div class="field option" style="margin-top: 20px;">
+            <label for="guests_under_21" class="required">Guests Under 21</label>
+            <%= check_box 'cb_1', 'guests_under_21', {}, 'yes', 'no' %>
+          </div>
+
+          <div class="field option">
+            <label for="alcohol_served" class="required">Alcohol to be Served</label>
+            <%= check_box 'cb_2', 'alcohol_served', {}, 'yes', 'no' %>
+          </div>
+
+          <div class="field option">
+            <label for="request_audio_visual" class="required">Request Audio Visual</label>
+            <%= check_box 'cb_3', 'request_audio_visual', {}, 'yes', 'no' %>
+          </div>
+
+          <div class="field option">
+            <label for="catering_services" class="required">Catering Services</label>
+            <%= check_box 'cb_4', 'catering_services', {}, 'yes', 'no' %>
+          </div>
+          
+        </div>
+
+<!--         </div> -->
+
+        <div class="grid-row" style="margin-top: 30px;">
+          <div class="section">
+            <h3>Review and Submit</h3>
+            <p style="padding-left:8px;"><a href="http://cabooseit.s3.amazonaws.com/assets/rivermarket/Tuscaloosa%20River%20Market%20Rental%20Info%20revised%20Oct%202015.pdf" target="_blank">View Facility Rental Terms</a></p>
+            <br />
+            <div class="field option">
+              <label for="agree_to_terms_required" class="required">I have read and agree to the terms for facility use.</label>
+              <%= check_box 'cb_5', 'agree_to_terms_required', {}, 'yes', 'no' %>
+            </div>
+          </div>
+        </div>
+        
+        <a id="submit-form" class="green btn">Submit</a>
+
+      </form>
+      <div id="message"></div>
+    
+  </div>
+  <%= stylesheet_link_tag "jquery-ui/datepicker" %>
+
+  <% content_for :js do %>
+
+    <%= javascript_include_tag "form_submit" %> 
+    <%= javascript_include_tag "jquery-ui/datepicker" %> 
+    <script>
+      $(document).ready(function() {
+        $('#submit-form').click(function(event) {
+          event.preventDefault(); 
+          submit_form("reservation-form");
+          return false;
+        });
+        $(".date-input").datepicker(); 
+      });
+     </script>
+
+  <% end %>
+  
+</div>
+

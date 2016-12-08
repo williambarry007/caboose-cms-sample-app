@@ -1,0 +1,56 @@
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main subpage">
+    <div class="top">
+      <div class="constrain">
+        <h1 class="mobile-logo conceal"><a href="/" title="Home">Port of Decatur</a></h1>
+        <nav class="reveal">
+          <% top_pages = Caboose::Page.where(:parent_id => 622, :hide => false).order(:sort_order).all %>
+          <ul>
+            <li><a href="/" title="Port of Decatur">Home</a></li>
+            <% top_pages.each do |p| %>
+              <li class="toplevel"><%== ApplicationHelper.nav_link(p, editing, false) %>
+                <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+                <% if subpages.count > 0 %>
+                  <div class="dropdown">
+                    <div class="constrain">
+                      <nav>
+                        <ul>
+                          <% subpages.each do |p| %>
+                            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+                          <% end %>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+        <a class="icon-menu-4 conceal" href="#" id="show-menu"></a>
+      </div>
+    </div>
+  </header>
+  <% if block.child_value('banner_image') %>
+    <% img = block.child_value('banner_image').url(:huge) %>
+  <% else %>
+    <% img = 'http://www.placehold.it/300x500' %>
+  <% end %>
+  <div class="subpage-banner" style="background-image:url(<%= img.include?('placehold') ? '//d9hjv462jiw15.cloudfront.net/assets/portofdecatur/images/decatur.jpg' : img %>);" >
+    <div class="banner-overlay"></div>
+    <div class="constrain">
+      <% if !block.child_value('banner_text').blank? %>
+        <div class="table">
+          <div class="table-cell">
+            <p class="banner-text">
+              <%= block.child_value('banner_text') %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+      <% if !block.child_value('button_url').blank? && !block.child_value('button_text').blank? %>
+        <a href="<%= block.child_value('button_url') %>" class="btn"><%= block.child_value('button_text') %></a>
+      <% end %>
+    </div>
+  </div>
+</div>

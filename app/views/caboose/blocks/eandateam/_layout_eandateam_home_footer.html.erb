@@ -1,0 +1,38 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of3 left">
+        <h4 class="unit-title">Get in Touch</h4>
+        <h5 class="phone">Call 1.888.504.7483</h5>
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+        <section class="nine">
+          <span>Designed and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+      <div class="unit1of3 center">
+        <h4 class="unit-title">Navigation</h4>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <% Caboose::Page.where(:parent_id => 1641, :hide => false).order(:sort_order).all.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+      <div class="unit1of3 right">
+        <h4 class="unit-title">Proud Member of</h4>
+        <div class="logos clearfix">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/carh.png" alt="CARH" />
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/nahb.png" alt="NAHB" width="120" height="55">
+         <!--  <img src="//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/gbc.png" alt="US Green Building Council" width="100" height="100"> -->
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/icc.png" alt="ICC" width="70" height="114">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/naa.png" alt="NAA" width="150" height="65">
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

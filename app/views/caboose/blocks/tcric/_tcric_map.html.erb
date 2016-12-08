@@ -1,0 +1,307 @@
+<div class="map-wrapper" id="block_<%= block.id %>">
+	<div id="construction-map"></div>
+</div>
+
+<% content_for :js do %>
+<script>
+function initialize_tcric_map() {
+	var mapel = $('#construction-map'); 
+	var mapCanvasId, mapCenterLat, mapCenterLng, mapDefaultZoom, mapInfoWindow, style_code;
+  mapCanvasId = mapel.attr("id");
+  mapCenterLat = 33.21;
+  mapCenterLng = -87.55;
+  mapDefaultZoom = 12;
+  style_code = [{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"administrative","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.country","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.country","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.country","elementType":"labels.text","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.province","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"all","stylers":[{"visibility":"simplified"},{"saturation":"-100"},{"lightness":"30"}]},{"featureType":"administrative.neighborhood","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative.land_parcel","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"all","stylers":[{"visibility":"simplified"},{"gamma":"0.00"},{"lightness":"74"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"landscape.man_made","elementType":"all","stylers":[{"lightness":"3"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"featureType":"road","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}];
+  var mapOptions = {
+    scrollwheel: false,
+    styles: style_code,
+  };
+  var map = new google.maps.Map(document.getElementById(mapCanvasId), mapOptions);
+  var markerIcon = new google.maps.MarkerImage('http://d9hjv462jiw15.cloudfront.net/assets/tcric/images/cone.png', null, null, null, new google.maps.Size(28,28));
+
+  /* Mitt Lary Road Improvements */
+  var lineOptions1 = {
+    strokeColor: '#E60000',
+    strokeOpacity: 0.7,
+    strokeWeight: 5
+  };
+  var dirService1 = new google.maps.DirectionsService();
+  var dirRenderer1 = new google.maps.DirectionsRenderer({suppressMarkers: true, polylineOptions: lineOptions1});
+  dirRenderer1.setMap(map);
+  var request1 = {
+    origin: new google.maps.LatLng(33.304985,-87.601054),
+    destination: new google.maps.LatLng(33.301111,-87.568653),
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  var marker1 = new google.maps.Marker({
+    position: {lat: 33.302653, lng: -87.587149},
+    map: map,
+    icon: markerIcon
+  });
+  var info1 = new google.maps.InfoWindow({
+    content: "Mitt Lary Road Improvements"
+  });
+  dirService1.route(request1, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      dirRenderer1.setDirections(result);
+    }
+  });
+
+  /* Highway 69 North Improvements */
+  var lineOptions2 = {
+    strokeColor: '#267300',
+    strokeOpacity: 0.7,
+    strokeWeight: 5
+  };
+  var dirService2 = new google.maps.DirectionsService();
+  var dirRenderer2 = new google.maps.DirectionsRenderer({suppressMarkers: true, polylineOptions: lineOptions2});
+  dirRenderer2.setMap(map);
+  var request2 = {
+    origin: new google.maps.LatLng(33.301111,-87.568653),
+    destination: new google.maps.LatLng(33.238929,-87.576635),
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  var marker2 = new google.maps.Marker({
+    position: {lat: 33.268070, lng: -87.570498},
+    map: map,
+    icon: markerIcon
+  });
+  var info2 = new google.maps.InfoWindow({
+    content: "Highway 69 North Improvements"
+  });
+  dirService2.route(request2, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      dirRenderer2.setDirections(result);
+    }
+  });
+
+  /* McFarland Blvd. Improvements */
+  var lineOptions3 = {
+    strokeColor: '#A8A800',
+    strokeOpacity: 0.7,
+    strokeWeight: 5
+  };
+  var dirService3 = new google.maps.DirectionsService();
+  var dirRenderer3 = new google.maps.DirectionsRenderer({suppressMarkers: true, polylineOptions: lineOptions3});
+  dirRenderer3.setMap(map);
+  var request3 = {
+    origin: new google.maps.LatLng(33.238929,-87.576635),
+    destination: new google.maps.LatLng(33.206115,-87.524579),
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  var marker3 = new google.maps.Marker({
+    position: {lat: 33.223457, lng: -87.531059},
+    map: map,
+    icon: markerIcon
+  });
+  var info3 = new google.maps.InfoWindow({
+    content: "McFarland Blvd. Improvements"
+  });
+  dirService3.route(request3, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      dirRenderer3.setDirections(result);
+    }
+  });
+
+  /* Martin Luther King / Jack Warner Parkway Improvements */
+  var lineOptions4 = {
+    strokeColor: '#730000',
+    strokeOpacity: 0.7,
+    strokeWeight: 5
+  };
+  var dirService4 = new google.maps.DirectionsService();
+  var dirRenderer4 = new google.maps.DirectionsRenderer({suppressMarkers: true, polylineOptions: lineOptions4});
+  dirRenderer4.setMap(map);
+  var request4 = {
+    origin: new google.maps.LatLng(33.212371,-87.570589),
+    destination: new google.maps.LatLng(33.205828,-87.577493),
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  var marker4 = new google.maps.Marker({
+    position: {lat: 33.211035, lng: -87.575734},
+    map: map,
+    icon: markerIcon
+  });
+  var info4 = new google.maps.InfoWindow({
+    content: "Martin Luther King / Jack Warner Parkway Improvements"
+  });
+  dirService4.route(request4, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      dirRenderer4.setDirections(result);
+    }
+  });
+
+  /* Highway 69 South Improvements */
+  var lineOptions5 = {
+    strokeColor: '#50008A',
+    strokeOpacity: 0.7,
+    strokeWeight: 5
+  };
+  var dirService5 = new google.maps.DirectionsService();
+  var dirRenderer5 = new google.maps.DirectionsRenderer({suppressMarkers: true, polylineOptions: lineOptions5});
+  dirRenderer5.setMap(map);
+  var request5 = {
+    origin: new google.maps.LatLng(33.164776,-87.550156),
+    destination: new google.maps.LatLng(33.110945,-87.551959),
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  var marker5 = new google.maps.Marker({
+    position: {lat: 33.131360, lng: -87.546508},
+    map: map,
+    icon: markerIcon
+  });
+  var info5 = new google.maps.InfoWindow({
+    content: "Highway 69 South Improvements"
+  });
+  dirService5.route(request5, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      dirRenderer5.setDirections(result);
+    }
+  });
+
+  /* Bear Creek Cutoff Road Improvements */
+  var lineOptions6 = {
+    strokeColor: '#0000FF',
+    strokeOpacity: 0.7,
+    strokeWeight: 5
+  };
+  var dirService6 = new google.maps.DirectionsService();
+  var dirRenderer6 = new google.maps.DirectionsRenderer({suppressMarkers: true, polylineOptions: lineOptions6});
+  dirRenderer6.setMap(map);
+  var request6 = {
+    origin: new google.maps.LatLng(33.144951,-87.538660),
+    destination: new google.maps.LatLng(33.148203,-87.526054),
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  var marker6 = new google.maps.Marker({
+    position: {lat: 33.148221, lng: -87.529390},
+    map: map,
+    icon: markerIcon
+  });
+  var info6 = new google.maps.InfoWindow({
+    content: "Bear Creek Cutoff Road Improvements"
+  });
+  dirService6.route(request6, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      dirRenderer6.setDirections(result);
+    }
+  });
+
+  /* McWrights Ferry Road Extension */
+  var roadCoords = [
+    { lat: 33.2315, lng: -87.52227 },
+    { lat: 33.23269, lng: -87.51946 },
+    { lat: 33.23405, lng: -87.51669 },
+    { lat: 33.23547, lng: -87.51446 },
+    { lat: 33.23762, lng: -87.51197 },
+    { lat: 33.23981, lng: -87.5097 },
+    { lat: 33.24214, lng: -87.5074 },
+    { lat: 33.24421, lng: -87.50502 },
+    { lat: 33.2462, lng: -87.50268 },
+    { lat: 33.24803, lng: -87.50066 },
+    { lat: 33.24841, lng: -87.50004 },
+    { lat: 33.24911, lng: -87.49929 },
+    { lat: 33.24984, lng: -87.49895 },
+    { lat: 33.24999, lng: -87.4983 },
+    { lat: 33.25008, lng: -87.49766 },
+    { lat: 33.25044, lng: -87.49727 },
+    { lat: 33.25099, lng: -87.49682 },
+    { lat: 33.25175, lng: -87.49622 },
+    { lat: 33.25253, lng: -87.49579 },
+    { lat: 33.2534, lng: -87.49545 },
+    { lat: 33.25419, lng: -87.49504 },
+    { lat: 33.25519, lng: -87.49459 },
+    { lat: 33.25639, lng: -87.49442 },
+    { lat: 33.25715, lng: -87.49427 },
+    { lat: 33.25812, lng: -87.49399 },
+    { lat: 33.25935, lng: -87.49365 },
+    { lat: 33.26048, lng: -87.49354 },
+    { lat: 33.26169, lng: -87.49348 },
+    { lat: 33.26296, lng: -87.49373 },
+    { lat: 33.26364, lng: -87.49365 },
+    { lat: 33.26495, lng: -87.49279 },
+    { lat: 33.26587, lng: -87.49206 },
+    { lat: 33.26655, lng: -87.49159 },
+    { lat: 33.26718, lng: -87.49142 },
+    { lat: 33.268, lng: -87.49139 },
+    { lat: 33.26888, lng: -87.49139 },
+    { lat: 33.26983, lng: -87.49135 },
+    { lat: 33.27057, lng: -87.49148 },
+    { lat: 33.27154, lng: -87.49135 },
+    { lat: 33.27252, lng: -87.49112 },
+    { lat: 33.27367, lng: -87.49086 },
+    { lat: 33.27491, lng: -87.49064 }
+  ];
+  var road = new google.maps.Polyline({
+    path: roadCoords,
+    geodesic: true,
+    strokeColor: '#E64C00',
+    strokeOpacity: 0.7,
+    strokeWeight: 5
+  });
+  road.setMap(map);
+  var marker7 = new google.maps.Marker({
+    position: {lat: 33.250414, lng: -87.499130},
+    map: map,
+    icon: markerIcon
+  });
+  var info7 = new google.maps.InfoWindow({
+    content: "McWrights Ferry Road Extension"
+  });
+
+  /* Marker click events */
+  google.maps.event.addListener(marker1, 'click', function() {
+    // info1.open(map,marker1);
+    window.location = '/projects/mitt-lary-road';
+  });
+  google.maps.event.addListener(marker2, 'click', function() {
+    // info2.open(map,marker2);
+    window.location = '/projects/highway-69-north';
+  });
+  google.maps.event.addListener(marker3, 'click', function() {
+    // info3.open(map,marker3);
+    window.location = '/projects/us-82-at-hargrove-road';
+  });
+  google.maps.event.addListener(marker4, 'click', function() {
+    // info4.open(map,marker4);
+    window.location = '/projects/jack-warner-pkwymartin-luther-king-blvd';
+  });
+  google.maps.event.addListener(marker5, 'click', function() {
+    // info5.open(map,marker5);
+    window.location = '/projects/highway-69-south';
+  });
+  google.maps.event.addListener(marker6, 'click', function() {
+    // info6.open(map,marker6);
+    window.location = '/projects/bear-creek-cutoff-intersection';
+  });
+  google.maps.event.addListener(marker7, 'click', function() {
+    // info7.open(map,marker7);
+    window.location = '/projects/mcwrights-ferry-road';
+  });
+  /* Pan map to center when ready */
+  google.maps.event.addListenerOnce(map, 'idle', function(){
+    map.panTo(new google.maps.LatLng(mapCenterLat,mapCenterLng));
+    map.setZoom(12);
+  });
+}
+
+function loadScript2() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = "https://maps.googleapis.com/maps/api/js?v=3key=AIzaSyDENedoxisMHbY-o895uaR7xp_bPFHo-24&callback=initialize_tcric_map";
+  document.body.appendChild(script);
+}
+	
+window.onload = loadScript2;
+</script>
+<% end %>
+
+<% content_for :css do %>
+<style>
+	#construction-map {
+		width: 100%;
+		height: 800px;
+		max-height: 90vh;
+	}
+</style>
+<% end %>

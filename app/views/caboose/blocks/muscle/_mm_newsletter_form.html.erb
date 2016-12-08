@@ -1,0 +1,17 @@
+<%
+info_text   = block.child_value('info_text')
+input_text  = block.child_value('input_text')
+button_text = block.child_value('button_text')
+
+input_text  = "Email Address" if input_text.nil?  || input_text.strip.length  == 0 
+button_text = "Learn More"    if button_text.nil? || button_text.strip.length == 0
+%>
+<div class="email-form-wrapper" id="block_<%= block.id %>">
+  <% if info_text && info_text.strip.length > 0 %>
+    <p class="info"><%= info_text %></p>
+  <% end %>
+  <form action="/mailchimp/subscribe" class='mailchimp_subscribe_form'>
+    <input type="email" name="email" placeholder="<%= input_text %>" />
+    <input type="submit" value="<%= button_text %>" class="btn">
+  </form>
+</div>

@@ -1,0 +1,61 @@
+<div class="content_wrapper home">
+  <div class="content_body home-content">
+  	<div class="table">
+  		<div class="table-cell">
+  			<div class="nav-bar top">
+		    	<a href="#" id="show-menu" data-effect="st-effect-12">
+			      <span class="icon-menu-4"></span>
+			      <span class="text">VERSES</span>
+			    </a>
+			    <h1 class="verse-location">
+			    	<a href="#" class='show-overlay' data-text='person'>
+			    		<%= @story ? "Meet #{@story.name}" : "Whitman, Alabama" %>
+			    	</a>
+			    </h1>
+			    <%== ApplicationHelper.social_links(@site.id, "icon", "white") %>
+		    </div>
+  			<div class="video-wrapper">
+					<div class="video-loader loading">
+						<img src="//placehold.it/640x360" alt="Loading Video..." style="width:100%;" />
+						<div class="overlay"></div>
+						<iframe id="video-iframe" src="https://player.vimeo.com/video/<%= @story && !@story.vimeo_url.blank? ? @story.vimeo_url : '184036326' %>?title=0&byline=0&portrait=0&autoplay=1" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+					</div>
+					<div class="overlay-wrapper">
+						<span class="arrow icon-up-big"></span>
+						<a href="#" class="close-overlay">
+							<span class="text">Close</span>
+							<span class="icon-close"></span>
+						</a>
+						<div class="table">
+							<div class="table-cell">
+								<div class="text-wrapper" id="about">
+									<%= render :partial => "caboose/blocks/whitman/about_project" %>
+								</div>
+								<div class="text-wrapper" id="verse">
+									<%= render :partial => "caboose/blocks/whitman/poem_text" %>
+								</div>
+								<div class="text-wrapper" id="map">
+									<%= render :partial => "caboose/blocks/whitman/locations_map" %>
+								</div>
+								<div class="text-wrapper" id="person">
+									<%== @story && !@story.introduction.blank? ? @story.introduction : '<p>“I take part. I see and hear the whole…”<br />Look closer. Listen.<br />She is searching for the white hawk in the trees.<br />He is singing to thunder.<br />She is cooing to the bounce of her mother’s hip.<br />He is reading in time to the twitch of his horse’s tail.<br />She is laughing from her prison bed.<br />“Ah this indeed is music—“<br />These voices all are whistling you home.<br />Join us. Here.<br />In Whitman, Alabama.</p>' %>
+								</div>
+							</div>
+						</div>
+						<span class="arrow icon-down-big"></span>
+					</div>
+		  	</div>
+		  	<div class="nav-bar bottom">
+		    	<ul class="links">
+		    		<li><a href="#" class='show-overlay' data-text="about">about the project</a></li>
+		    		<li><a href="#" class='show-overlay' data-text="map">locations</a></li>
+		    		<li><a href="#" class='show-overlay' data-text="verse">read the poem</a></li>
+		    		<li><a href="#">be a part of our project</a></li>
+		    		<li><a href="#">follow us</a></li>
+		    	</ul>
+		    	<%= render 'svg/nine' %>
+		    </div>
+  		</div>
+  	</div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="facebook-feed-block" id="block_<%= block.id %>">
+	<%  
+    limit = block.child_value('posts_to_show')
+    limit = limit.blank? ? 8 : limit.to_i
+    sc = Caboose::SocialConfig.where(:site_id => site.id).last
+    pid = sc ? sc.facebook_page_id : ''
+    posts = FacebookCache.where(:page_id => pid).order("date_created DESC").take(limit) 
+  %>
+  <% if !posts.blank? %>
+  	<h2 class="social-title">Facebook</h2>
+    <% posts.each do |p| %>
+    	<%
+	    	body = p.message.nil? ? "" : p.message.truncate(300)
+		    body = body.blank? ? p.picture : body
+	    %>
+      <div class="fb-post clearfix">
+      	<div class="image-holder">
+          <% if p.profile_img %>
+            <img src="<%= p.profile_img %>" class="profile-pic">
+          <% end %>
+      	</div>
+      	<div class="text-wrapper">
+      		<h5 class="page-name"><%= p.page_name %></h5>
+      		<h6 class="date"><%= time_ago_in_words(p.date_created) %> ago</h6>
+	        <% if !body.blank? && body.include?('https') %>
+	          <p class="post-body"><img src="<%= body %>" />
+	            <span style="display:block;margin-top:10px;"><%== p.story %></span>
+	          </p>
+	        <% else %>
+	          <p class="post-body">
+              <%== body %>
+              <a href="<%= p.post_url %>" target="_blank">View Post</a>
+            </p>
+	        <% end %>
+      	</div>
+      </div>
+    <% end %>
+  <% else %>
+    <% if editing %>
+      <p style="padding:10px;background:#fff;border:1px solid gray;text-align:center;">Empty Facebook feed. Please make sure page ID is correct in Social Media settings and allow 10 minutes for the feed to refresh.</p>
+    <% end %>
+  <% end %>
+</div>

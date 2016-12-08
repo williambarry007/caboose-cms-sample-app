@@ -1,0 +1,40 @@
+<% if modal %>
+
+  <% if block.child("width") %>
+    <div id="block_<%= block.child('width').id %>" style="text-decoration:underline;cursor:pointer;">
+      Width: <%= block.child_value('width') %>
+    </div>
+  <% end %>
+  <% if block.child("height") %>
+    <div id="block_<%= block.child('height').id %>" style="text-decoration:underline;cursor:pointer;">
+      Height: <%= block.child_value('height') %>
+    </div>
+  <% end %>
+
+<% else %>
+
+	<div class="content_wrapper" id='block_<%= block.id %>'>      
+	  <div class="content">
+	    <% if block.children.count > 0 %>
+	      <% block.children.drop(2).each do |b| %>
+	      	<%= raw block.render(b, local_assigns) %>
+	      <% end %>
+	    <% end %>                          
+	  </div>
+	</div>
+
+	<% content_for :css do %>
+    <style>
+		#block_<%= block.id %> > .content {
+			width: <%= block.child_value('width') %>px;
+			min-height: <%= block.child_value('height') %>px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		#block_93874 > div > div > div.post-text > a {
+			color: #e6e5e5;
+		}
+    </style>
+    <% end %>
+
+<% end %>

@@ -1,0 +1,214 @@
+<% cats = Caboose::PostCategory.where(:site_id => site.id).all %>
+<% limit = block.child_value('posts_to_show').blank? ? 1000 : block.child_value('posts_to_show').to_i %>
+<% ads = block.children.where(:block_type_id => 1350).all %>
+<% show_ads = block.child_value('show_ads') %>
+<% post_limit = (limit == 1000) ? 9 : limit %>
+<% post_limit = (show_ads == "Yes" && ads.count > 0) ? post_limit - 1 : post_limit %>
+<% user = controller.logged_in_user %>
+<% if !modal %>
+<% c = Caboose::PostCategory.where("LOWER(name) = ?", page.slug).last %>
+<% end %>
+<% if c %>
+  <% posts = c.posts.where(:published => true).order("created_at DESC").limit(post_limit) %>
+<% else %>
+  <% if user && user.id != 2 %>
+    <% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").limit(post_limit) %>
+  <% else %>
+    <% private_posts = Caboose::PostCategory.find(132).posts.all.map{|p| p.id} %>
+    <% private_posts = private_posts.blank? ? 0 : private_posts %>
+    <% posts = Caboose::Post.where("id NOT IN (?)", private_posts).where(:site_id => site.id, :published => true).limit(post_limit).order("created_at DESC") %>
+  <% end %>
+<% end %>
+<% offset = posts.count %>
+<% numberads = block.child_value('posts_to_ad').to_i %>
+<% title = block.child_value('section_title') %>
+<% if modal %>
+  <% if block.child("section_title") %>
+    <div id="block_<%= block.child('section_title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Section Title: <%= title %>
+    </div>
+  <% end %>
+  <% if block.child("posts_to_show") %>
+    <div id="block_<%= block.child('posts_to_show').id %>" style="text-decoration:underline;cursor:pointer;">
+      Posts to Show: <%= limit %>
+    </div>
+  <% end %>
+  <% if block.child("show_ads") %>
+    <div id="block_<%= block.child('show_ads').id %>" style="text-decoration:underline;cursor:pointer;">
+      Show Ads: <%= show_ads %>
+    </div>
+  <% end %>
+  <% if block.child("posts_to_ad") %>
+  <!--   <div id="block_<%= block.child('posts_to_ad').id %>" style="text-decoration:underline;cursor:pointer;">
+      Posts to Ad Ratio: <%= numberads %>
+    </div> -->
+  <% end %>
+  <p>Ads:</p>
+  <ul>
+    <% ads.each_with_index do |s,i| %>
+      <% name = s.child_value('name') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Ad #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new ad!</a>
+  <% elsif block.post %>
+    <a href='/admin/pages/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new ad!</a>
+  <% end %>
+<% else %>
+  <div class="news-list-wrapper clearfix" id="block_<%= block.id %>">
+    <% if !title.blank? %><h2 class="section-title"><%= title %></h2><% end %>
+      <% if posts.count > 0 %>
+        <% index = rand(post_limit) %>
+        <div class="news-grid-wrapper" data-count="<%= index %>">
+        	<% posts.each_with_index do |p, i| %>
+            <% if (i == index) && show_ads == "Yes" && ads.count > 0 %>
+              <% img = ads.first.child_value('photo').url(:large) %>
+              <% if img && !img.include?('placehold') %>
+                <article class="advertisement">
+                  <img src="<%= img %>" alt="<%= ads.first.child_value('name') %>" class="ad" />
+                  <a href="<%= ads.first.child_value('url') %>" target="_blank" title="<%= ads.first.child_value('name') %>" class="dark btn news-click-link">Visit for More</a>
+                </article>
+              <% end %>
+            <% end %>
+        		<article id="post-<%= p.id %>" data-index="<%= i %>">
+        			<a href="<%= p.uri %>" title="<%= p.title %>">
+                <% if p.post_categories.map{|c| c.id}.include?(132) %>
+                  <div class="exclusive-banner">SUBSCRIBER EXCLUSIVE</div>
+                <% end %>
+        				<div class="image-holder lazy" data-src="<%= p.image.url(:large) %>"></div>
+        			</a>
+        			<p class="subtitle"><%= p.subtitle %></p>
+        			<a href="<%= p.uri %>" title="<%= p.title %>"><h3><%= p.title %></h3></a>
+              <% if !p.preview.blank? %>
+          			<div class="excerpt">
+          				<% 
+                    html = Nokogiri::HTML( p.preview ) 
+                    text = html.at('body').inner_text
+                    words = text.blank? ? "" : text.split[0..30] 
+                  %>
+                  <% if !words.blank? && words.count > 29 %>
+                  	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+                  <% else %>
+          					<%= words.blank? ? "" : words.join(' ') %>
+                  <% end %>
+          			</div>
+              <% end %>
+              <% cat = p.post_categories.where("post_categories.id != ? AND post_categories.id != ?",121,132).first %>
+              <% if !c && cat && !cat.name.blank? %>
+        			  <div class="more">More Stories from <a href="/stories/<%= cat.name.downcase.gsub(' ','-') %>"><%= cat.name %></a></div>
+              <% end %>
+        		</article>
+        	<% end %>
+        </div>
+      <% else %>
+        <% if c %>
+          <p class="none category">Sorry, there are no articles under the category <%= c.name %> yet.</p>
+        <% else %>
+          <p class="none">Sorry, no articles were found.</p>
+        <% end %>
+      <% end %>
+  </div>
+  <% if show_ads == "Yes" and ads.count > 0 %>
+    <% content_for :js do %>
+      <script>
+        $(".news-click-link").click(function(event) {
+          ga('send', 'event', 'stories-ad', 'click', $(this).attr("title"), 1);
+        });
+      </script>
+    <% end %>
+    <% content_for :css do %>
+      <style>
+        .advertisement .btn {
+          background-color: <%= ads.first.child_value('color') %>;
+        }
+      </style>
+    <% end %>
+  <% end %>
+  <% if limit == 1000 %>
+    <% content_for :js do %>
+    	<script type="text/javascript">
+        var amount = 3, offSet = <%= offset %>, isPreviousEventComplete = true, isDataAvailable = true, post_id = 0, lazyInstance = null;
+        $(window).scroll(function () {
+         if ($(document).height() - ($("footer.main").outerHeight() + 50) <= $(window).scrollTop() + $(window).height()) {
+          if (isPreviousEventComplete && isDataAvailable) {
+            isPreviousEventComplete = false;
+            $.ajax({
+              type: "post",
+              data: {
+              	"amount"   : amount,
+              <% if c %>
+                "category_id" : <%= c.id %>,
+              <% end %>
+              	"offset"  : offSet
+              },
+              url: '/api/posts',
+              success: function (result) {
+                console.dir(result);
+                isPreviousEventComplete = true;
+                if (result == '') { // no more available
+                  isDataAvailable = false;
+                }
+                else {
+                	offSet = offSet + (result.length / 4);
+                $.each(result, function(index, post) {
+              //    console.dir(post);
+                  if ( index % 4 == 0 ) {
+                    post_id = post.id;
+                    $(".news-grid-wrapper").append("<article class='animated fadeInUp' id='post-" + post.id + "' style='display:none;'></article>");
+                    var article = $("#post-" + post.id);
+                    article.append("<a href='" + post.uri + "' title='" + post.title + "'><div class='image-holder lazy-"+offSet+"'></div></a>");
+                    if (post.subtitle)
+                      article.append("<p class='subtitle'>" + post.subtitle + "</p>");
+                    else
+                      article.append("<p class='subtitle'></p>");
+                    article.append("<a href='" + post.uri + "' title='" + post.title + "'><h3>" + post.title + "</h3></a>");
+                    if (post.preview)
+                      article.append("<div class='excerpt'>" + post.preview + "</div>");
+                    article.append("<div class='more'>More: <a href='#'>Another Story Title Here</a></div>");
+                  }
+                  else if ( index % 4 == 1 ) {
+                    var article = $("#post-" + post_id);
+                    if ( post.indexOf("placehold") > -1 )
+                      article.find(".image-holder").css("background-image","url('//d9hjv462jiw15.cloudfront.net/assets/goodgrit/images/placeholder.jpg')");
+                    else
+                      article.find(".image-holder").css("background-image","url(" + post + ")");
+              //      article.show();
+                  }
+                  else if ( index % 4 == 2 ) {
+                    var article = $("#post-" + post_id);
+                    <% if !c %>
+                      if ( post.length > 0 ) {
+                        article.find(".more a").html(post);
+                        var slug = post.replace(" ","-").toLowerCase();
+                        article.find(".more a").attr("href","/stories/" + slug);
+                      }
+                      else
+                        article.find(".more a").html("");
+                    <% else %>
+                      article.find(".more").html("");
+                    <% end %>
+               //     article.show();
+                  }
+                  else if ( index % 4 == 3 ) {
+                    var article = $("#post-" + post_id);
+                    if ( post == true )
+                      article.find("a").first().append("<div class='exclusive-banner'>SUBSCRIBER EXCLUSIVE</div>");
+                    article.show();
+                  }
+                });
+                }
+              },
+              error: function (error) {
+                console.log("Error fetching more posts.");
+              }
+            });
+          }
+         }
+        });
+    	</script>
+    <% end %>
+  <% end %>
+<% end %>

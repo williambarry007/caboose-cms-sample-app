@@ -1,0 +1,16 @@
+<section class="image-row clearfix" id="block_<%= block.id %>">
+  <div class="constrain">
+    <% images = block.children.where(:block_type_id => 299).all %>
+    <% if images.count > 0 %>
+      <% images.each do |i| %>
+        <% url = i.child_value('link_url') %>
+        <% if url.blank? %>
+          <div class="image-unit" href="<%= i.child_value('link_url') %>" target="_blank" style="background-image:url(<%= i.child_value('image').url(:large) %>);"></div>
+        <% else %>
+          <a class="image-unit" href="<%= i.child_value('link_url') %>" target="_blank" style="background-image:url(<%= i.child_value('image').url(:large) %>);"></a>
+        <% end %>
+      <% end %>
+    <% else %>
+    <% end %>
+  </div>
+</section>

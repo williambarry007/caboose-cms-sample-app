@@ -1,0 +1,29 @@
+<div class="property-content commercial">
+  <div class="overlay"></div>
+  <div class="constrain">
+    <p>Visions Commercial Real Estate is dedicated to the serving the needs of a broad spectrum of client needs in the Tuscaloosa, Alabama area. These include helping our clients find and develop, retail space, industrial &amp; warehouse, and office professional space.</p>
+  </div>
+</div>
+
+<div class="property-index-wrapper">
+  <div class="header">
+    <div class="constrain">
+      <h2>Commercial Listings</h2>
+      <a class="btn" href="#" id="show-commercial-search"><span id="text">Show Search</span> <span class="icon-search"></span></a> 
+    </div>
+  </div>
+  <%= block.partial('rets_commercial_search_form', local_assigns) %>
+  <div class="properties-wrapper">
+    <div class="property-list">
+      <% properties = properties.reject{ |p| p.prop_type.blank? || p.mls_acct.blank? || p.street_num.blank? || p.street_name.blank? || p.nil? } %>
+      <% if properties.nil? || properties.count == 0 %>
+        <div class='no-results'>No results found</div>
+      <% else %>
+        <% properties.each do |p| %>            
+          <%= block.partial('rets_commercial_row', local_assigns.merge({:p => p})) %>             
+        <% end %>
+        <%= pager.generate.html_safe %>
+      <% end %>
+    </div>
+  </div>
+</div>

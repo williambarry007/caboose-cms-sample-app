@@ -1,0 +1,36 @@
+<div class="captioned-photo" id="block_<%= block.id %>" style="float:<%= block.child_value('align') %>">
+	<img src="<%= block.child_value('photo').url(:large) %>" />
+	<div class="richtext">
+		<%== block.child_value('caption') %>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		#block_<%= block.id %> {
+			width: 20%;
+		}
+		#block_<%= block.id %> img {
+			width: 200px;
+			margin-bottom: 15px;
+		}
+		#block_<%= block.id %> .richtext {
+			width: 96%;
+		}
+		#block_<%= block.id %> .richtext p {
+			font-size: 13px;
+			margin-bottom: 5px;
+		}
+		#block_<%= block.id %> .richtext h4 {
+			font-size: 16px;
+		}
+		@media all and (max-width: 800px) {
+			#block_<%= block.id %> {
+				float: none !important;
+				width: 100%;
+				text-align: center;
+				margin-bottom: 30px;
+			}
+		}
+	</style>
+<% end %>

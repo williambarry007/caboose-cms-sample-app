@@ -1,0 +1,104 @@
+<%
+  logos = Caboose::Media.where(:media_category_id => 2477)
+%>
+
+<% if modal %>
+  <% if block.child("background_color") %>
+    <div id="block_<%= block.child('background_color').id %>" style="text-decoration:underline;cursor:pointer;">
+      Background Color: <%= block.child_value('background_color') %>
+    </div>
+  <% end %>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new logo!</a>
+<% else %>
+
+  <div class="ve-photobanner-container" id="block_<%= block.id %>">
+    <div class="photobanner">
+      <% logos.each_with_index do |logo, i| %>
+        <% if i == 0 %>
+          <img class="first" src="<%= logo.image_urls[:original_url] %>" alt="">
+        <% else %>
+          <img src="<%= logo.image_urls[:original_url] %>" alt="">
+        <% end %>
+      <% end %>
+
+      <% logos.each do |logo| %>
+        <img src="<%= logo.image_urls[:original_url] %>" alt="">
+      <% end %>
+    </div>
+  </div>
+
+<% end %>
+
+<% content_for :css do %>
+  <style>
+    .ve-photobanner-container {
+      overflow: hidden;
+      background-color: <%= block.child_value('background_color') %>;
+    }
+    .photobanner {
+      padding-top: <%= block.child_value('padding') %>;
+      padding-bottom: <%= block.child_value('padding') %>;
+      width: <%= 2 * 200 * logos.count %>px;
+      font-size: 0;
+    }
+
+    .photobanner > img {
+      width: 100px;
+      margin: 10px 50px 10px 50px;
+    }
+
+    /*keyframe animations*/
+    .first {
+      -webkit-animation: bannermove 60s linear infinite;
+         -moz-animation: bannermove 60s linear infinite;
+          -ms-animation: bannermove 60s linear infinite;
+           -o-animation: bannermove 60s linear infinite;
+              animation: bannermove 60s linear infinite;
+    }
+
+    @keyframes "bannermove" {
+      0% {
+        margin-left: 0px;
+      }
+      100% {
+        margin-left: <%= -1 * 200 * logos.count %>px;
+      }
+    }
+
+    @-moz-keyframes bannermove {
+      0% {
+       margin-left: 0px;
+      }
+      100% {
+       margin-left: <%= -1 * 200 * logos.count %>px;
+      }
+    }
+
+    @-webkit-keyframes "bannermove" {
+      0% {
+       margin-left: 0px;
+      }
+      100% {
+       margin-left: <%= -1 * 200 * logos.count %>px;
+      }
+    }
+
+    @-ms-keyframes "bannermove" {
+      0% {
+       margin-left: 0px;
+      }
+      100% {
+       margin-left: <%= -1 * 200 * logos.count %>px;
+      }
+    }
+
+    @-o-keyframes "bannermove" {
+      0% {
+       margin-left: 0px;
+      }
+      100% {
+       margin-left: <%= -1 * 200 * logos.count %>px;
+      }
+    }
+  </style>
+<% end %>

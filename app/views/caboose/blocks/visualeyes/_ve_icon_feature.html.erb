@@ -1,0 +1,16 @@
+<%
+  icon      = block.child_value("icon" )
+  title     = block.child_value("title")
+  body      = block.child("body")
+%>
+
+<div class="ve_icon_feature clearfix" id="block_<%= block.id %>">
+  <div class="icon-container">
+    <span class="helper"></span>
+    <img src="<%= icon %>" alt="<%= title %>" />
+  </div>
+  <div class="text-container">
+    <h5><%= title %></h5>
+    <%= block.render(body, local_assigns) %>
+  </div>
+</div>

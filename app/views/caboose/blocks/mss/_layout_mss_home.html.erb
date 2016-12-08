@@ -1,0 +1,96 @@
+<%
+sc = Caboose::SocialConfig.where(:site_id => site.id).where("twitter_username IS NOT NULL").first
+desc = page.meta_description.blank? ? "Interactive Visual Tools for strategic instruction in the common core, and K-12 graphic organizers for instruction in reading, writing, science, and more." : page.meta_description
+domain = site.primary_domain.domain
+%>
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js ie lt-ie9 lt-ie8 lt-ie7" lang="en"><![endif]-->
+<!--[if IE 7]><html class="no-js ie ie7 lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if IE 8]><html class="no-js ie ie8 lt-ie9" lang="en"><![endif]-->
+<!--[if IE 9]><html class="no-js ie ie9" lang="en"><![endif]-->
+<!--[if !IE]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<!--[if lt IE 9]><script src="/html5shiv.js"></script><![endif]-->
+  <head>    
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta http-equiv="content-language" content="en">
+    <title><%== page.seo_title.blank? ? page.head_title : page.seo_title %></title>
+    <meta name="description" content="<%= desc %>" />
+    <meta property="og:title" content="<%== page.seo_title.blank? ? page.head_title : page.seo_title %>" />
+    <meta property="og:url" content="http://<%= domain %>/<%= page.uri %>" />
+    <meta property="og:site_name" content="<%= site.description %>"/>
+    <meta property="og:description" content="<%= page.fb_description.blank? ? desc : page.fb_description %>" />
+    <meta name="twitter:card" content="summary">
+    <% if sc %><meta name="twitter:site" content="@<%= sc.twitter_username %>" /><% end %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:image" content="http://cabooseit.s3.amazonaws.com/assets/mss/images/share.jpg"/>
+    <meta name="robots" content="<%= page.meta_robots.blank? ? 'index, follow' : page.meta_robots %>">
+    <%= render :partial => "caboose/blocks/mss/icons" %>
+    <script src="//use.typekit.net/zst1lgi.js"></script>
+    <script>try{Typekit.load();}catch(e){}</script>
+    <%= raw css %>
+    <%= raw csrf_meta_tags %>
+    <script>(function() {
+      var _fbq = window._fbq || (window._fbq = []);
+      if (!_fbq.loaded) {
+        var fbds = document.createElement('script');
+        fbds.async = true;
+        fbds.src = '//connect.facebook.net/en_US/fbds.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(fbds, s);
+        _fbq.loaded = true;
+      }
+    })();
+    window._fbq = window._fbq || [];
+    window._fbq.push(['track', '6022060906415', {'value':'0.00','currency':'USD'}]);
+    </script>
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6022060906415&amp;cd[value]=0.00&amp;cd[currency]=USD&amp;noscript=1" /></noscript>
+  </head>  
+  <body>
+    <div id="sidr" style="display:none;">
+      <a href="#" id="close-sidr" class="icon-close"></a>
+      <div class="nav">
+        <ul>
+          <li><a href="/" title="Makes Sense Strategies">Home</a></li>
+          <% Caboose::Page.where(:parent_id => 584, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %>
+              <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+              <% if subpages.count > 0 %>
+                <ul>
+                  <% subpages.each do |p| %>
+                    <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+                  <% end %>
+                </ul>
+              <% end %>
+            </li>
+          <% end %>
+          <li><a href="/cart" title="My Cart">Cart</a></li>
+          <li><a href="/my-account" title="My Account">My Account</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container" id='block_<%= block.id %>'>
+      <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+      <![endif]-->
+      <%= raw block.render('header' , local_assigns) %>
+      <%= raw block.render('content', local_assigns) %>
+      <%= raw block.render('footer' , local_assigns) %>      
+    </div>
+  <%= raw js %>  
+
+  
+<!-- Start of Async HubSpot Analytics Code -->
+  <script type="text/javascript">
+    (function(d,s,i,r) {
+      if (d.getElementById(i)){return;}
+      var n=d.createElement(s),e=d.getElementsByTagName(s)[0];
+      n.id=i;n.src='//js.hs-analytics.net/analytics/'+(Math.ceil(new Date()/r)*r)+'/2427556.js';
+      e.parentNode.insertBefore(n, e);
+    })(document,"script","hs-analytics",300000);
+  </script>
+<!-- End of Async HubSpot Analytics Code -->
+  </body>
+</html>

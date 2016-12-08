@@ -1,0 +1,29 @@
+<% hf = Caboose::Block.where(:block_type_id => 2456).last %>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of2 left">
+        <div class="richtext"><%== hf.child_value('footer_text') %></div>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <% Caboose::Page.where(:parent_id => 2015, :hide => false).order(:sort_order).all.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+      <div class="unit1of2 right">
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+        <a href="/refunds" title="Cancellation & Refunds" class="cancel">Cancellation &amp; Refunds</a>
+        <section class="nine">
+          <span>Designed and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>
+</footer>

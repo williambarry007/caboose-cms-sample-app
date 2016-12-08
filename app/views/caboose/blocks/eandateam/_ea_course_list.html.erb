@@ -1,0 +1,67 @@
+<% courses = Ea::Course.where(:status => "Active").order(:sort_order).all %>
+<% display = block.child_value('display').blank? ? "Long" : block.child_value('display') %>
+<% cid = params[:cid] %>
+<% course_id = cid.blank? ? false : cid.to_i %>
+<% course = course_id ? Ea::Course.where(:id => course_id).first : false %>
+<% page_uri = page ? page.uri : "#" %>
+
+<div class="course-list-block <%= display %>" id="block_<%= block.id %>">
+	<!-- <div class="constrain"> -->
+
+		<% if course %>
+			<div class="course-details">
+				<% if course.image && !course.image.url.include?('placehold') %>
+					<div class="image-holder">
+						<img src="<%= course.image.url(:huge) %>" alt="<%= course.name %>" />
+					</div>
+				<% end %>
+				<h3 class="name">
+					<%= course.name %>
+					<% if course.spanish %>
+						<span class="spanish">Also Available in Spanish</span>
+					<% end %>
+				</h3>
+				<div class="share-buttons">
+					<% url = "http://" + site.primary_domain.domain + "/" + page_uri + "?cid=" + course.id.to_s %>
+					<a href="https://www.facebook.com/sharer/sharer.php?u=<%= url %>" target="_blank" title="Share on Facebook" class="holder" id="facebook" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-facebook white"></span></a>
+					<a href="https://twitter.com/home?status=<%= course.name + ' @ ' + url %>" title="Share on Twitter" target="_blank" class="holder" id="twitter" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-twitter white"></span></a>
+					<a href="https://plus.google.com/share?url=<%= url %>" title="Share on Google +" target="_blank" class="holder" id="google-plus" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-google-plus white"></span></a>
+					<a href="mailto:?subject=<%= course.name %>&amp;body=<%= url %>" title="Share by Email" class="holder" id="email"><span class="icon-mail white"></span></a>
+				</div>
+				<h5 class="instructor">Instructor: <%= course.instructor %></h5>
+				<h5 class="price">Price: <%= course.price %></h5>
+				<a href="<%= course.url %>" title="Register Now" target="_blank" class="btn">Register Now</a>
+				<% if !course.certification.blank? %><p class="certifications"><strong class="title">Certification:</strong>&nbsp;<%== course.certification %></p><% end %>
+				<% if !course.categories.blank? %><p class="categories"><strong class="title">Categories:</strong>&nbsp;<%== course.categories %></p><% end %>
+				<h4>About the Course</h4>
+				<div class="description richtext"><%== course.description %></div>
+				<a href="<%= course.url %>" title="Register Now" target="_blank" class="btn">Register Now</a>
+			</div>
+		<% elsif courses.count > 0 %>
+			<ul class="course-ul">
+				<% courses.each do |c| %>
+					<li>
+						<h4 class="name">
+							<a href="/<%= page_uri %>?cid=<%= c.id %>" title="<%= c.name %>"><%= c.name %></a>
+							<% if c.spanish %>
+								<span class="spanish">Also Available in Spanish</span>
+							<% end %>
+						</h4>
+						<h5 class="instructor">Instructor: <%= c.instructor %></h5>
+						<h5 class="price">Price: <%= c.price %></h5>
+						<p class="certifications"><strong class="title">Certification:</strong>&nbsp;<%== c.certification %></p>
+						<div class="buttons">
+							<a href="/<%= page_uri %>?cid=<%= c.id %>" class="btn">More Info</a>
+							<a href="<%= c.url %>" target="_blank" title="Register Now" class="btn">Register Now</a>
+						</div>
+					</li>
+				<% end %>
+			</ul>
+		<% else %>
+			<p>Sorry, the course you are looking for could not be found.</p>
+		<% end %>
+<!-- 	</div> -->
+</div>

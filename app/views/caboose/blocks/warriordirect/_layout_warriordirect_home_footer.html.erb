@@ -1,0 +1,23 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of2">
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <% Caboose::Page.where(:parent_id => 2387, :hide => false).order(:sort_order).all.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+      <div class="unit1of2">
+        <section class="nine">
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>
+</footer>

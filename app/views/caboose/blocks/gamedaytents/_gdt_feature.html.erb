@@ -1,0 +1,15 @@
+<%
+icon = block.child_value('icon').url(:large)
+title = block.child_value('title')
+body = block.child_value('body')
+%>
+
+<div class="feature-block clearfix" id="block_<%= block.id %>">
+	<div class="icon-wrapper">
+		<div class="icon" style="background-image:url(<%= icon %>);"></div>
+	</div>
+	<div class="text-wrapper">
+		<h3 class="title"><%= title %></h3>
+		<div class="body richtext"><%== body %></div>
+	</div>
+</div>

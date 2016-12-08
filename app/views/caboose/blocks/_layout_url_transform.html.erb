@@ -1,0 +1,40 @@
+<%
+url_block = block.child('url')
+transform_function_block = block.child('transform_function')
+
+if url_block.nil? || transform_function_block.nil?
+  block.create_children
+end
+
+if editing 
+%>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>Admin</title>    
+    <meta name="viewport" content="width=device-width" />    
+    <%= raw css %>
+    <%= raw csrf_meta_tags %>
+  </head>  
+  <body>
+    <div class='container wrap'>
+      <h1>URL Transform Layout</h1>
+      <p>This layout is used to transform the source code of a URL and display it locally.</p><br />
+      <p>URL:</p>
+      <div id='block_<%= url_block.id %>'><p><% if url_block.value %><%= url_block.value %><% else %>[Empty]<% end %></p></div><br />
+      <p>Transform Function:</p>
+      <div id='block_<%= code_block.id %>'><% if transform_function_block.value %><code><pre><%= raw html_escape(transform_function_block.value) %></pre></code><% else %><p>[Empty]</p><% end %></div>
+    </div>
+  <%= raw js %>
+  </body>
+</html>
+<%
+elsif url_block.value   
+  resp = HTTParty.get(url_block.value)
+  body = resp.body
+  body = body.gsub('</body>', "#{code_block.value}</body>") if code_block.value
+  %><%= raw body %><%
+end
+%>

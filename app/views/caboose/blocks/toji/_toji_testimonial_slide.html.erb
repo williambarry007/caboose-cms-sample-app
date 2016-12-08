@@ -1,0 +1,13 @@
+<li id="block_<%= block.id %>">
+  <div class="wrapper">
+    <p><%= block.child_value('quote') %></p>
+    
+    <aside>
+      <%= block.child_value('name') %>
+      
+      <% if !block.child_value('type').blank? %>
+        <br /><small><%= block.child_value('type') %></small>
+      <% end %>
+    </aside>
+  </div>
+</li>

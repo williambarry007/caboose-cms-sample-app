@@ -1,0 +1,28 @@
+<%
+shape = block.child_value('style').blank? ? "circle" : block.child_value('style').downcase
+color = block.child_value('color').blank? ? "white" : block.child_value('color').downcase
+align = block.child_value('align').blank? ? "center" : block.child_value('align').downcase
+padding = block.child_value('padding').blank? ? "Small" : block.child_value('padding')
+css_padding = "10px 2%"
+if padding == "None"
+	css_padding = "0"
+elsif padding == "Medium"
+	css_padding = "20px 2%"
+elsif padding == "Large"
+	css_padding = "40px 2%"
+elsif padding == "Huge"
+	css_padding = "100px 2%"
+end
+%>
+<div class="social-icons-block" id="block_<%= block.id %>">
+	<%== ApplicationHelper.social_links(site.id, shape, color) %>
+</div>
+
+<% content_for :css do %>
+	<style>
+		#block_<%= block.id %> {
+			text-align: <%= align %>;
+			padding: <%= css_padding %>;
+		}
+	</style>
+<% end %>

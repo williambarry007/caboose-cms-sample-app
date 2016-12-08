@@ -1,0 +1,81 @@
+<%
+title = block.child_value('title')
+body = block.child_value('body')
+img_url = block.child_value('banner_image').url(:huge)
+# img_url = '/assets/tintopinn/images/house.jpg'
+color = block.child_value('overlay_color').blank? ? "transparent" : block.child_value('overlay_color')
+%>
+
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main home" data-parallax="scroll" data-image-src="<%= img_url %>">
+    <div class="overlay" style="background-color:<%= color %>;"></div>
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/tintopinn/images/white_logo.png" alt="<%= site.description %>" width="180" height="180" />
+      </a>
+<!--       <div class="table">
+        <div class="table-cell"> -->
+          <div class="text-wrapper">
+            <h1 class="title"><%= title %></h1>
+            <div class="richtext"><%== body %></div>
+            <a href="tel:2052708655" title="Call for Reservations" class="btn">Call for Reservations</a>
+            <p class="phone" style="margin-top:12px;font-size:1.4em;padding-left:10px;">(205) 270-8655</p>
+          </div>
+
+      <div class="rates-banner">
+        <h3>Rates</h3>
+        <p>All rooms: $69/night</p>
+      </div>
+<!--         </div>
+      </div> -->
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+    <nav class="reveal">
+      <ul>
+        <li class="top-li"><a href="/" title="Home">Home</a></li>
+        <% pages = Caboose::Page.where(:parent_id => 2015, :hide => false).order(:sort_order).all %>
+        <% pages.each_with_index do |p,i| %>
+          <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+          <li class="top-li">
+            <% if subpages.count > 0 %>
+              <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <div class="dropdown <%= (pages.count - i < 3) ? 'right' : '' %>">
+                <div class="contain">
+                  <ul class="level-2">
+                    <% subpages.each do |s| %>
+                      <li class="li-2">
+                        <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                        <% if grandchildren.count > 0 %>
+                          <%== ApplicationHelper.nav_link(s, editing, false) %>
+                          <ul class="level-3">
+                            <% grandchildren.each do |g| %>
+                              <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                            <% end %>
+                          </ul>
+                        <% else %>
+                          <%== ApplicationHelper.nav_link(s, editing, false) %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            <% else %>
+              <%== ApplicationHelper.nav_link(p, editing, false) %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+  </header>
+  <% if false %>
+    <div class="booking-banner">
+      <div class="constrain">
+        <%= render :partial => "caboose/blocks/tintopinn/booking_banner" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+

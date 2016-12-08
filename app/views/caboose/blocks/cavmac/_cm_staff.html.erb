@@ -1,0 +1,34 @@
+<%
+designation = block.child_value('designation')
+link        = block.child_value('link')
+name        = block.child_value('name')
+photo       = block.child_value('photo')
+style       = block.child_value('photo_style').blank? ? 'Circle' : block.child_value('photo_style')
+title       = block.child_value('title')
+%>
+
+<div class="cm-staff-block clearfix" id="block_<%= block.id %>">
+	<% img_url = (photo.url && !photo.url.include?("placehold")) ? photo.url(:large) : '//d9hjv462jiw15.cloudfront.net/assets/shared/default_profile.png' %>
+	<% if img_url && style != 'None' %>
+			<a href=<%= link %>>
+				<span class="image-wrapper">
+					<% if style == "Circle" %>
+						<div class="profile-image" style="background-image:url(<%= img_url %>);"></div>
+					<% elsif style == "Rectangle" %>
+						<img src="<%= img_url %>" alt="<%= name %>">
+					<% end %>
+				</span>
+			</a>
+	<% end %>
+	<div class="text-wrapper <% if style == 'None' %>full<% end %>">
+		<h4 class="name">
+			<%= name %>
+		</h4>
+		<h6 class="designation">
+			<% if !designation.blank? %><%= designation %>
+			<% else %>&nbsp;
+			<% end %>
+		</h6>
+		<% if !title.blank? %><h6 class="title"><%= title %></h6><% end %>
+	</div>
+</div>

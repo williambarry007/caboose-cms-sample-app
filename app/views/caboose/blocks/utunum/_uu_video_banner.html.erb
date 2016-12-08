@@ -1,0 +1,80 @@
+<%
+l_img = block.child_value('left_image').url(:large) 
+r_img = block.child_value('right_image').url(:large) 
+url = block.child_value('video_url') 
+source = "YouTube" 
+if url && url.include?('vimeo') 
+  source = "Vimeo"
+end 
+%>
+
+<div class="video-banner-block clearfix" id="block_<%= block.id %>">
+	<div class="left" style="background-image:url(<%= l_img %>);"></div>
+	<div class="right">
+		<div class="top clearfix">
+			<div class="video-wrapper">
+				<div class="video_page_block" id="video-<%= block.id %>">
+				  <div style="text-align:center; width: 100%;">
+				    <img style="width:24px; height:24px; margin-right: 10px; position: relative; top: 5px;" src='//dfqtg9731bovy.cloudfront.net/assets/loading.gif' />
+				    <span>Loading video...</span>
+				  </div>
+				</div>
+			</div>
+			<div class="img" style="background-image:url(<%= r_img %>);"></div>
+		</div>
+		<div class="bottom">
+			<div class="table">
+				<div class="table-cell">
+					<%== block.child_value('text') %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<% content_for :js do %>
+  <script>
+  $(document).ready(function() {
+      var video_block = $("#video-<%= block.id %>");
+      var source_url = "<%= url %>"; 
+      var source_type = "<%= source %>";
+      var autoplay = "No"; 
+      var width = "100%"; 
+      var height = "450"; 
+      if (autoplay == "Yes") {
+        autoplay = 1; 
+      }
+      else {
+        autoplay = 0; 
+      }
+      if ( source_type == "YouTube" ) {
+        function ytVidId(url) {
+          var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+          return (url.match(p)) ? RegExp.$1 : false;
+        }
+        var video_id = ytVidId( source_url );
+        if ( video_id ){
+            var iframe = "<iframe id='ytplayer' type='text/html' width='" + width +  "' height='" + height +  "' " + 
+            "src='http://www.youtube.com/embed/" + video_id + 
+            "?autoplay=" + autoplay + "&origin=http://arec.alabama.gov'frameborder='0'/>"; 
+            video_block.html(iframe); 
+        }
+        else{
+            video_block.html("<p>Error loading video.</p>"); 
+        }
+      }
+      else if ( source_type == "Vimeo" ) {
+        var regExp = /http(s)?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+        var match = source_url.match(regExp);
+        if ( match[3] ){
+            var iframe = "<iframe src='//player.vimeo.com/video/" + match[3] + "?autoplay=" + autoplay + 
+            "' width='" + width +  "' height='" + height +  "' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"; 
+            video_block.html(iframe); 
+        }
+        else{
+            video_block.html("<p>Error loading video.</p>"); 
+        }
+      }
+  });
+  </script>
+<% end %>

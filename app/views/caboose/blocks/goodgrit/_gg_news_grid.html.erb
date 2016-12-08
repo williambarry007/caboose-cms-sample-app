@@ -1,0 +1,39 @@
+<% 
+user = controller ? controller.logged_in_user : nil
+post_limit = 4
+home_cat = Caboose::PostCategory.where(:id => 121).first
+posts = home_cat ? home_cat.posts.where("created_at < ?",DateTime.now).order("created_at DESC").limit(post_limit) : []
+%>
+
+<% if modal %>
+  <% if block.child("posts_to_show") %>
+    <div id="block_<%= block.child('posts_to_show').id %>" style="text-decoration:underline;cursor:pointer;">
+      Posts to Show: <%= post_limit %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="home-featured-posts" id="block_<%= block.id %>">
+    <% if posts.count > 0 %>
+      <div class="posts-container clearfix">
+        <% posts.each_with_index do |p, index| %>
+          <% cat = p.post_categories.where("post_categories.id != ?",121).first %>
+          <% img_url = p.image.url(:huge) %>
+          <div class="post-unit">
+            <div class="contain">
+              <a class="post-link" href="<%= p.uri %>" title="<%= p.title %>">
+                <span class="image-holder">
+                  <img src="<%= img_url %>" alt="<%= p.title %>">
+                </span>
+                <span class="title"><%= p.title %></span>
+                <% if cat %><span class="category"><%= cat.name %></span><% end %>
+                <span class="date"><%= p.created_at.strftime("%B %-d, %Y") %></span>
+              </a>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p>Sorry, there are no posts to show.</p>
+    <% end %>
+  </div>
+<% end %>

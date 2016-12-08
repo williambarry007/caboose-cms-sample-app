@@ -1,0 +1,23 @@
+<% top_page = Caboose::Page.where(:parent_id => 959, :title => "Education").last %>
+<% pages = Caboose::Page.where(:parent_id => top_page.id, :hide => false).where("id != ?",page.id).order(:sort_order).all %>
+<div class="edu-links" id="block_<%= block.id %>">
+	<% pages.each_with_index do |p,i| %>
+		<div class="edu-link-block">
+			<div class="contain">
+			<% if p.slug == 'the-paperless-agent' # Paperless Agent %>
+				<img src="http://alabamarealtors.s3.amazonaws.com/uploads/paperless.png" style="width:200px;"/>
+			<% elsif p.slug == 'online-classes' # ROI %>
+				<img src="http://alabamarealtors.s3.amazonaws.com/uploads/roi.png" style="width:140px;" />
+			<% elsif p.slug == 'gri' # GRI %>
+				<img src="http://alabamarealtors.s3.amazonaws.com/uploads/gri.png" style="width:140px;" />
+			<% elsif p.slug == 'ninja-selling' %>
+				<img src="http://d2twyuu72t1mm8.cloudfront.net/uploads/5626_original.jpg" style="width:140px;" />
+			<% else %>
+				<h2 class="edu-title"><%== p.title %></h2>
+			<% end %>
+			<p class="meta"><%= p.meta_description %></p>
+			<a class="btn" href="/<%= p.uri %>" title="<%== p.title %>">GO</a>
+			</div>
+		</div>
+	<% end %>
+</div>

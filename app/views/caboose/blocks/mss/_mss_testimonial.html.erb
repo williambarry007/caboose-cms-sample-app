@@ -1,0 +1,17 @@
+<%
+quote = block.child_value('quote')
+name = block.child_value('name')
+title = block.child_value('title')
+%>
+
+<% if editing && quote.blank? && name.blank? && title.blank? %>
+	<p style="padding:10px;border:1px dashed gray;" id="block_<%= block.id %>">Empty testimonial block. Click to edit.</p>
+<% else %>
+	<div class="testimonial-block" id="block_<%= block.id %>">
+		<div class="quote">
+			<%== quote %>
+		</div>
+		<% if !name.blank? %><h4 class="name"><%= name %></h4><% end %>
+		<% if !title.blank? %><h4 class="title"><%= title %></h4><% end %>
+	</div>
+<% end %>

@@ -1,0 +1,248 @@
+<% 
+
+  sc = Caboose::SocialConfig.where(:site_id => site.id).first
+  fbid = sc ? sc.facebook_page_id : ''
+  twun = sc ? sc.twitter_username : ''
+  igun = sc ? sc.instagram_username : ''
+  ytun = sc ? sc.youtube_url : ''
+
+	@fb = FacebookCache.where("id != 1885490").where(:page_id => "34621554367").order("date_created DESC").take(3)
+	@f2 = FacebookCache.where("id != 1885490").where(:page_id => "572437299526626").order("date_created DESC").take(3)
+	@tw = TwitterCache.where(:site_id => site.id).order("created_at DESC").take(5)
+	@ig = InstagramCache.where(:site_id => site.id).order("date_created DESC").take(3)
+	@yt = YoutubeCache.where("id != 25042").where("id != 131427").where(:site_id => site.id).order("uploaded_at DESC").take(4)
+	@posts = Caboose::Post.where("id != 863").where(:site_id => site.id, :published => true).order("created_at DESC").take(4)
+
+	@fb_index = 0
+	@f2_index = 0
+	@tw_index = 0
+	@ig_index = 0
+	@yt_index = 0
+	@post_index = 0
+
+	total = @fb.count + @tw.count + @ig.count + @yt.count + @f2.count + @posts.count
+
+	index = 0
+
+	def next_fb
+		if @fb_index < @fb.count
+			this = @fb[@fb_index]
+			@fb_index += 1
+			return this
+		else
+			return nil
+		end
+	end
+
+	def next_f2
+		if @f2_index < @f2.count
+			this = @f2[@f2_index]
+			@f2_index += 1
+			return this
+		else
+			return nil
+		end
+	end
+
+	def next_tw
+		if @tw_index < @tw.count
+			this = @tw[@tw_index]
+			@tw_index += 1
+			return this
+		else
+			return nil
+		end
+	end
+
+	def next_ig
+		if @ig_index < @ig.count
+			this = @ig[@ig_index]
+			@ig_index += 1
+			return this
+		else
+			return nil
+		end
+	end
+
+	def next_yt
+		if @yt_index < @yt.count
+			this = @yt[@yt_index]
+			@yt_index += 1
+			return this
+		else
+			return nil
+		end
+	end
+
+	def next_post
+		if @post_index < @posts.count
+			this = @posts[@post_index]
+			@post_index += 1
+			return this
+		else
+			return nil
+		end
+	end
+%>
+<div class="social-media-grid-block" id="block_<%= block.id %>">
+	<h3 class="grid-title">Media Center</h3>
+	<div class="grid-wrapper clearfix" id="grid-<%= block.id %>">
+		<% if total > 0 %>
+			<% while index < total %>
+				<% p = next_fb %>
+				<% if p %>
+					<%
+			    	message = p.message.nil? ? "" : p.message.truncate(300)
+		        story = p.story.nil? ? "" : p.story.truncate(300)
+		        description = p.description.nil? ? "" : p.description.truncate(300)
+				    picture = p.picture
+		        link = p.link
+			    %>
+					<div class="post facebook" data-href="<%= p.post_url %>">
+						<div class="contain">
+							<p class="icon-facebook white"></p>
+							<p class="post-date"><%= time_ago_in_words(p.date_created) %> ago</p>
+							<% if !picture.blank? %>
+	              <% if !link.blank? %><a href="<%= link %>" target="_blank"><% end %>
+	                <img src="<%= picture %>" class="post-image" />
+	              <% if !link.blank? %></a><% end %>
+	            <% end %>
+	            <% if !story.blank? %><div class="post-story"><%== story %></div><% end %>
+	            <% if !message.blank? %><div class="post-body"><%== message %></div><% end %>
+						</div>
+					</div>
+				<% end %>
+				<% p = next_tw %>
+				<% if p %>
+					<div class="post twitter" data-href="<%= p.tweet_url %>">
+						<div class="contain">
+							<p class="icon-twitter white"></p>
+							<p class="post-date"><%= time_ago_in_words(p.created_at) %> ago</p>
+							<p class="post-body"><%== p.body %></p>
+						</div>
+					</div>
+				<% end %>
+				<% p = next_post %>
+				<% ae_post = p ? Caboose::PostCategoryMembership.where(:post_category_id => 128, :post_id => p.id).exists? : false %>
+				<% if p && !ae_post %>
+					<div class="post news" data-href="<%= p.uri %>">
+						<div class="contain">
+							<p class="icon-blog white"></p>
+							<p class="post-date"><%= time_ago_in_words(p.created_at) %> ago</p>
+							<% if p.image.url && !p.image.url.include?('placehold') %>
+								<img src="<%= p.image.url(:large) %>" class="post-image" />
+							<% end %>
+							<div class="post-body">
+								<h6 style="margin-bottom:6px;"><%= p.title %></h6>
+								<%== p.preview %>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				<% p = next_ig %>
+				<% if p %>
+					<div class="post instagram" data-href="<%= p.link_url %>">
+						<div class="contain">
+							<p class="icon-instagram white"></p>
+							<p class="post-date"><%= time_ago_in_words(DateTime.strptime(p.date_created.to_s,'%s')) %> ago</p>
+							<div class="image-wrapper"><img src="<%= p.image_url %>"></div>
+							<p class="image-caption"><%= p.caption %></p>
+						</div>
+					</div>
+				<% end %>
+				<% p = next_f2 %>
+				<% if p %>
+					<%
+			    	message = p.message.nil? ? "" : p.message.truncate(300)
+		        story = p.story.nil? ? "" : p.story.truncate(300)
+		        description = p.description.nil? ? "" : p.description.truncate(300)
+				    picture = p.picture
+		        link = p.link
+			    %>
+					<div class="post facebook" data-href="<%= p.post_url %>">
+						<div class="contain">
+							<p class="icon-facebook white"></p>
+							<p class="post-date"><%= time_ago_in_words(p.date_created) %> ago</p>
+							<% if !picture.blank? %>
+	              <% if !link.blank? %><a href="<%= link %>" target="_blank"><% end %>
+	                <img src="<%= picture %>" class="post-image" />
+	              <% if !link.blank? %></a><% end %>
+	            <% end %>
+	            <% if !story.blank? %><div class="post-story"><%== story %></div><% end %>
+	            <% if !message.blank? %><div class="post-body"><%== message %></div><% end %>
+						</div>
+					</div>
+				<% end %>
+				<% p = next_yt %>
+				<% if p %>
+					<div class="post youtube" rel="<%= p.video_id %>" data-href="<%= p.video_url %>">
+						<div class="contain">
+							<p class="icon-youtube white"></p>
+							<p class="post-date"><%= time_ago_in_words( p.uploaded_at ) %> ago</p>
+							<div class="image-wrapper"><img src="<%= p.thumbnail_url %>"></div>
+							<p class="image-caption"><%= p.title %></p>
+						</div>
+					</div>
+				<% end %>
+				<% index += 1 %>
+			<% end %>
+			<div class="post radio">
+				<div class="contain">
+					<iframe src ="http://www.retradio.com/player/player-regular.html" width="200" height="200" frameborder="0" scrolling="No"></iframe>
+        	<a href="http://www.retradio.com/player/" target="_blank" style="color:#fff;text-transform:none;font-size:14px;">
+        		Open in New Tab
+        	</a>
+				</div>
+      </div>
+		<% else %>
+			<% if editing %>
+				<p style="padding:10px;background:#fff;border:1px solid gray;text-align:center;">Empty social media grid. Please make sure usernames are set in Social Media settings and allow 10 minutes for the feed to refresh.</p>
+			<% end %>
+		<% end %>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		@import url("http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/redmond/jquery-ui.css");
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.1.8/imagesloaded.pkgd.min.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/3.2.2/masonry.pkgd.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+  <%= javascript_include_tag "youtube.js" %>
+	<script>
+		if ($(window).width() > 800) {
+			$("#block_<%= block.id %> .post.youtube").YouTubePopup({ hideTitleBar: true, showBorder: false, height: 390, overlayOpacity: 0.8 });
+		}
+		$(window).load(function(){
+	    $('#grid-<%= block.id %>').imagesLoaded(function() {
+	    	$('#grid-<%= block.id %>').masonry({ 
+		      columnWidth:'.post',
+		      itemSelector: '.post',
+		      animate: true
+		    });
+	    });
+		});
+		<% if !editing %>
+			if ($(window).width() < 800) {
+				$("#grid-<%= block.id %> .post.youtube").click(function(event) {
+					event.preventDefault();
+		    	var win = window.open($(this).data("href"), '_blank');
+					win.focus();
+				});
+			}
+			$("#grid-<%= block.id %> .post").not(".youtube").click(function(event) {
+	    	event.preventDefault();
+	    	if ($(this).hasClass("news"))
+	    		window.location = $(this).data("href");
+	    	else {
+	    		var win = window.open($(this).data("href"), '_blank');
+	    		win.focus();
+	    	}
+	    });
+	  <% end %>
+	</script>
+<% end %>

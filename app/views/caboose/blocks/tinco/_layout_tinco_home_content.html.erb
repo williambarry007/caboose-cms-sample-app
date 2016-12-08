@@ -1,0 +1,7 @@
+<div id='block_<%= block.id %>'>
+  <% if block.children.count > 0 %>
+    <% block.children.each do |b| %>
+      <%== block.render(b, local_assigns) %>
+    <% end %>
+  <% end %>
+</div>

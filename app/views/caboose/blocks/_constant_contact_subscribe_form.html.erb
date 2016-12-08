@@ -1,0 +1,71 @@
+<% 
+api_key = Caboose::Setting.where(:site_id => site.id, :name => 'cc_api_key').exists?
+access_token = Caboose::Setting.where(:site_id => site.id, :name => 'cc_access_token').exists?
+list_id = Caboose::Setting.where(:site_id => site.id, :name => 'cc_list_id').exists?
+capture_name = block.child_value('capture_name')
+desc = block.child_value('description').blank? ? "<p>Sign up for our newsletter!</p>" : block.child_value('description')
+%>
+
+<div class="mailchimp-form-block cc" id="block_<%= block.id %>">
+	<% if api_key && list_id && access_token %>
+		<div class="constrain">
+      <% if !desc.blank? %><div class="text"><div class="description richtext"><%== desc %></div></div><% end %>
+			<form id="newsletter-form">
+      	<div class="grid-row name-row">
+      		<div class="unit1of2 left">
+      			<input type="text" placeholder="First Name" name="contact[first_name]" />
+      		</div>
+      		<div class="unit1of2 right">
+      			<input type="text" placeholder="Last Name" name="contact[last_name]" />
+      		</div>
+      	</div>
+        <input type="email" placeholder="Email Address" name="email[email_address]">
+        <a href="#" class="btn" id="submit-newsletter-form">Submit</a>
+      </form>
+      <div id="message"></div>
+		</div>
+	<% elsif editing %>
+		<p style="border:1px dashed red;padding:10px;">Constant Contact API Key, Access Token, and List ID must be set for this form to work.</p>
+	<% end %>
+</div>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      function submit_newsletter(form_id) {
+        var mess = $("#" + form_id).next("#message");
+        mess.html("<p class='note loading'>Submitting form... </p>");
+        var form = $("#" + form_id); 
+        form.find("input, textarea").each(function() {
+          if ( $(this).attr("placeholder") == $(this).val() ) {
+            $(this).val("");
+          }
+        });
+        $.ajax({
+          url: '/constantcontact/subscribe',
+          type: 'post',
+          data: form.serialize(),
+          success: function(resp) {
+            if(resp.error) {
+              form.find("input, textarea").each(function() {
+                if ( $(this).val() == "" ) {
+                  $(this).val( $(this).attr("placeholder") );
+                }
+              });
+              mess.html("<p class='note error'>" + resp.error + "</p>");
+            } 
+            if(resp.success) {
+              form.slideUp(); 
+              mess.html("<p class='note success'>" + resp.success + "</p>");
+            }
+          }
+        });
+      }
+      $("#submit-newsletter-form").click(function(event) {
+        event.preventDefault();
+        submit_newsletter("newsletter-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

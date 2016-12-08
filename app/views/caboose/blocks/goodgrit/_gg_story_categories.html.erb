@@ -1,0 +1,117 @@
+<% author = params[:author] %>
+<% if author && !author.blank? %>
+	<h2 class="author-title">Stories by <%= author.titleize %></h2>
+	<% posts = Caboose::Post.where("created_at < ?",DateTime.now).where(:site_id => site.id, :published => true).where("author ILIKE (?)","%#{author}%").order("created_at DESC").take(12) %>
+	<div class="news-grid-wrapper">
+		<% posts.each do |p| %>
+			<% cat = p.post_categories.where("post_categories.id != ? AND post_categories.id != ?",121,132).first %>
+			<article id="post-<%= p.id %>">
+	      <h5 class="category"><%= cat.name %></h5>
+				<a href="<%= p.uri %>" title="<%= p.title %>">
+					<div class="image-holder lazy" data-src="<%= p.image.url(:large) %>">
+	          <% if p.post_categories.map{|c| c.id}.include?(132) %>
+	            <div class="exclusive-banner">SUBSCRIBER EXCLUSIVE</div>
+	          <% end %>
+	        </div>
+				</a>
+				<p class="subtitle"><%= p.subtitle %></p>
+				<a href="<%= p.uri %>" title="<%= p.title %>"><h3><%= p.title %></h3></a>
+	      <% if !p.preview.blank? %>
+	  			<div class="excerpt">
+	  				<% 
+	            html = Nokogiri::HTML( p.preview ) 
+	            text = html.at('body').inner_text
+	            words = text.blank? ? "" : text.split[0..30] 
+	          %>
+	          <% if !words.blank? && words.count > 29 %>
+	          	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+	          <% else %>
+	  					<%= words.blank? ? "" : words.join(' ') %>
+	          <% end %>
+	  			</div>
+	      <% end %>
+	      <div class="more">More Stories from <a href="/stories/<%= cat.name.downcase.gsub(' ','-') %>"><%= cat.name %></a></div>
+			</article>
+		<% end %>
+	</div>
+<% else %>
+	<% cats = Caboose::PostCategory.where("id in (114,115,116,117,118,119,120,124)").order(:id).all %>
+	<% seen_posts = [] %>
+	<% seen_ads = [] %>
+	<div class="news-list-wrapper story-categories clearfix" id="block_<%= block.id %>">
+	  <div class="news-grid-wrapper">
+	    <% cats.each do |c| %>
+	    	<% #ad_count = Goodgrit::AdvertCategory.where(:post_category_id => c.id).count %>
+	    	<% ad_ids = Goodgrit::AdvertCategory.where(:post_category_id => c.id).pluck(:advert_id) %>
+	    	<% where2 = ad_ids.count > 0 ? ("id in (" + ad_ids.join(",") + ")") : "" %> 
+	    	<% where3 = seen_ads.count > 0 ? ("id NOT IN (" + seen_ads.join(',') + ")") : "" %>
+	    	<% ad = ad_ids.count > 0 ? Goodgrit::Advert.where(:status => "Active").where(where2).where(where3).first : nil %>
+	    	<% if ad %>
+	    		<%  seen_ads << ad.id %>
+	    	<% end %>
+	    	<h2 class="cat-title"><%= c.name %></h2>
+	      <% where = seen_posts.blank? ? "" : "posts.id NOT IN (" + seen_posts.join(",") + ")" %>
+	      <% posts = c.posts.where("created_at < ?",DateTime.now).order("created_at DESC").where(:published => true).where(where).take(ad ? 2 : 3) %>
+	      <% posts.each_with_index do |p, index| %>
+		      <% seen_posts << p.id %>
+		  		<article id="post-<%= p.id %>">
+		  			<a href="<%= p.uri %>" title="<%= p.title %>">
+		  				<div class="image-holder lazy" data-src="<%= p.image.url(:large) %>">
+		            <% if p.post_categories.map{|c| c.id}.include?(132) %>
+		              <div class="exclusive-banner">SUBSCRIBER EXCLUSIVE</div>
+		            <% end %>
+		          </div>
+		  			</a>
+		  			<p class="subtitle"><%= p.subtitle %></p>
+		  			<a href="<%= p.uri %>" title="<%= p.title %>"><h3><%= p.title %></h3></a>
+		        <% if !p.preview.blank? %>
+		    			<div class="excerpt">
+		    				<% 
+		              html = Nokogiri::HTML( p.preview ) 
+		              text = html.at('body').inner_text
+		              words = text.blank? ? "" : text.split[0..30] 
+		            %>
+		            <% if !words.blank? && words.count > 29 %>
+		            	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+		            <% else %>
+		    					<%= words.blank? ? "" : words.join(' ') %>
+		            <% end %>
+		    			</div>
+		        <% end %>
+		        <div class="more">More Stories from <a href="/stories/<%= c.name.downcase.gsub(' ','-') %>"><%= c.name %></a></div>
+		        <% if !p.author.blank? && p.author.length < 40 %>
+							<% a = p.author.gsub(/,? ?(Photography|Photos|Illustrations)([A-z0-9 ]*)/,"") %>
+							<div class="more author">More Stories from <a href="/stories?author=<%= a %>"><%= a %></a></div>
+						<% end %>
+		  		</article>
+		  		<% if ad && index == 0 %>
+						<article class="ad" style="text-align:center;">
+							<a href="<%= ad.clickthru_url %>" title="<%= ad.title %>" target="_blank" data-id="<%= ad.id %>">
+								<img src="<%= ad.image.url(:large) %>" alt="<%= ad.title %>" />
+							</a>
+							<a data-id="<%= ad.id %>" href="<%= ad.clickthru_url %>" target="_blank" title="<%= ad.title %>" class="btn" style="margin-top:20px;">More Info</a>
+						</article>
+		      <% end %>
+		  	<% end %>
+	  	<% end %>
+	  </div>
+	</div>
+<% end %>
+
+<% content_for :js do %>
+	<script>
+		$("article.ad a").click(function() {
+			console.log("click");
+		  $.ajax({
+		    url: "/admin/adverts/increment-clicks",
+		    type: 'put',
+		    data: {
+		      advert_id: $(this).data("id")
+		    },
+		    success: function(data) {
+
+		    }
+		  });
+		});
+	</script>
+<% end %>

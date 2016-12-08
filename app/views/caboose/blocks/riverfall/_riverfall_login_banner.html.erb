@@ -1,0 +1,57 @@
+<%
+title = block.child_value('main_title')
+subtitle = block.child_value('main_subtitle')
+title1 = block.child_value('title_1')
+link1 = block.child_value('link_1')
+btn1 = block.child_value('button_1')
+title2 = block.child_value('title_2')
+link2 = block.child_value('link_2')
+btn2 = block.child_value('button_2')
+%>
+
+<div class="login-banner" id="block_<%= block.id %>">
+	<div class="constrain">
+		<header>
+			<h2 class="title"><%= title %></h2>
+			<h3 class="subtitle"><%= subtitle %></h3>
+		</header>
+		<section class="main">
+			<div class="flexbox">
+				<div class="left-side">
+					<script src="https://tether.netteller.com/riverfall/login.js"></script>
+				</div>
+				<div class="right-side">
+					<div class="grid-row">
+						<div class="unit1of2">
+							<div class="table"><div class="table-cell">
+								<h4><%= title1 %></h4>
+								<a href="<%= link1 %>" class="alternate btn"><%= btn1 %></a>
+							</div></div>
+						</div>
+						<div class="unit1of2">
+							<div class="table"><div class="table-cell">
+								<h4><%= title2 %></h4>
+								<a href="<%= link2 %>" class="alternate btn"><%= btn2 %></a>
+							</div></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		header.main #show-virtual-login {
+			display: none;
+		}
+		header.main .top form {
+			float: right;
+			margin-right: 0;
+		}
+		header.main .top nav.small {
+			clear: right;
+		}
+	</style>
+<% end %>

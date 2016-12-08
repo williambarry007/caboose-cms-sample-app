@@ -1,0 +1,95 @@
+<div class="content_wrapper" id='block_<%= block.id %>'>
+  <div class="content_body home-content">
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>
+      <% if block.constrain == true %><div class='constrain'><% end %>
+      <%= raw controller_view_content %>    
+      <% if block.constrain == true %></div><% end %>
+    <% elsif post %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <%      
+      constrain_all = block.constrain_all
+      outer_header = block.constrain == true ? (constrain_all ? "<div class='constrain'>" : '') : ''
+      outer_footer = block.constrain == true ? (constrain_all ? "</div>" : '') : ''
+      inner_header = block.constrain == true ? (constrain_all ? '' : "<div class='constrain'>") : ''
+      inner_footer = block.constrain == true ? (constrain_all ? '' : "</div>") : ''      
+      %>
+      <%= raw outer_header %>
+      <% block.children.each do |b| %>
+        <% if block.constrain && !b.full_width %><%= raw inner_header %><% end %>
+        <%= raw block.render(b, local_assigns) %>
+        <% if block.constrain && !b.full_width %><%= raw inner_footer %><% end %>
+      <% end %>
+      <%= raw outer_footer %>
+    <% end %>
+  </div>
+</div>
+
+<div class="fullscreen-overlay" id="subscribe-modal">
+  <div class="table">
+    <div class="table-cell">
+      <div class="modal-wrapper">
+        <div class="modal homepage-form">
+          <a href="#" id="close-subscribe-modal" class="icon-close"></a>
+          <div class="subscribe-info clearfix">
+            <a id="modal-subscribe" href="http://store.goodgritmag.com/collections/subscriptions" title="Subscribe">
+              <img src="//d9hjv462jiw15.cloudfront.net/assets/goodgrit/images/popup.jpg" alt="Good Grit Magazine" width="500" height="333" />
+            </a>
+         <!--    <div class="text-wrapper">
+              <h4>Subscribe to Good Grit</h4>
+              <p>Good Grit is an elegant and progressive reflection of Southern culture, committed to taking you on a thought provoking journey from cover to cover. Subscribe below.</p>
+              <a id="modal-subscribe" href="http://store.goodgritmag.com/collections/subscriptions" title="Subscribe" class="btn">Click Here</a>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :js do %>
+  <script>
+    function setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+d.toUTCString();
+      document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+    function getCookie(cname) {
+      var name = cname + "=";
+      var ca = document.cookie.split(';');
+      for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+      }
+      return "";
+    }
+    function checkCookie() {
+      var subscribed = getCookie("gg_subscribed");
+      if (subscribed == "") {
+        $("#subscribe-modal").fadeIn();
+      }
+    }
+    $(document).ready(function() {
+      checkCookie();
+    });
+    $("#close-subscribe-modal").click(function(event) {
+      event.preventDefault();
+      setCookie("gg_subscribed", true, 365);
+      $("#subscribe-modal").fadeOut();
+    });
+    $("#modal-subscribe").click(function() {
+      setCookie("gg_subscribed", true, 365);
+      $("#subscribe-modal").fadeOut();
+    });
+  </script>
+<% end %>
+
+<% content_for :css do %>
+  <style>
+    #slider-24921 #slide-0 .slider-slide {
+      background-position: right center !important;
+    }
+  </style>
+<% end %>

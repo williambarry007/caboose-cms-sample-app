@@ -1,0 +1,13 @@
+<footer class="basic" id="block_<%= block.id %>">
+  <div class="constrain">
+  	<div class="copyright">
+			Copyright &copy; <%= DateTime.now.strftime("%Y") %> Ward Scott Architecture
+  	</div>
+    <section class="nine">
+    	<span>site loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

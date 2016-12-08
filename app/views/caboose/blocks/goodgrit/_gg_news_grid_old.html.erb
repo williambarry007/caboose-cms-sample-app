@@ -1,0 +1,107 @@
+<% cats = Caboose::PostCategory.where("id in (114,115,116,117,118,119,120,124)").all %>
+<% seen_posts = [] %>
+<% limit = block.child_value('posts_to_show').blank? ? 1000 : block.child_value('posts_to_show').to_i %>
+<% ads = block.children.where(:block_type_id => 1350).all %>
+<% show_ads = block.child_value('show_ads') %>
+<% post_limit = (limit == 1000) ? 9 : limit %>
+<% post_limit = (show_ads == "Yes" && ads.count > 0) ? post_limit - 1 : post_limit %>
+<% numberads = block.child_value('posts_to_ad').to_i %>
+<% title = block.child_value('section_title') %>
+<% if modal %>
+  <% if block.child("section_title") %>
+    <div id="block_<%= block.child('section_title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Section Title: <%= title %>
+    </div>
+  <% end %>
+  <% if block.child("posts_to_show") %>
+    <div id="block_<%= block.child('posts_to_show').id %>" style="text-decoration:underline;cursor:pointer;">
+      Posts to Show: <%= limit %>
+    </div>
+  <% end %>
+  <% if block.child("show_ads") %>
+    <div id="block_<%= block.child('show_ads').id %>" style="text-decoration:underline;cursor:pointer;">
+      Show Ads: <%= show_ads %>
+    </div>
+  <% end %>
+  <p>Ads:</p>
+  <ul>
+    <% ads.each_with_index do |s,i| %>
+      <% name = s.child_value('name') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Ad #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new ad!</a>
+  <% elsif block.post %>
+    <a href='/admin/pages/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new ad!</a>
+  <% end %>
+<% else %>
+  <div class="news-list-wrapper clearfix" id="block_<%= block.id %>">
+    <% if !title.blank? %><h2 class="section-title"><%= title %></h2><% end %>
+    <% index = rand(post_limit) %>
+    <div class="news-grid-wrapper" data-count="<%= index %>">
+      <% cats.each_with_index do |c,i| %>
+        <% where = seen_posts.blank? ? "" : "posts.id NOT IN (" + seen_posts.join(",") + ")" %>
+        <% p = c.posts.order("created_at DESC").where(:published => true).where(where).first %>
+        <% seen_posts << p.id %>
+        <% if (i == index) && show_ads == "Yes" && ads.count > 0 %>
+          <% offset = rand(ads.count) %>
+          <% ad = ads[offset] %>
+          <% img = ad.child_value('photo').url(:large) %>
+          <% if img && !img.include?('placehold') %>
+            <article class="advertisement">
+              <h5 class="category">Sponsor</h5>
+              <img src="<%= img %>" alt="<%= ad.child_value('name') %>" class="ad" />
+              <a href="<%= ad.child_value('url') %>" target="_blank" title="<%= ad.child_value('name') %>" class="dark btn news-click-link">Visit for More</a>
+            </article>
+            <% content_for :css do %>
+              <style>
+                .advertisement .btn {
+                  background-color: <%= ad.child_value('color') %>;
+                }
+              </style>
+            <% end %>
+          <% end %>
+        <% end %>
+        <article id="post-<%= p.id %>" data-index="<%= i %>">
+          <h5 class="category"><%= c.name %></h5>
+          <a href="<%= p.uri %>" title="<%= p.title %>">
+            <div class="image-holder lazy" data-src="<%= p.image.url(:large) %>">
+              <% if p.post_categories.map{|c| c.id}.include?(132) %>
+                <div class="exclusive-banner">SUBSCRIBER EXCLUSIVE</div>
+              <% end %>
+            </div>
+          </a>
+          <p class="subtitle"><%= p.subtitle %></p>
+          <a href="<%= p.uri %>" title="<%= p.title %>"><h3><%= p.title %></h3></a>
+          <% if !p.preview.blank? %>
+            <div class="excerpt">
+              <% 
+                html = Nokogiri::HTML( p.preview ) 
+                text = html.at('body').inner_text
+                words = text.blank? ? "" : text.split[0..30] 
+              %>
+              <% if !words.blank? && words.count > 29 %>
+                <%= words.blank? ? "" : words.join(' ') + " ..." %>
+              <% else %>
+                <%= words.blank? ? "" : words.join(' ') %>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="more">More Stories from <a href="/stories/<%= c.name.downcase.gsub(' ','-') %>"><%= c.name %></a></div>
+        </article>
+      <% end %>
+    </div>
+  </div>
+  <% if show_ads == "Yes" and ads.count > 0 %>
+    <% content_for :js do %>
+      <script>
+        $(".news-click-link").click(function(event) {
+          ga('send', 'event', 'stories-ad', 'click', $(this).attr("title"), 1);
+        });
+      </script>
+    <% end %>
+  <% end %>
+<% end %>

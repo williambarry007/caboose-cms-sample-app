@@ -1,0 +1,14 @@
+<% 
+url = nil
+if block.media  
+  url = block.media.image.url(:tiny)
+elsif block.image
+  url = block.image.url(:tiny)
+end
+ 
+if editing && url.nil?
+  %><p id='block_<%= block.id %>'>Please upload an image.</p><%
+else
+  %><img src='<%= raw url %>' id='block_<%= block.id %>' /><%
+end
+%>

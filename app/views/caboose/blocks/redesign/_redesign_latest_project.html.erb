@@ -1,0 +1,68 @@
+<%
+  mcid = block.child_value('media_category')
+  mc = Caboose::MediaCategory.where(:id => mcid).first
+  media = mc && mc.media ? mc.media.all : []
+%>
+
+<div class="latest-project-block" id="block_<%= block.id %>">
+	<h4 class="lined"><span>Latest Project</span></h4>
+	<div class="flexbox">
+		<div class="media-category-slider">
+		  <% if media.count > 0 %>
+		    <div class="slider-container" id="slider-container-<%= block.id %>">
+		      <div class="liquid-slider" id="slider-<%= block.id %>">
+		        <% slide = media.first %>
+		        <% bg_image = slide.image && !slide.image.url.include?('placehold') ? slide.image.url(:large) : '' %>
+		        <div class="slide clearfix" id="slide-0">
+		          <div class="slider-slide" style='background-image:url(<%= bg_image %>);'></div>
+		        </div>
+		      </div>
+		      <div class="nav-holder">
+		      	<div class="left-nav" id="nav-left-<%= block.id %>">
+			        <div class="arrow icon-left-big"></div>
+			      </div>
+			      <div class="right-nav" id="nav-right-<%= block.id %>">
+			        <div class="arrow icon-right-big"></div>
+			      </div>
+		      </div>
+		    </div>
+		  <% end %>
+		</div>
+		<div class="text-holder">
+			<div class="table">
+				<div class="table-cell">
+					<h3 class="title"><%= block.child_value('title') %></h3>
+					<div class="richtext"><%== block.child_value('body') %></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      <% media.each_with_index do |slide, index| %>
+        <% bg_image = slide.image && !slide.image.url.include?('placehold') ? slide.image.url(:large) : '' %>
+        <% next if index == 0 || bg_image.blank? %>
+        $("#slider-<%= block.id %>").append($('<div/>').addClass('slide clearfix').attr('id','slide-<%= index %>').append( $('<div/>').addClass('slider-slide').css('background-image','url(<%= bg_image %>)') ));
+      <% end %>
+      $("#slider-<%= block.id %>").liquidSlider({
+        autoSlide: false,
+        autoHeight: false,
+        slideEaseFunction: "fade",
+        dynamicArrows: false,
+        dynamicTabs: false
+      });
+      var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+      $("#nav-left-<%= block.id %>").click(function() {
+        api.setNextPanel('left');
+        api.updateClass($(this)); 
+      });
+      $("#nav-right-<%= block.id %>").click(function() {
+        api.setNextPanel('right');
+        api.updateClass($(this)); 
+      });
+    });
+  </script>
+<% end %>

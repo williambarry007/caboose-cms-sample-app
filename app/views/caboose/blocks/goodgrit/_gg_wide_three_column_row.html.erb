@@ -1,0 +1,223 @@
+<%
+	l = block.child('left_column')
+	m = block.child('middle_column')
+	r = block.child('right_column')
+	c = block.child('constrain')
+	fh = block.child('fixed_height')
+	ho = block.child('height_option')
+	height_option = block.child_value('height_option').blank? ? "Auto" : block.child_value("height_option")
+	height = block.child_value('fixed_height').blank? ? "500px" : block.child_value("fixed_height")
+	if !height.include?('px')
+		height = height + "px"
+	end
+%>
+
+<% if modal %>
+
+  <li id="block_<%= l.id %>" style="text-decoration:underline;cursor:pointer;">Left Column</li>
+  <li id="block_<%= m.id %>" style="text-decoration:underline;cursor:pointer;">Middle Column</li>
+  <li id="block_<%= r.id %>" style="text-decoration:underline;cursor:pointer;">Right Column</li>
+  <br />
+  <% if c %>
+		<li id="block_<%= c.id %>" style="text-decoration:underline;cursor:pointer;">Constrain: <%= c.value %></li>
+  <% end %>
+  <% if ho %>
+		<li id="block_<%= ho.id %>" style="text-decoration:underline;cursor:pointer;">Height Option: <%= ho.value %></li>
+  <% end %>
+  <% if fh && ho && ho.value == "Fixed" %>
+		<li id="block_<%= fh.id %>" style="text-decoration:underline;cursor:pointer;">Fixed Height: <%= fh.value %></li>
+  <% end %>
+
+<% else %>
+
+	<div class="three-column-row clearfix" id="block_<%= block.id %>">
+		<% if c && c.value == "Yes" %><div class="constrain"><% end %>
+			<div class="grid-row">
+				<div class="unit1of4 left-column" id="lc-<%= block.id %>">
+					<% vc = l.child('column_options').child_value('vertically_center_content') %>
+					<% if vc && vc == "Yes" %><div class="table"><div class="table-cell"><% end %>
+					<% if l.children.count > 0 %>
+			      <% l.children.each do |b| %>
+			      	<% next if b.name == "column_options" %>
+			      	<%= raw block.render(b, local_assigns) %>
+			      <% end %>
+			    <% end %>  
+			    <% if vc && vc == "Yes" %></div></div><% end %> 
+				</div>
+				<div class="unit1of2 middle-column" id="mc-<%= block.id %>">
+					<% vc = m.child('column_options').child_value('vertically_center_content') %>
+					<% if vc && vc == "Yes" %><div class="table"><div class="table-cell"><% end %>
+					<% if m.children.count > 0 %>
+			      <% m.children.each do |b| %>
+			      	<% next if b.name == "column_options" %>
+			      	<%= raw block.render(b, local_assigns) %>
+			      <% end %>
+			    <% end %>  
+			    <% if vc && vc == "Yes" %></div></div><% end %> 
+				</div>
+				<div class="unit1of4 right-column" id="rc-<%= block.id %>">
+					<% vc = r.child('column_options').child_value('vertically_center_content') %>
+					<% if vc && vc == "Yes" %><div class="table"><div class="table-cell"><% end %>
+					<% if r.children.count > 0 %>
+			      <% r.children.each do |b| %>
+			      	<% next if b.name == "column_options" %>
+			      	<%= raw block.render(b, local_assigns) %>
+			      <% end %>
+			    <% end %>  
+			    <% if vc && vc == "Yes" %></div></div><% end %> 
+				</div>
+			</div>
+		<% if c && c.value == "Yes" %></div><% end %>
+	</div>
+
+	<% content_for :css do %>
+		<style>
+			#block_<%= block.id %> .constrain {
+				padding-left: 0;
+				padding-right: 0;
+			}
+			#block_<%= block.id %> .grid-row {
+				position: relative;
+				<% if editing %>
+					border: 1px dashed gray;
+				<% end %>
+				<% if height_option == "Fixed" %>
+					height: <%= height %>;
+				<% end %>
+			}
+			#lc-<%= block.id %>, #mc-<%= block.id %>, #rc-<%= block.id %> {
+				<% if editing %>
+					border: 1px dashed gray;
+				<% end %>
+				<% if height_option == "Expand" %>
+					height: 100%;
+				<% end %>
+				<% if height_option == "Fixed" %>
+					height: <%= height %>;
+				<% end %>
+			}
+			#lc-<%= block.id %> {
+				padding-left: <%= l.child('column_options').child_value('padding_left') %>;
+				padding-right: <%= l.child('column_options').child_value('padding_right') %>;
+				padding-bottom: <%= l.child('column_options').child_value('padding_bottom') %>;
+				padding-top: <%= l.child('column_options').child_value('padding_top') %>;
+				<% bg_color = l.child('column_options').child_value('background_color') %>
+				<% if bg_color != 'main' %>
+					background-color: <%= bg_color %>;
+				<% end %>
+				<% bg_img = l.child('column_options').child_value('background_image') %>
+				<% if bg_img && !bg_img.url.include?('placehold') %>
+					background-image: url("<%= bg_img.url(:large) %>");
+				<% end %>
+				<% bg_siz = l.child('column_options').child_value('background_image_sizing') %>
+				<% if bg_siz && bg_siz.include?('Center') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center center;
+				<% elsif bg_siz && bg_siz.include?('Top') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center top;
+				<% elsif bg_siz && bg_siz.include?('Bottom') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center bottom;
+				<% elsif bg_img && !bg_img.url.include?('placehold') %>
+					background-size: contain;
+					background-position: center center;
+					background-repeat: no-repeat;
+				<% end %>
+				text-align: <%= l.child('column_options').child_value('text_align') %>;
+				left: 0; 
+			}
+			#mc-<%= block.id %> {
+				padding-left: <%= m.child('column_options').child_value('padding_left') %>;
+				padding-right: <%= m.child('column_options').child_value('padding_right') %>;
+				padding-bottom: <%= m.child('column_options').child_value('padding_bottom') %>;
+				padding-top: <%= m.child('column_options').child_value('padding_top') %>;
+				<% bg_color = m.child('column_options').child_value('background_color') %>
+				<% if bg_color != 'main' %>
+					background-color: <%= bg_color %>;
+				<% end %>
+				<% bg_img = m.child('column_options').child_value('background_image') %>
+				<% if bg_img && !bg_img.url.include?('placehold') %>
+					background-image: url("<%= bg_img.url(:large) %>");
+				<% end %>
+				<% bg_siz = m.child('column_options').child_value('background_image_sizing') %>
+				<% if bg_siz && bg_siz.include?('Center') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center center;
+				<% elsif bg_siz && bg_siz.include?('Top') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center top;
+				<% elsif bg_siz && bg_siz.include?('Bottom') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center bottom;
+				<% elsif bg_img && !bg_img.url.include?('placehold') %>
+					background-size: contain;
+					background-position: center center;
+					background-repeat: no-repeat;
+				<% end %>
+				text-align: <%= m.child('column_options').child_value('text_align') %>;
+				<% if height_option == "Expand" %>
+					left: 25%;
+				<% end %>
+			}
+			#rc-<%= block.id %> {
+				padding-left: <%= r.child('column_options').child_value('padding_left') %>;
+				padding-right: <%= r.child('column_options').child_value('padding_right') %>;
+				padding-bottom: <%= r.child('column_options').child_value('padding_bottom') %>;
+				padding-top: <%= r.child('column_options').child_value('padding_top') %>;
+				<% bg_color = r.child('column_options').child_value('background_color') %>
+				<% if bg_color != 'main' %>
+					background-color: <%= bg_color %>;
+				<% end %>
+				<% bg_img = r.child('column_options').child_value('background_image') %>
+				<% if bg_img && !bg_img.url.include?('placehold') %>
+					background-image: url("<%= bg_img.url(:large) %>");
+				<% end %>
+				<% bg_siz = r.child('column_options').child_value('background_image_sizing') %>
+				<% if bg_siz && bg_siz.include?('Center') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center center;
+				<% elsif bg_siz && bg_siz.include?('Top') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center top;
+				<% elsif bg_siz && bg_siz.include?('Bottom') && bg_img && !bg_img.url.include?('placehold') %>
+					background-size: cover;
+					background-position: center bottom;
+				<% elsif bg_img && !bg_img.url.include?('placehold') %>
+					background-size: contain;
+					background-position: center center;
+					background-repeat: no-repeat;
+				<% end %>
+				text-align: <%= r.child('column_options').child_value('text_align') %>;
+				<% if height_option == "Expand" %>
+					left: 75%;
+				<% end %>
+			}
+		</style>
+	<% end %>
+
+	<% content_for :js do %>
+		<script>
+			<% if height_option == "Expand" %>
+				$(document).ready(function() {
+					var l = $("#lc-<%= block.id %>");
+					var m = $("#mc-<%= block.id %>");
+					var r = $("#rc-<%= block.id %>");
+					var biggest = l.outerHeight();
+					var col = l;
+					if (m.outerHeight() > biggest) {
+						biggest = m.outerHeight();
+						col = m; 
+					}
+					if (r.outerHeight() > biggest) {
+						biggest = r.outerHeight(); 
+						col = r;
+					}
+					col.css("position","relative"); 
+					$("#block_<%= block.id %> .unit1of3").not(col).css("position","absolute"); 
+				});
+			<% end %>
+		</script>
+	<% end %>
+
+<% end %>

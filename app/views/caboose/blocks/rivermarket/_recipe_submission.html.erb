@@ -1,0 +1,56 @@
+<div class="recipe-form" id="block_<%= block.id %>">
+	<div class="constrain content-wrapper form-wrapper">
+		<form id="recipe-form">
+			<div class="grid-row">
+				<div class="section unit">
+					<h3 class="section-title">Submit Your Own Recipe</h3>
+					<input type="hidden" value="Recipe Form" name="form_name">
+					<input type="hidden" value="<%= block.id %>" name="block_id">
+					<div class="field">
+						<label for="name_required" class="required">Your Name</label>
+						<input type="text" name="name_required">
+					</div>
+
+					<div class="field">
+						<label for="email" class="required">Email</label>
+						<input type="text" name="email_required">
+					</div>
+				</div>
+				<div class="grid-row">		
+					<div class="field">
+						<label for="recipe_name_required" class="required">Name Of Your Dish</label>
+						<input type="text" name="recipe_name_required">
+					</div>
+				</div>
+				<div class="grid-row">	
+					<br>
+					<div class="field">
+						<label for="ingredients_required" class="required">Ingredients Needed</label>
+						<textarea name="ingredients_required" rows="3" id="ingredients_required"></textarea>
+					</div>
+				</div>
+				<div class="grid-row">
+					<br>
+					<div class="field">
+						<label for="directions_required" class="required">Step-by-Step Directions</label>
+						<textarea name="directions_required" rows="3" id="directions_required"></textarea>
+					</div>
+				</div>
+				<a id="submit-recipe-form" class="yellow btn" href="#">Submit</a>
+			</div>
+		</form>
+	<div id="message"></div>
+	</div>
+	<% content_for :js do %>
+		<%= javascript_include_tag "form_submit" %> 
+		<script>
+      $(document).ready(function() {
+        $('#submit-recipe-form').click(function(event) {
+          event.preventDefault();
+          submit_form("recipe-form");
+          return false;
+        });
+      });
+     </script>
+  <% end %>
+</div>

@@ -1,0 +1,26 @@
+
+development:
+  #url: "http://www.westalabamamls.com/SERetsTuscaloosa/Login.aspx"
+  url: "http://rets.westalabamamls.com/login.aspx"
+  #username: "RETS_21"
+  #password: "ELLIS_2"
+  username: "RETS_28"
+  password: "lenora"
+  days_per_batch: 30 # When performing a large property import, how many days to search on per batch                                 
+  limit: 100 # How many records to limit per request
+  import_only_active: false # Only import active property listings
+  temp_path: "/tmp"
+  media_base_url: 'http://www.westalabamamls.com/ListitTuscaloosa/media'  
+
+production: 
+  #url: "http://www.westalabamamls.com/SERetsTuscaloosa/Login.aspx"
+  url: "http://rets.westalabamamls.com/login.aspx"
+  #username: "RETS_21"
+  #password: "ELLIS_2"
+  username: "RETS_28"
+  password: "lenora" 
+  days_per_batch: 30 # When performing a large property import, how many days to search on per batch                                 
+  limit: 100 # How many records to limit per request
+  import_only_active: false # Only import active property listings  
+  temp_path: "/tmp"
+  media_base_url: 'http://www.westalabamamls.com/ListitTuscaloosa/media'

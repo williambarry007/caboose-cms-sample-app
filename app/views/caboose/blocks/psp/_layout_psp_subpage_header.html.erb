@@ -1,0 +1,19 @@
+<header class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/psp/images/main_logo.png" alt="Christian Episcopal Church" class="logo" />
+    <a class="logo-link" href="/" title="Porter St. Paul C.M.E. Church">
+      <h1 class="title"><span class="top">Porter St. Paul</span><br /><span class="bottom">C.M.E. Church</span></h1>
+    </a>
+    <nav class="reveal">
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 932, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</header>

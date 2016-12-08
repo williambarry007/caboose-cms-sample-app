@@ -1,0 +1,36 @@
+<% brands = Caboose::Block.where(:block_type_id => 623).last %>
+<% if brands %>
+  <div class="subpage-our-brands">
+    <%= block.render(brands, local_assigns) %>
+  </div>
+<% end %>
+
+<footer class="basic" id="block_<%= block.id %>">
+  <div class="constrain">
+    <nav>
+      <ul>
+        <li><a href="/" title="Locker Room Home">Home</a></li>
+        <li><a title="About" href="/about">About</a></li>
+        <li><a title="Location" href="/location">Location</a></li>
+        <li><a title="Store Hours" href="/store-hours">Store Hours</a></li>
+        <li><a title="Returns &amp; Exchanges" href="/returns-exchanges">Returns/Exchanges</a></li>
+        <li><a title="Contact" href="/contact">Contact</a></li>
+        <li><a title="Privacy Policy" href="/privacy">Privacy</a></li>
+        <li><a title="Terms of Use" href="/terms-of-use">Terms of Use</a></li>
+      </ul>
+    </nav>
+    <div class="copyright">
+      <p style="margin-bottom:10px;">the locker room traditional clothing<br />
+      2104 University Boulevard / Tuscaloosa, Alabama 35401 / 800-749-0992 / 205-752-2990<br /> 
+      copyright &copy; <%= DateTime.now.strftime("%Y") %>
+      </p>
+      <p><img src="//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/locker_50.png" alt="" class="footer-image" /></p>
+    </div>
+    <section class="nine">
+      <span>Designed with Southern flair by</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

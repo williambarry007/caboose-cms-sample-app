@@ -1,0 +1,50 @@
+<div class="event-list-block" id="block_<%= block.id %>">
+	<% cal = Caboose::Calendar.where(:site_id => site.id).first %>
+	<% if cal %>
+		<h2 class="section-title">Upcoming Events</h2>
+		<div class="events-wrapper">
+			<% limit = block.child_value('events_to_show') == "Unlimited" ? 1000 : block.child_value('events_to_show').to_i %>
+			<% events = Caboose::CalendarEvent.where(:calendar_id => cal.id).where("cast(begin_date as date) >= ?",DateTime.now.to_date).order(:begin_date).take(limit) %>
+			<% if events.count > 0 %>
+				<% events.each do |e| %>
+					<div class="event-wrapper clearfix">
+						<div class="cal-icon">
+							<div class="month-wrapper">
+								<span class="month"><%= e.begin_date.strftime("%B") %></span>
+							</div>
+							<div class="day-wrapper">
+								<span class="day"><%= e.begin_date.strftime("%-d") %></span>
+							</div>
+						</div>
+						<div class="text-wrapper">
+							<h4 class="event-name"><%= e.name %></h4>
+							<% if e.all_day %>
+								<% if e.begin_date.strftime("%B") == e.end_date.strftime("%B") && e.begin_date.strftime("%Y") == e.end_date.strftime("%Y") %>
+									<% if e.begin_date.strftime("%-d") != e.end_date.strftime("%-d") %>
+										<h5 class="event-time"><%= e.begin_date.strftime("%B %-d") %> - <%= e.end_date.strftime("%-d, %Y") %></h5>
+									<% else %>
+										<h5 class="event-time"><%= e.begin_date.strftime("%B %-d, %Y") %></h5>
+									<% end %>
+								<% else %>
+									<h5 class="event-time"><%= e.begin_date.strftime("%B %-d") %> - <%= e.end_date.strftime("%-d, %Y") %></h5>
+								<% end %>
+							<% else %>
+								<% if e.begin_date.strftime("%P") == e.end_date.strftime("%P") %>
+									<h5 class="event-time"><%= e.begin_date.strftime("%l:%M") %> - <%= e.end_date.strftime("%l:%M %P") %></h5>
+								<% else %>
+									<h5 class="event-time"><%= e.begin_date.strftime("%l:%M %P") %> - <%= e.end_date.strftime("%l:%M %P") %></h5>
+								<% end %>
+							<% end %>
+							<% if !e.description.blank? %>
+								<div class="description"><%== e.description.truncate(200) %></div>
+							<% end %>
+							<% if !e.location.blank? %>
+								<a href="<%= e.location %>">Read More</a>
+							<% end %>
+						</div>
+					</div>
+				<% end %>
+			<% end %>
+		</div>
+	<% end %>
+</div>

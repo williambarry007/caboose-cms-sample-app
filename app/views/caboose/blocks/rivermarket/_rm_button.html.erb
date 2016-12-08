@@ -1,0 +1,20 @@
+<%
+  url = block.child_value("url")
+  text = block.child_value("text")
+  color = block.child_value("color")
+  target = block.child_value("target")
+%>
+
+<div id="block_<%= block.id %>" style="display:inline-block;">
+  <% if !url.blank? && !text.blank? %>
+    <% if target == "Blank" %>
+      <a href="<%= url %>" class="<%= color %> btn" target="_blank" title="<%= text %>"><%= text %></a>
+    <% else %>
+      <a href="<%= url %>" class="<%= color %> btn" title="<%= text %>"><%= text %></a>
+    <% end %>
+  <% else %>
+    <% if editing %>
+      <p style="background:#fff;color:#000;padding:8px;">Button has empty text or link. Click to edit.</p>
+    <% end %>
+  <% end %>
+</div>

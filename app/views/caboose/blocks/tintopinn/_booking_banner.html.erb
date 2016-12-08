@@ -1,0 +1,82 @@
+<form id="chkAvailabilityForm" name="chkAvailabilityForm" action="res.shtml" method="get" class="form">
+  <input type="hidden" name="dateFlag" id="dateFlag" value="0">
+  <input type="hidden" name="openInNewWindow" id="openInNewWindow" value="0">
+  <input type="hidden" name="daysOffset" id="daysOffset" value="0">
+  <input type="hidden" name="useIFrame" id="useIFrame" value="0">
+  <input type="hidden" name="clientCode" id="clientCode" value="tintop">
+  <input type="hidden" name="beFilterConfig" id="beFilterConfig" value="property">
+  <input type="hidden" name="showHideBEFilter" id="showHideBEFilter" value="hide">
+  <input type="hidden" name="showHideChildren" id="showHideChildren" value="hide">
+  <input type="hidden" name="showHideNights" id="showHideNights" value="hide">
+  <input type="hidden" name="showHidePromoCode" id="showHidePromoCode" value="hide">
+  <input type="hidden" name="PropTimeZone" id="PropTimeZone" value="-300">
+  <div class="maintable">
+    <div class="head" align="center">BOOK NOW</div>
+    <div class="main_div">
+      <ul id="widgetList">
+        <li id="beFilterTR">
+          <div class="sub_div1">
+            <input name="beFilterName" id="beFilterName" type="hidden" />
+            <div class="sub_div1_div1">
+              <label id="beFilterLabel" for="beFilterLabel" class="tabformobject2"></label>
+            </div>
+            <div class="fleft">
+              <select name="beFilterVal" class="tabformobject2s" id="beFilterVal">
+                <option>--Select--</option>
+                <option value="-1">All</option>
+                <option value="2877" selected="selected">tintop</option>
+              </select>
+            </div>
+          </div>
+        </li>
+        <li>
+          <label>Check-in :</label>
+          <input class="tabformobjects dateIcon" name="dateStart" id="dateStart" size="15" onchange="return setCheckoutDate();" onclick="scwNextAction=calClosed.runsAfterSCW(this);clickedstartdate(this,event)" onfocus="clickedstartdate(event)" type="text" />
+        </li>
+        <li>
+          <label>Check-out :</label>
+          <input class="tabformobjects dateIcon" name="dateEnd" id="dateEnd" size="15" onchange="return setNights();" onclick="clickedenddate(event)" onfocus="clickedenddate(event)" type="text" />
+        </li>
+        <li  id="beNightsTR">
+          <label>Nights :</label>
+          <input class="tabformobjectsss" name="noOfNights" id="noOfNights" size="3" onblur="return setCheckoutDate();" type="text" />
+        </li>
+        <li class="adultsGroup">
+          <label>Adult :</label>
+          <select name="adults" size="1" class="formobjects" id="adults">
+            <option value="1" selected="selected">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+          <div class="SubText" id="beChildrenTD">(12 yrs above)</div>
+        </li>
+        <li class="childGroup">
+          <label>Child :</label>
+          <select name="children" size="1" class="formobjects" id="children">
+            <option value="0" selected="selected">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+          <div class="SubText" id="beChildrenHelpTD">(Upto 12 yrs)</div>
+        </li>
+        <li id="bePromoCodeTR">
+          <label>Promo Code:</label>
+          <input class="tabformobjectsss" name="promoCode" id="promoCode" type="text" />
+        </li>
+        <li class="checkbg">
+          <input type="button" name="button" class="btn white" id="button" value="CHECK AVAILABILITY" onClick="javascript:sendToReservation();"/>
+        </li>
+      </ul>
+    </div>
+  </div>
+</form>
+
+<% content_for :js do %>
+  <script>
+    populateDates();
+    fillForm();
+  </script>
+<% end %>

@@ -1,0 +1,5 @@
+<% if block.child_value('logo').url && !block.child_value('logo').url.include?("placehold") %>
+	<div class="client-block" id="block_<%= block.id %>">
+		<div class="image-holder client-logo" style="background-image:url(<%= block.child_value('logo').url(:large) %>);"></div>
+	</div>
+<% end %>

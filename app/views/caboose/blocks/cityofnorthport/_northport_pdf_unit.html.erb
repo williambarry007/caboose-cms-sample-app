@@ -1,0 +1,22 @@
+<div class="pdf-unit-block clearfix" id="block_<%= block.id %>">
+  <span class="pdf-title"><%= block.child_value('title') %></span>
+  <% if block.child_value('file') %>
+  	<div class="button-holder">
+      <% if ( block.child('file') && block.child('file').id < 27942 && block.child('file').file_upload_name.blank? && block.child('file').media_id.blank? ) %>
+  	    <a href="http://cabooseit.s3.amazonaws.com/northport_files/<%= block.child('file').file_file_name %>" title="<%= block.child_value('title') %>" class="pdf btn" target="_blank">
+  	      Download
+  	    </a>
+      <% else %>
+        <a href="<%= block.child_value('file').url %>" title="<%= block.child_value('title') %>" class="pdf btn" target="_blank">
+          Download
+        </a>
+      <% end %>
+	  </div>
+  <% end %>
+  <% if !block.child_value('date').blank? || !block.child_value('description').blank? %>
+    <div class="bottom">
+    	<span class="date"><%= block.child_value('date') %></span>
+    	<div class="description"><%== block.child_value('description') %></div>
+    </div>
+  <% end %>
+</div>

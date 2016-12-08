@@ -1,0 +1,20 @@
+<div class="footer-wrapper" id="block_<%= block.id %>">
+	<div class="photo-grid">
+		<div class="grid-row">
+			<div class="unit1of5" style="background-image:url(<%= block.child_value('image_1').url(:large) %>);"></div>
+			<div class="unit1of5" style="background-image:url(<%= block.child_value('image_2').url(:large) %>);"></div>
+			<div class="unit1of5" style="background-image:url(<%= block.child_value('image_3').url(:large) %>);"></div>
+			<div class="unit1of5" style="background-image:url(<%= block.child_value('image_4').url(:large) %>);"></div>
+			<div class="unit1of5" style="background-image:url(<%= block.child_value('image_5').url(:large) %>);"></div>
+		</div>
+	</div>
+	<footer class="main home">
+	  <div class="constrain">
+	    <a class="logo-link" href="/" title="Crosspoint Church">
+	      <img src="//d9hjv462jiw15.cloudfront.net/assets/crosspoint/images/main_logo.png" alt="Crosspoint Church" />
+	    </a>
+	    <%== ApplicationHelper.social_links(site.id, "circle") %>
+	  </div>
+	</footer>
+</div>
+

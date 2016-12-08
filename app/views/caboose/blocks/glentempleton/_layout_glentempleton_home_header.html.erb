@@ -1,0 +1,31 @@
+<% 
+photo = block.child_value("banner_image").url(:huge)
+img = photo.include?('placehold') ? "//d9hjv462jiw15.cloudfront.net/assets/glentempleton/images/glen.jpg" : photo
+pos = block.child_value('position').blank? ? "center center" : block.child_value('position')
+%>
+
+<div class="header-wrapper home" id="block_<%= block.id %>" data-image-src="<%= img %>" data-parallax="scroll" data-position="<%= pos %>">
+  <div class="constrain">
+    <header class="main home">
+      <nav class="reveal">
+        <ul>
+          <li><a href="/" title="Home">Home</a></li>
+          <% Caboose::Page.where(:parent_id => 1236, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+          <% end %>
+        </ul>
+      </nav>
+      <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </header>
+    <div class="bottom home">
+      <h1 class="title">Glen<br />Templeton</h1>
+      <div class="follow">
+        <iframe src="https://embed.spotify.com/follow/1/?uri=spotify:artist:58PGErqpV9jX7sXz5wmV6o&size=detail&theme=dark" width="225" height="56" scrolling="no" frameborder="0" style="border:none; overflow:hidden;" allowtransparency="true"></iframe>
+        <a href="https://geo.itunes.apple.com/us/artist/glen-templeton/id433162134?&app=itunes" style="display:inline-block;overflow:hidden;background:url(http://linkmaker.itunes.apple.com/images/badges/en-us/badge_itunes-lrg.svg) no-repeat;width:165px;height:40px;" target="_blank" title="iTunes"></a>
+      </div>
+    </div>
+  </div>
+</div>

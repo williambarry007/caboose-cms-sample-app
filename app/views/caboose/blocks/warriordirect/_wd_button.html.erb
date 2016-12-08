@@ -1,0 +1,8 @@
+<%
+  link       = block.child_value('link')
+  title      = block.child_value('title')
+%>
+
+<div class="btn-draw-wrapper" id="block_<%= block.id %>">
+	<a class="btn-draw" href="<%= link %>"><span><%= title %></span></a>
+</div>

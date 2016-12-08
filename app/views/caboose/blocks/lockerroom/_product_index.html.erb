@@ -1,0 +1,106 @@
+<%  
+has_categories = @category.children.where(:status => 'Active').count > 0
+has_products   = @category.active_products.count > 0
+%>
+<div class="product-index">          
+	<div class="constrain">  
+
+		<div class="product-navigation">
+			<input type="text" id="search" class="media-boxes-search" placeholder="Filter by Keyword">
+			<div class="breadcrumbs">
+        <ul>
+          <% @category.ancestry.each do |c| %>
+            <li><a href="<%= c.url %>" title="<%= c.name %>"><%= c.name %></a></li>
+          <% end %>
+        </ul>
+      </div>
+		</div>
+		
+		<div class="media-grid" id="category-grid">
+		  <%
+		  if has_categories 
+		  %>		  
+		  	<% @category.children.where(:status => 'Active').reorder(:sort_order).each do |c| %>	
+		  		<% if c.active_products.count > 0 || c.children.count > 0 %>	  	  
+			  		<div class="media-box" href="<%= c.url %>">
+			      	<div class="media-box-image">
+			          <div class="image-wrap" data-width="250px" data-height="250px" data-thumbnail="<%= ApplicationHelper.image_for_category(c.id) %>" style="background-image:url(<%= ApplicationHelper.image_for_category(c.id) %>);"></div>
+			          <div class="thumbnail-overlay">
+			             <span class="category-view">View Category</span>
+			         	</div>
+			  	    </div>
+			  	    <div class="category-name"><%= c.name %></div> 
+			      </div>
+			    <% end %>
+		  	<% end %>		    
+		  <% end %>
+		  <%
+		  if has_products
+		  %> 
+		    <% @category.category_memberships.reorder(:sort_order).all.each do |cm| %>
+		      <% p = cm.product %>
+		      <% next if p.nil? %>
+		      <% next if p.status != Caboose::Product::STATUS_ACTIVE %>		      				
+					<% cats = p.categories.last.ancestry.collect{|a| a.slug} %>
+					<% cats = cats.join(' ') %>
+			    <div class="media-box <%= cats %>" href="<%= p.url %>">
+			    	<% if p.on_sale %><div class="product-sale">SALE</div><% end %>
+			    	<div class="media-box-image">
+			    		<% img = p.featured_image ? (p.featured_image.url(:large).include?('placehold') ? '//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg' : p.featured_image.url(:large)) : ('//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg') %>
+			        <div class="image-wrap" data-width="250px" data-height="250px" data-thumbnail="<%= img %>" style="background-image:url(<%= img %>);"></div>
+			        <div class="thumbnail-overlay">
+		            <% min_price = number_to_currency(p.price_range[0]) %>
+		            <% max_price = number_to_currency(p.price_range[1]) %>
+		            <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+		            <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+		            	<span class="product-price"><%= display_price %></span>
+		            <% end %>
+		        	</div>
+				    </div>
+				    <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+				    	<div class="product-mobile-price conceal"><%= display_price %></div>
+				    <% end %>
+				    <div class="product-title"><%= p.title %></div>
+			    </div>
+		 		<% end %>						
+			<% end %>
+		</div>
+				
+		<% if has_categories || has_products %> 
+		  <% content_for :js do %>
+				<script>
+					// Initialize the product grid
+					$('#category-grid').mediaBoxes({
+			      boxesToLoadStart: 20,
+			      boxesToLoad: 4,
+			      search: '#search',
+			      horizontalSpaceBetweenBoxes: 10,
+			      verticalSpaceBetweenBoxes: 10,
+			  		searchTarget: '.product-title',
+			  		noMoreEntriesWord: "No more products"
+			    });
+			    $("#category-grid .media-box, #category-grid .media-box-hidden").each(function() {
+			    	$(this).click(function(event) {
+			    		window.location = $(this).attr("href");
+			    	});
+			    });
+				</script>
+			<% end %>	  				
+		<% else %>
+			<div class="no-products">
+				<p>Sorry, no products were found.</p>
+			</div>
+		<% end %>
+
+  </div>
+</div>
+
+<% content_for :js do %>
+	<script>
+    // Fix the placeholder bug
+    $(window).load(function() {
+    	$("#search").val("");
+    	$("#search").change();
+    });
+	</script>
+<% end %>

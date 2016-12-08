@@ -1,0 +1,43 @@
+<%
+img_url = Caboose::Block.find(109426).child_value('logo_image').url(:huge)
+%>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row flexbox">
+    
+      <div class="logos">
+        <img src="<%= img_url %>" alt="<%= site.description %>" >
+        <section class="nine">
+          <span>OUR CITY LOVES THE</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+      
+      <div class="nav-links">
+        <div class="line"></div>
+        <nav>
+          <ul>
+            <% Caboose::Page.where(:parent_id => 2383, :hide => false).order(:sort_order).all.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+        <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+      </div>
+
+      <div class= "contacts">
+        <h4>City Contacts</h4>
+        <a href="/about/departments/fire-department"             >Fire Department                </a>
+        <a href="/about/departments/police-department"           >Police Department              </a>
+        <a href="/living/parks"                                  >Parks                          </a>
+        <a href="/living/utilities/water-board"                  >Water Board                    </a>
+        <a href="/living/utilities/gas-board"                    >Gas Board                      </a>
+        <a href="/about/departments/street-sanitation-department">Street &amp; Sanitation Department </a>
+      </div>
+
+    </div>
+  </div>
+</footer>

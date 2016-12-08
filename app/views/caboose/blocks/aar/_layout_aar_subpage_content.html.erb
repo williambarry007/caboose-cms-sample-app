@@ -1,0 +1,98 @@
+<div id="block_<%= block.id %>" class="body-content-wrapper">
+  <div class="title_bar">
+    <% if !page.nil? %>
+      <% if page.parent.nil? %>
+        <h3>Alabama Association of REALTORS</h3>
+      <% else %>
+        <% parent = page.parent.title %>
+        <h3><%== post ? "AAR News" : parent %></h3>
+      <% end %>
+    <% else %>
+      <h3>Alabama Association of REALTORS</h3>
+    <% end %>
+  </div>
+
+  <div class="l-body">
+    <div class="l-wrapper">
+      <div class="l-sidebar clearfix">
+
+      <% if page && (page.custom_field_value('show_sidebar') == '1' || page.custom_field_value('show_sidebar') == 1 || page.custom_field_value('show_sidebar') == true) %>
+        <div class="sidebar-bg"></div>
+        <div class="sidebar-aside">
+          <h3 class="sidebar-title"><% if post %>More News <% else %>Navigation<% end %></h3>
+          <% if post %>
+            <% ae_post = Caboose::PostCategoryMembership.where(:post_category_id => 128, :post_id => post.id).exists? %>
+            <% if ae_post %>
+              <% ae_cat = Caboose::PostCategory.where(:id => 128).first %>
+              <% other = ae_cat ? ae_cat.posts.where(:published => true).where("posts.id != ?", post.id).order("created_at DESC").limit(6) : [] %>
+            <% else %>
+              <% other = Caboose::Post.where(:site_id => site.id, :published => true).where("id != ?", post.id).order("created_at DESC").limit(6) %>
+            <% end %>
+            <% if other.count > 0 %>
+              <nav>
+                <ul>
+                  <% other.each do |o| %>
+                    <% ae_other = Caboose::PostCategoryMembership.where(:post_category_id => 128, :post_id => o.id).exists? %>
+                    <% next if ae_other %>
+                    <li><a href="<%= o.uri %>" title="<%= o.title %>"><%= o.title %></a></li>
+                  <% end %>
+                </ul>
+              </nav>
+            <% end %>
+          <% else %>
+            <% parent_id = page && page.parent_id ? page.parent_id : 959 %>
+            <% siblings = Caboose::Page.where(:parent_id => parent_id, :hide => false).count > 0 ? Caboose::Page.where(:parent_id => parent_id, :hide => false).order(:sort_order).all : Caboose::Page.where(:parent_id => 959, :hide => false).order(:sort_order).all %>
+            <% if siblings.count > 0 %>
+              <nav>
+                <ul>
+                  <% siblings.each do |s| %>
+                    <li><%== ApplicationHelper.nav_link(s, editing, false) %></li>
+                  <% end %>
+                </ul>
+              </nav>
+            <% end %>
+          <% end %>
+          <% tweet = TwitterCache.where(:site_id => site.id).order("created_at DESC").first %>
+          <% if tweet %>
+            <div class="tweet">
+              <p class="icon-twitter"></p>
+              <p class="body"><%== tweet.body %></p>
+              <p class="time"><%= time_ago_in_words(tweet.created_at) %> ago</p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+        <div class="sidebar-body clearfix" id='main_content'>    
+        
+          <% if !post %>
+            <h2 class="main-page-title">
+              <%== page.title %>
+            </h2>
+          <% end %>
+
+          <% if controller_view_content && controller_view_content.strip.length > 0 %>
+            <% if block.constrain == true %><div class='constrain'><% end %>
+            <%= raw controller_view_content %>
+            <% if block.constrain == true %></div><% end %>
+          <% elsif post %>
+            <%= raw block.partial('post', local_assigns) %>
+
+            <% elsif block.children.count > 0 %>
+
+            <% block.children.each do |b| %>
+              <% if block.constrain && !b.full_width %><% end %>
+              <%= raw block.render(b, local_assigns) %>
+              <% if block.constrain && !b.full_width %><% end %>
+            <% end %>
+
+          <% else %>
+            <% if editing %>
+              <p style="border:1px dashed gray;padding:10px;">Empty content area. Click to add child blocks.</p>
+            <% end %>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

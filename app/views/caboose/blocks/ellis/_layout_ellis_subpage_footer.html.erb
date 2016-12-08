@@ -1,0 +1,24 @@
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+  	<div class="grid-row">
+  		<div class="unit1of3 left">
+  			<p>Ellis Architects <%= DateTime.now.strftime("%Y") %> All Rights Reserved</p>
+  		</div>
+  		<div class="unit1of3 center">
+  			<section class="nine">
+          <span>Designed and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+  		</div>
+  		<div class="unit1of3 right">
+  			<ul>
+	        <% Caboose::Page.where(:parent_id => 2270, :hide => false).order(:sort_order).all.each do |p| %>
+	          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+	        <% end %>
+	      </ul>
+  		</div>
+  	</div>
+  </div>
+</footer>

@@ -1,0 +1,156 @@
+<div class="content_wrapper" id='block_<%= block.id %>'>          
+  <div class="content_body">
+
+    <section class="clients-container" id="client-section">
+      <a href="#" id="close-clients" class="icon-close"></a>
+      <div class="constrain">
+        <div class="table">
+          <div class="table-cell pad-top-mobile">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/nine/images/clients.png" alt="Our Clients" id="client-header" />
+            <p class="header-text">We've had the honor of working with these great clients over the past several years.</p>
+            <% clients = block.children.where(:block_type_id => 1085).order(:sort_order).all %>
+            <% clients.each do |c| %><%= raw block.render(c, local_assigns) %><% end %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="header-social-links"><%== ApplicationHelper.social_links(site.id, "outline", "white") %></div>
+
+    <section class="home-grid-container clearfix">
+      
+      <div class="grid-overlay"></div>
+      
+      <a href="#" id="show-menu" class="icon-nine-menu"></a>
+      
+      <div class="grid-unit current-panel" id="panel-0">
+        <div class="image-bg" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/nine/images/ourteam.jpg');"></div>
+        <!-- <div class="overlay"></div> -->
+        <div class="content">
+          <div class="table">
+            <div class="table-cell">
+              <h2 class="unit-title">Our Team</h2>
+              <h3 class="unit-subtitle">Software Engineers &amp; Designers</h3>
+              <a href="page-our-team" class="btn white-outline">built in the south.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-unit video" id="panel-1">
+        <div class="image-bg home-video"></div>
+        <!-- <div class="overlay"></div> -->
+        <div class="content">
+          <div class="table">
+            <div class="table-cell">
+              <h2 class="unit-title">Digital Reel</h2>
+              <h3 class="unit-subtitle">Capturing Moments</h3>
+              <a href="page-reel" class="btn white-outline">convey your story.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="grid-unit" id="panel-2">
+        <div class="image-bg" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/nine/images/develop.jpg');"></div>
+        <!-- <div class="overlay"></div> -->
+        <div class="content">
+          <div class="table">
+            <div class="table-cell">
+              <h2 class="unit-title">Web Development</h2>
+              <h3 class="unit-subtitle">It's the Core of Who We Are</h3>
+              <a href="page-web" class="btn white-outline">beautiful design that is functional.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-unit" id="panel-3">
+        <div class="image-bg" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/nine/images/branding.jpg');"></div>
+        <!-- <div class="overlay"></div> -->
+        <div class="content">
+          <div class="table">
+            <div class="table-cell">
+              <h2 class="unit-title">Eyesight</h2>
+              <h3 class="unit-subtitle">Be Seen and On Target</h3>
+              <a href="page-eyesight" class="btn white-outline">build your following.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-unit" id="panel-4">
+        <div class="image-bg" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/nine/images/train.jpg');"></div>
+<!--         <div class="overlay" style="opacity:0.3;"></div> -->
+        <div class="content">
+          <div class="table">
+            <div class="table-cell">
+              <h2 class="unit-title">Our Products</h2>
+              <h3 class="unit-subtitle">Building a Better Way</h3>
+              <a href="page-products" class="btn white-outline">we ride the rails like no one else.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-unit" id="panel-5">
+        <div class="image-bg" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/nine/images/photography.jpg');"></div>
+        <!-- <div class="overlay"></div> -->
+        <div class="content">
+          <div class="table">
+            <div class="table-cell">
+              <h2 class="unit-title">Photography</h2>
+              <h3 class="unit-subtitle">Seeing is Believing</h3>
+              <a href="page-photography" class="btn white-outline">a picture is worth a thousand likes.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <a id="home-link" href="#home"><%= render 'svg/nine' %></a>
+
+    <%= render :partial => "caboose/blocks/nine/page_our_team" %>
+    <%= render :partial => "caboose/blocks/nine/page_reel" %>
+    <%= render :partial => "caboose/blocks/nine/page_web" %>
+    <%= render :partial => "caboose/blocks/nine/page_eyesight" %>
+    <%= render :partial => "caboose/blocks/nine/page_products" %>
+    <%= render :partial => "caboose/blocks/nine/page_photography" %>
+    <%= render :partial => "caboose/blocks/nine/contact_form" %>
+    <%= render :partial => "caboose/blocks/nine/contact_page", :locals => { :site => site } %>
+
+  </div>
+</div>
+
+<% content_for :js do %>
+  <% video_path = block.child_value('video_path').blank? ? "http://d9hjv462jiw15.cloudfront.net/assets/nine/images/reel" : block.child_value('video_path') %>
+  <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+  <script>
+    var reel_video = null;
+    var home_video = null;
+    $(document).ready(function() {
+      home_video = $(".home-video").vide("<%= video_path %>");
+      reel_video = $("#reel-video").vide("<%= video_path %>");
+      footer_video = $(".footer-video").vide("<%= video_path %>");
+    });
+    (function() {
+      var formWrap = document.getElementById( 'fs-form-wrap' );
+
+      [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {  
+        new SelectFx( el, {
+          stickyPlaceholder: false,
+          onChange: function(val){
+            document.querySelector('span.cs-placeholder').style.backgroundColor = val;
+          }
+        });
+      } );
+
+      new FForm( formWrap, {
+        onReview : function() {
+          classie.add( document.body, 'overview' ); // for demo purposes only
+        }
+      } );
+    })();
+  </script>
+<% end %>

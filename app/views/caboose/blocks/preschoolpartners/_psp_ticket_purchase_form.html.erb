@@ -1,0 +1,86 @@
+<% adult = block.child_value('adult_cost').blank? ? false : block.child_value('adult_cost').to_f %>
+<% child = block.child_value('child_cost').blank? ? false : block.child_value('child_cost').to_f %>
+<% pk = Caboose::Setting.where(:site_id => site.id, :name => 'stripe_public_key').first %>
+<% public_key = pk ? pk.value : false %>
+<% piu = 'https://s3.amazonaws.com/stripe-uploads/acct_17ZoOuIeBi7lno28merchant-icon-1454431737457-icon.png' %>
+<% desc = block.child_value('description') %>
+<% title = block.child_value('title') %>
+<% event_title = block.child_value('event_title').blank? ? "Event" : block.child_value('event_title') %>
+<% cat1 = block.child_value('category_1_name').blank? ? "Adult Tickets" : block.child_value('category_1_name') %>
+<% cat2 = block.child_value('category_2_name').blank? ? "Child Tickets" : block.child_value('category_2_name') %>
+
+<div class="ticket-form-block" id="block_<%= block.id %>">
+	<form action="/stripe/charge" action="post" id="ticket-form">
+		<input type="hidden" name="charge_description" value="<%= title %> Tickets">
+		<h3 class="section-title"><%= title %></h3>
+		<h5 class="event-title"><%= event_title %></h5>
+		<div class="richtext"><%== desc %></div>
+		<div class="selects">
+			<div class="grid-row">
+				<div class="unit1of2">
+					<% if adult && adult.is_a?(Float) %>
+						<h5 class="unit-title"><%= cat1 %><br /><span class="cost">($<%= sprintf('%.2f', adult) %> each)</span></h5>
+						<div class="field">
+							<label for="adult_quantity">Quantity: </label>
+							<select name="adult_quantity" class="quantity-select">
+								<% (0..10).each do |i| %>
+									<option value="<%= i %>"><%= i %></option>
+								<% end %>
+							</select>
+						</div>
+					<% else %>
+						&nbsp;
+					<% end %>
+				</div>
+				<p class="icon-ticket"></p>
+				<div class="unit1of2 right">
+					<% if child && adult.is_a?(Float) %>
+						<h5 class="unit-title"><%= cat2 %><br /><span class="cost">($<%= sprintf('%.2f', child) %> each)</span></h5>
+						<div class="field">
+							<label for="child_quantity">Quantity: </label>
+							<select name="child_quantity" class="quantity-select">
+								<% (0..10).each do |i| %>
+									<option value="<%= i %>"><%= i %></option>
+								<% end %>
+							</select>
+						</div>
+					<% else %>
+						&nbsp;
+					<% end %>
+				</div>
+			</div>
+		</div>
+		<div class="field">
+			<p class="total">Total: $<span id="total-amount">0.00</span></p>
+		</div>
+		<% if !public_key.blank? %>
+			<input type="submit" id="submit-ticket-form" class="alternate btn" value="Purchase" />
+		<% elsif editing %>
+			<p>Stripe API keys need to be added.</p>
+		<% end %>
+		<p class="info">secure payment processing provided by <a href="http://www.stripe.com" title="Stripe" target="_blank">Stripe</a></p>
+	</form>
+	<div id="message"></div>
+</div>
+
+<% content_for :js do %>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script>
+		function init_tickets_<%= block.id %>() {
+    	var tc_<%= block.id %> = new TicketsController({
+     		authenticity_token: '<%= form_authenticity_token %>',
+     		public_key: '<%= public_key %>',
+     		block_id: 'block_<%= block.id %>',
+     		proile_image_url: '<%= piu %>',
+     		child_cost: <%= child ? child : 0.0 %>,
+     		adult_cost: <%= adult ? adult : 0.0 %>,
+     		event_title: '<%== event_title %>',
+     		cat1_title: '<%= cat1 %>',
+     		cat2_title: '<%= cat2 %>'
+     	});
+    }
+		$(window).load(function() {
+			init_tickets_<%= block.id %>();
+		});
+	</script>
+<% end %>

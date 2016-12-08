@@ -1,0 +1,18 @@
+<li class="col-md-4 col-sm-4 col-xs-12 item" id="block_<%= block.id %>">
+  <a data-toggle="modal" href="#modal<%= block.id %>" class="image">
+    <img src="<%= block.child_value('photo').url(:large) %>" alt="<%= block.child_value('title') %>"> 
+    <span class="overlay"><span class="valign"></span><i class="fa fa-search"></i></span>              
+  </a>
+  <div class="description">
+    <h2><%= block.child_value('title') %></h2>
+    <%== block.child_value('description') %>
+    <div class="clearfix"></div>
+  </div>          
+</li>
+
+<div class="modal fade" id="modal<%= block.id %>" tabindex="-1" role="dialog">
+      <div class="wrapper">
+        <img data-dismiss="modal" class="img-responsive" src="<%= block.child_value('photo').url(:huge) %>" alt="<%= block.child_value('title') %>">
+        <h2 class="modal-title"><a href="http://sintel.org"><%= block.child_value('title') %></a></h2>
+      </div><!-- /.content -->      
+    </div><!-- /.modal -->

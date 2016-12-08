@@ -1,0 +1,139 @@
+<div class="news-list-block" id="block_<%= block.id %>">
+
+	<% if false %>
+			<div class="blog-container constrain">
+				
+					<h3 class="section-title">What We're Reading</h3>
+
+				<div class="post-list">
+					<% posts = Caboose::PostCategory.find(143).posts.where(:site_id => site.id, :published => true).order("created_at DESC").take(2) %>
+					<% if posts.count == 0 %>
+						<p class="none">Sorry, there are no posts in that category yet. Check back later!</p>
+					<% end %>
+					<% posts.each_with_index do |p,i| %>
+						<div class="post-unit alt clearfix" id="index-<%= i %>">
+							<div class="image-wrapper" style="background-image:url(<%= p.image.url(:large) %>);">
+								<div class="arrow" id="index-<%= i %>"></div>
+							</div>
+							<div class="text-wrapper">
+								<% if !p.subtitle.blank? %>
+									<a href="<%= p.subtitle %>" class="title" target="_blank" title="<%= p.title %>"><%= p.title %></a>
+								<% else %>
+									<h3 class="title"><%= p.title %></h3>
+								<% end %>
+								<h4 class="meta"><% if !p.author.blank? %><%= p.author %> | <% end %><%= p.created_at.strftime("%B %-d, %Y") %></h4>
+		            <% src_text = p.preview %>
+							  <% if p.preview.blank? && !p.body.blank? %>
+									<% src_text = p.body %>
+							  <% end %>
+							  <% if !src_text.blank? %>
+			            <div class="excerpt">
+			              <% 
+			                html = Nokogiri::HTML( src_text ) 
+			                text = html.at('body').inner_text
+			                words = text.blank? ? "" : text.split[0..40] 
+			              %>
+			              <% if !words.blank? && words.count > 39 %>
+			              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+			              <% else %>
+											<%= words.blank? ? "" : words.join(' ') %>
+			              <% end %>
+			            </div>
+			          <% end %>
+							</div>
+						</div>
+					<% end %>
+				</div>
+			</div>
+		<% end %>
+			<div class="blog-container constrain skinny">
+
+					<h3 class="section-title">
+					<img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/black_icon.png">Blog</h3>
+			
+				<div class="post-list">
+					<% posts = Caboose::PostCategory.find(87).posts.where(:site_id => site.id, :published => true).order("created_at DESC").take(2) %>
+					<% if posts.count == 0 %>
+						<p class="none">Sorry, there are no posts in that category yet. Check back later!</p>
+					<% end %>
+					<% posts.each_with_index do |p,i| %>
+					<% ps = p.post_categories.where("post_categories.id != ? AND post_categories.id != ? AND post_categories.id != ?", 87, 143, 157).all %>
+				<a title="<%= p.title %>" class="tall post-unit alt clearfix animated" href="<%= p.uri %>" data-tags="<%= ps.count > 0 ? ps.map{|c| c.name}.join(',') : '' %>">
+					<div class="image-wrapper" style="background-image:url(<%= p.image.url(:large) %>);">
+						<div class="arrow"></div>
+					</div>
+					<div class="text-wrapper">
+						<span class="title"><%= p.title %></span>
+						<h4 class="meta"><span class="author"><% if !p.author.blank? %>by <%= p.author %></span> | <% end %><%= p.created_at.strftime("%B %-d, %Y") %></h4>
+            <% src_text = p.preview %>
+					  <% if p.preview.blank? && !p.body.blank? %>
+							<% src_text = p.body %>
+					  <% end %>
+					  <% if !src_text.blank? %>
+	            <div class="excerpt">
+	              <% 
+	                html = Nokogiri::HTML( src_text ) 
+	                text = html.at('body').inner_text
+	                words = text.blank? ? "" : text.split[0..55] 
+	              %>
+	              <% if !words.blank? && words.count > 54 %>
+	              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+	              <% else %>
+									<%= words.blank? ? "" : words.join(' ') %>
+	              <% end %>
+	            </div>
+	          <% end %>
+					</div>
+				</a>
+				<% end %>
+
+					<% if false %>
+<!-- 					<div class="grid-row">
+					<% posts.each_with_index do |p,i| %>
+						<div class="unit1of2 <% if i == 0 %>left<% end %>">
+						<div class="post-unit">
+							<div class="image-wrapper" style="background-image:url(<%= p.image.url(:large) %>);">
+								<h3 class="title"><%= p.title %></h3>
+							</div>
+							<div class="text-wrapper">
+		            <% src_text = p.preview %>
+							  <% if p.preview.blank? && !p.body.blank? %>
+									<% src_text = p.body %>
+							  <% end %>
+							  <% if !src_text.blank? %>
+			            <div class="excerpt">
+			              <% 
+			                html = Nokogiri::HTML( src_text ) 
+			                text = html.at('body').inner_text
+			                words = text.blank? ? "" : text.split[0..30] 
+			              %>
+			              <% if !words.blank? && words.count > 29 %>
+			              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+			              <% else %>
+											<%= words.blank? ? "" : words.join(' ') %>
+			              <% end %>
+			            </div>
+			          <% end %>
+			          <div class="bottom clearfix">
+			          	<div class='share-icons'>
+										<% url = "http://www.utunum.com" + p.uri %>
+										<a href="https://www.facebook.com/sharer/sharer.php?u=<%= url %>" target="_blank" class="icon-circle-facebook white" onclick="window.open(this.href, 'mywin',
+				'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"></a>
+										<a href="https://twitter.com/home?status=<%= p.title + ' @ ' + url %>" target="_blank" class="icon-circle-twitter white" onclick="window.open(this.href, 'mywin',
+				'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"></a>
+										<a href="https://plus.google.com/share?url=<%= url %>" target="_blank" class="icon-circle-google-plus white" onclick="window.open(this.href, 'mywin',
+				'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"></a>
+									</div>
+									<a href="<%= p.uri %>" class="btn color-outline" title="<%= p.title %>">Read More</a>
+			          </div>
+							</div>
+						</div>
+						</div>
+					<% end %>
+					</div> -->
+					<% end %>
+				</div>
+			</div>
+	
+
+</div>

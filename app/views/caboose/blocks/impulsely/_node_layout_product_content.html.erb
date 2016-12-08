@@ -1,0 +1,63 @@
+<% p = @product %>
+
+<% if @node.product_id %>
+  <div class="product-details loading" id="product" data-id="<%= p.id %>">
+    <% if p.images.count > 0 %>   
+      <div class="loading-text">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/osp/images/icons/loading.gif" width="35" height="35" />
+        <h3>Loading product...</h3>
+      </div>
+    <% end %>
+    <div class="constrain">    
+      <% if p.images.count > 0 %>
+        <div id="product-images"></div>
+      <% end %>
+      <div class="left-text-wrapper">
+        <h1 class="product-title"><%= @product.title %></h1>
+        <div class='description'><%= raw @product.body_html %></h1>
+      </div>
+      <section class="product-details-wrapper">
+        <span id='percent-off'></span>
+        <span id='sale-price'></span>    
+        <div id="product-price"></div>      
+        <div id="product-options"></div>
+        <div id="add-to-cart"></div>
+      </section>
+    </div>
+  </div>
+<% else %>
+  <p>No product configured for this node.</p>
+<% end %>
+
+<%= content_for :css do %>
+  <%= stylesheet_link_tag 'caboose/product_images' %>
+  <%= stylesheet_link_tag 'caboose/product_options' %>
+<% end %>
+
+<%= content_for :js do %>
+<%= javascript_include_tag 'caboose/imageZoom' %>
+<%= javascript_include_tag 'impulsely/js/cart_controller.js' %>
+<%= javascript_include_tag 'impulsely/js/product_controller.js' %>
+<script type='text/javascript'>
+
+<% if @node.product_id %>
+var product_controller = false;
+var cart_controller = false;
+$(document).ready(function() {
+    
+  product_controller = new ProductController({
+    shop_id: <%= @funnel.shop_id %>,
+    funnel_id: <%= @funnel.id %>,
+    node_id: <%= @node.id %>,    
+    authenticity_token: "<%= form_authenticity_token %>"
+  });
+  
+  cart_controller = new CartController({    
+    authenticity_token: "<%= form_authenticity_token %>"
+  });
+
+});
+<% end %>
+
+</script>
+<% end %>

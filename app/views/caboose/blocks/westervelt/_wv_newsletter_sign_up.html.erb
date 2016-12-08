@@ -1,0 +1,73 @@
+<%
+  heading = block.child_value("heading")
+  details = block.child_value("details")
+%>
+
+<!-- <div id="block_<%= block.id %>">
+  <div class="newsletter-sign-up">
+    <div class="constrain">
+      <h1 class="title"><%= heading %></h1>
+      <p class="meta"><%= details %></p>
+      <form id="newsletter-form">
+        <input type="hidden" value="Newsletter Signup Form" name="form_name">
+        <input type="hidden" value="<%= block.id %>" name="block_id">
+        <input type="email" name="email_address_required" placeholder="Email Address*">
+        <input type="submit" class="btn" value="Submit" id="submit-form">
+      </form>
+      <div id="message"></div>
+    </div>
+  </div>
+</div> -->
+
+<section class="newsletter-sign-up" id="block_<%= block.id %>">
+  <h1 class="title"><%= heading %></h1>
+  <p class="meta"><%= details %></p>
+  <form id="newsletter-form" class="simform" autocomplete="off">
+    <input type="hidden" value="Newsletter Signup Form" name="form_name">
+    <input type="hidden" value="<%= block.id %>" name="block_id">
+    <div class="simform-inner">
+      <ol class="questions">
+        <li>
+          <span><label for="first_name">What's your first name?</label></span>
+          <input id="first_name" name="first_name" type="text"/>
+        </li>
+        <li>
+          <span><label for="last_name">What's your last name?</label></span>
+          <input id="last_name" name="last_name" type="text"/>
+        </li>
+        <li>
+          <span><label for="email_address_required">What's your email address?</label></span>
+          <input id="email_address_required" name="email_address_required" type="text"/>
+        </li>
+      </ol><!-- /questions -->
+      <button class="submit" type="submit">Send answers</button>
+      <div class="controls">
+        <button class="next"></button>
+        <div class="progress"></div>
+        <span class="number">
+          <span class="number-current"></span>
+          <span class="number-total"></span>
+        </span>
+        <span class="error-message"></span>
+      </div><!-- / controls -->
+    </div><!-- /simform-inner -->
+    <span class="final-message"></span>
+  </form><!-- /simform -->  
+<!--   <div id="message"></div>   -->  
+</section>
+
+<% content_for :js do %>
+  <%= javascript_include_tag "form_submit" %>
+  <script>
+    var theForm = document.getElementById( 'newsletter-form' );
+    new stepsForm( theForm, {
+      onSubmit : function( form ) {
+        classie.addClass( theForm.querySelector( '.simform-inner' ), 'hide' );
+        submit_form("newsletter-form");
+        var messageEl = theForm.querySelector( '.final-message' );
+        messageEl.innerHTML = "Thank you! We'll be in touch.";
+        classie.addClass( messageEl, 'show' );
+      }
+    } );
+  </script>
+<% end %>

@@ -1,0 +1,31 @@
+<% 
+  sc = Caboose::SocialConfig.where(:site_id => site.id).last
+  un = sc ? sc.twitter_username : ''
+  un = un.blank? ? '' : un.downcase
+%>
+<% if !un.blank? %>
+  <% tweet = TwitterCache.where(:username => un).order("created_at DESC").first %>
+  <% if tweet %>
+    <div class="single-tweet-banner" href="http://www.twitter.com/<%= un %>" id="block_<%= block.id %>">
+      <div class="constrain">
+        <a class="icon-twitter colored" href="http://www.twitter.com/<%= un %>" target="_blank"></a>
+        <span class="tweet-content">
+          <%== tweet.body %>
+        </span>
+        <span class="tweet-time">
+          <%= time_ago_in_words(tweet.created_at) %> ago
+        </span>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <% if editing %>
+    <div class="single-tweet-banner" id="block_<%= block.id %>">
+      <div class="constrain">
+        <span class="tweet-content">
+          Twitter username is not set. Please set in Admin -> Pages -> Site Configuration.
+        </span>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,16 @@
+<section id="block_<%= block.id %>">
+  <h3>Lunch Entrees Every Day</h3>
+  
+  <ul class="entrees grid-row constrain">
+    <%
+    entrees = []
+    block.children.each{ |entree| entrees << entree if entree.block_type_id == 88 }
+    %>
+    <% entrees.each do |entree| %>                      
+      <li class="unit1of<%= entrees.count %>">
+        <%= block.render(entree, local_assigns) %>
+      </li>
+    <% end %>
+  </ul>
+</section>
+

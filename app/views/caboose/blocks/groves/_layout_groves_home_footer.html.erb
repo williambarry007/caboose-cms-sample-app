@@ -1,0 +1,13 @@
+<footer class="main basic" id="block_<%= block.id %>">
+  <div class="constrain">
+    <h1 class="footer-text"><%= block.child_value('footer_text') %></h1>
+    <img class="footer-image" src="//d9hjv462jiw15.cloudfront.net/assets/groves/images/feet2.jpg" alt="I Go" />
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

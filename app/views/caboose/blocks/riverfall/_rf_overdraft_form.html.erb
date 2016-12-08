@@ -1,0 +1,65 @@
+<div class="overdraft-form contact-form-block clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="text">
+			<h3 class="section-title">Account Information</h3>
+		</div>
+		<form id="overdraft_form">
+			<input type="hidden" name="block_id" value="<%= block.id %>" />
+			<input type="hidden" name="form_name" value="Overdraft Opt-In Form" />
+			<div class="grid-row">
+				<div class="unit1of3" style="padding-right:2%;">
+					<input type="text" name="account_holder_name_required" placeholder="Account Holder Name">
+				</div>
+				<div class="unit1of3" style="padding-left:1%;padding-right:1%;">
+					<input type="email" name="account_number_required" placeholder="Account Number">
+				</div>
+				<div class="unit1of3" style="padding-left:2%;">
+					<input type="hidden" name="subject" value="New Opt-In Request on RiverFallCU.com">
+					<input type="text" name="date" value="<%= DateTime.now.strftime('%-m/%-d/%Y') %>" disabled="disabled" />
+				</div>
+			</div>
+			<div class="grid-row">
+				<div class="unit1of1">
+		<!-- 			<input type="checkbox" name="authorization_required" id="authorization" checked/> -->
+         	<p style="text-align:right;font-size:14px;margin:10px auto;">By clicking Submit, I affirm that I want RiverFall Credit Union to authorize and pay overdrafts on my ATM and everyday debit card transactions.</p>
+				</div>
+			</div>
+<!-- 			<div class="grid-row">
+				<div class="unit1of1">
+					<textarea name="message_required" placeholder="Message" rows="4"></textarea>
+				</div>
+			</div> -->
+			<% if block.child_value('show_captcha') && block.child_value('show_captcha') == "Yes" %>
+				<div class="recaptcha clearfix">
+					<div style="margin:10px 0;" class="g-recaptcha clearfix" data-sitekey="6LcOOQATAAAAAK0PVSzlqmm0X_RggYhM7GMuot4X"></div>
+				</div>
+			<% end %>
+			<div class="bottom clearfix">
+				<a href="#" class="btn" id="submit-contact-form">Submit</a>
+			</div>
+		</form>
+		<div id="message"></div>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		.g-recaptcha > div > div {
+			float: right;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<%= javascript_include_tag "form_submit" %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-contact-form").click(function(event) {
+				event.preventDefault();
+				submit_form("overdraft_form"); 
+				return false;
+			});
+		});
+	</script>
+<% end %>

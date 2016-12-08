@@ -1,0 +1,20 @@
+<%
+photo = block.child_value('photo')
+name = block.child_value('name')
+quote = block.child_value('quote')
+%>
+
+<div class="testimonial-block">
+	<div class="constrain">
+		<% img_url = (photo.url && !photo.url.include?("placehold")) ? photo.url(:large) : '//d9hjv462jiw15.cloudfront.net/assets/shared/default_profile.png' %>
+		<% if img_url %>
+			<div class="image-wrapper">
+				<div class="image" style="background-image:url(<%= img_url %>);"></div>
+			</div>
+		<% end %>
+		<div class="text-wrapper">
+			<h4 class="name"><%= name %></h4>
+			<div class="richtext">&#8220;<%== quote %>&#8221;</div>
+		</div>
+	</div>
+</div>

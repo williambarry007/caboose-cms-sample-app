@@ -1,0 +1,32 @@
+<%= render :partial => "caboose/blocks/whitman/verse" %>
+
+<% content_for :js do %>
+<script>
+	$(window).load(function() {
+		$('.video-loader').removeClass('loading');
+	});
+	$('.show-overlay').click(function(e) {
+		e.preventDefault();
+		$('.overlay-wrapper .text-wrapper:not(#' + $(this).data('text') + ')').hide();
+		$('.overlay-wrapper .text-wrapper#' + $(this).data('text')).show();
+		$('.overlay-wrapper').fadeIn();
+		if ( $(this).data('text') == 'verse' ) {
+			scroll_to_verse(<%= @story ? @story.stanza : 1 %>);
+		}
+		if ( $(this).data('text') == 'map' ) {
+			$('.overlay-wrapper').css('padding',0);
+			$('#verses-map-holder .map').css('height', $('.overlay-wrapper').outerHeight() + 1 );
+			show_verse_map();
+		}
+		else {
+			$('.overlay-wrapper').css('padding','50px 5%');
+		}
+		toggle_arrows();
+	});
+	$('.close-overlay').click(function(e) {
+		e.preventDefault();
+		$('.overlay-wrapper .text-wrapper').hide();
+		$('.overlay-wrapper').fadeOut();
+	});
+</script>
+<% end %>

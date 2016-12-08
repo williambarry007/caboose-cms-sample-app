@@ -1,0 +1,69 @@
+<%
+departments = block.children.where(:block_type_id => 2046).all
+%>
+
+<% if modal %>
+
+<% else %>
+
+<div class="contact-form-block clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+		<h4 class="lined"><span>Let's Talk</span></h4>
+		<div class="f-wrapper">
+			<div class="form-wrapper">
+				<form id="contact_form">
+					<input type="hidden" name="block_id" value="<%= block.id %>" />
+					<input type="hidden" name="form_name" value="Contact Form" />
+					<div class="field">
+						<input type="text" name="name" placeholder="Name">
+					</div>
+					<div class="field">
+						<input type="email" name="email_required" placeholder="Email">
+					</div>
+					<div class="field">
+						<input type="text" name="subject" placeholder="Subject">
+					</div>
+					<div class="field">
+						<textarea name="message_required" placeholder="Message" rows="4"></textarea>
+					</div>
+					<% if block.child_value('show_captcha') && block.child_value('show_captcha') == "Yes" %>
+						<div class="recaptcha clearfix">
+							<div style="margin:10px 0;" class="g-recaptcha clearfix" data-sitekey="6LcOOQATAAAAAK0PVSzlqmm0X_RggYhM7GMuot4X"></div>
+						</div>
+					<% end %>
+					<div class="bottom clearfix">
+						<a href="#" class="btn color-outline" id="submit-contact-form">Send</a>
+					</div>
+				</form>
+				<div id="message"></div>
+			</div>
+			<div class="photo-holder">
+				
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		.recaptcha > div > div {
+			float: right;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<%= javascript_include_tag "form_submit" %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-contact-form").click(function(event) {
+				event.preventDefault();
+				submit_form("contact_form"); 
+				return false;
+			});
+		});
+	</script>
+<% end %>
+<% end %>

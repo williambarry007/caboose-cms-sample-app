@@ -1,0 +1,31 @@
+<% cal = Caboose::Calendar.where(:id => 88).last %>
+<% limit = page.id == 1236 ? 10 : 1000 %>
+<div class="tour-dates-block" id="block_<%= block.id %>">
+	<% if cal %>
+		<h2 class="title">Tour Dates</h2>
+		<% events = cal.calendar_events.where("cast(begin_date as date) >= ?",DateTime.now).order(:begin_date).take(limit) %>
+		<% if events.count > 0 %>
+			<ul>
+				<% events.each do |e| %>
+					<li>
+						<div class="constrain">
+							<span class="field date"><%= e.begin_date.strftime("%B %-d") %></span>
+							<span class="field name"><%= e.name %></span>
+							<span class="field location"><%= e.location %></span>
+							<span class="field time">
+								<% if e.all_day %>
+									TBD
+								<% else %>
+									<%= e.begin_date.strftime("%l:%M%P") %>
+								<% end %>
+							</span>
+							<span class="field link"><a href="/event?id=<%= e.id %>" class="btn">More Details</a></span>
+						</div>
+					</li>
+				<% end %>
+			</ul>
+		<% end %>
+	<% elsif editing %>
+		<p>Couldn't find tour dates calendar.</p>
+	<% end %>
+</div>

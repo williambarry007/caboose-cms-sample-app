@@ -1,0 +1,21 @@
+<div id="block_<%= block.id %>">
+  <div class="home-calendar">
+    <% events = Caboose::CalendarEvent.where("((cast(begin_date as date) >= ? and cast(begin_date as date) <= ?) or ( cast(end_date as date) >= ? and cast(end_date as date) <= ?))", Date.today, (Date.today + 6.months), Date.today, (Date.today + 6.months)).where(:calendar_id => 26).take(5) %>
+    <div class="section">
+      <h5 class="top-title">Upcoming Events</h5>
+      <% if events.count > 0 %>
+        <% events.each do |e| %>
+          <div class="news-post">
+            <h5 class="name"><%= e.name %></h5>
+            <h6 class="date"><%= e.begin_date.strftime("%B %-d, %Y") %></h6>
+            <div class="post-body">
+              <%== e.description %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p style="padding:0 8px 0 8px;">Sorry, there are no upcoming events.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

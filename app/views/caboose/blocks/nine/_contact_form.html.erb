@@ -1,0 +1,79 @@
+<div class="fs-form-wrap" id="fs-form-wrap">
+  <a href="#" id="close-contact-form" class="icon-close"></a>
+  <div class="fs-title">
+    <h1>Contact Us</h1>
+    <p>Please use the form below to contact us, and we will be in touch with you shortly.</p>
+  </div>
+  <form id="myform" class="fs-form fs-form-full" autocomplete="off">
+    <input type="hidden" name="block_id" value="3955" />
+    <input type="hidden" name="form_name" value="Contact Form" />
+    <ol class="fs-fields">
+      <li>
+        <label class="fs-field-label fs-anim-upper" for="q1">What's your name?</label>
+        <input class="fs-anim-lower" id="q1" name="name_required" type="text" placeholder="Steve Jobs" required/>
+      </li>
+      <li>
+        <label class="fs-field-label fs-anim-upper" for="q2" data-info="We won't send you spam, we promise...">What's your email address?</label>
+        <input class="fs-anim-lower" id="q2" name="email_required" type="email" placeholder="jobs@apple.com" required/>
+      </li>
+      <li>
+        <label class="fs-field-label fs-anim-upper" for="q3" data-info="We won't send you spam, we promise...">What's the subject of your message?</label>
+        <input class="fs-anim-lower" id="q3" name="subject" type="text" placeholder="New Website"/>
+      </li>
+      <li>
+        <label class="fs-field-label fs-anim-upper" for="q4">Describe how The Nine can help you</label>
+        <textarea class="fs-anim-lower" id="q4" name="message_required" placeholder="Describe here"></textarea>
+      </li>
+      <li>
+        <% number_1 = rand(1..20) %>
+        <% number_2 = rand(1..20) %>
+        <label class="fs-field-label fs-anim-upper" for="q5" data-info="We need to prove you are a human...">What is <%= number_1 %> + <%= number_2 %>?</label>
+        <input class="fs-anim-lower" id="q5" name="a8v98sdf<%= number_1 + number_2 %>jx0vxc" type="text" placeholder="Your Answer" />
+      </li>
+    </ol>
+    <div id="message"></div>
+    <a href="#" class="fs-submit btn" id="submit-contact-form">Submit</a>
+  </form>
+</div>
+
+<% content_for :js do %>
+  <script>
+    function submit_form(form_id) {
+      var mess = $("#" + form_id).find("#message");
+      mess.html("<p class='note loading'>Submitting form... </p>");
+      var form = $("#" + form_id); 
+      form.find("input, textarea").each(function() {
+        if ( $(this).attr("placeholder") == $(this).val() ) {
+          $(this).val("");
+        }
+      });
+      $.ajax({
+        url: '/form',
+        type: 'post',
+        data: form.serialize(),
+        success: function(resp) {
+          if(resp.error) {
+            form.find("input, textarea").each(function() {
+              if ( $(this).val() == "" ) {
+                $(this).val( $(this).attr("placeholder") );
+              }
+            });
+            mess.html("<p class='note error'>" + resp.error + "</p>");
+          } 
+          if(resp.success) {
+            
+            mess.html("<p class='note success'>" + resp.success + "</p>");
+            $("#fs-form-wrap").delay(500).fadeOut();
+          }
+        }
+      });
+    }
+    $(document).ready(function() {
+      $("#submit-contact-form").click(function(event) {
+        event.preventDefault();
+        submit_form("myform"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

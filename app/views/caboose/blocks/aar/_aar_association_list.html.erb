@@ -1,0 +1,16 @@
+<%
+associations = Aar::Association.reorder(:sort_order).all
+%>
+
+<div class="association-list-block" id="block_<%= block.id %>">
+	<ul>
+		<% associations.each do |a| %>
+			<li class="association">
+				<h4 class="name"><%= a.name %></h4>
+				<h5 class="a-region"><%= a.region %></h5>
+				<% if !a.phone.blank? %><h6 class="phone"><%= a.phone %></h6><% end %>
+				<a href="/about/local-associations/<%= a.slug %>" class="btn">More Info</a>
+			</li>
+		<% end %>
+	</ul>	
+</div>

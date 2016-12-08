@@ -1,0 +1,26 @@
+<%
+align = block.child_value('align')
+title = block.child_value('title')
+body = block.child_value('body')
+photo = block.child_value('photo')
+img = photo && photo.url && !photo.url.include?('placehold') ? photo.url(:huge) : ""
+%>
+
+<div class="photo-feature-block <%= align %> clearfix" id="block_<%= block.id %>">
+	<div class="text-wrapper">
+		<div class="table">
+			<div class="table-cell">
+				<h3 class="title"><%= title %></h3>
+				<div class="richtext"><%== body %></div>
+				<% if !title.blank? %>
+					<div class="button" style="margin-top:1.2em;">
+						<a href="/<%= title.downcase %>" class="btn">Gallery</a>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+	<div class="image-wrapper" style="background-image:url(<%= img %>);">
+		<div class="arrow <%= align %>"></div>
+	</div>
+</div>

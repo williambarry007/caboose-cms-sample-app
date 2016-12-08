@@ -1,0 +1,5 @@
+<div id="block_<%= block.id %>" class="blurb">
+  <figure style="background-image: url(<%= block.child_value('background').url(:large) %>)"></figure>
+  <h4 class="title"><%= block.child_value('title') %></h4>
+  <p><%= block.child_value('details') %></p>
+</div>

@@ -1,0 +1,298 @@
+<%
+custom = page.blocks.where(:block_type_id => 2280).first
+if custom
+  price_gte = custom.child_value('current_price_gte')
+  price_lte = custom.child_value('current_price_lte')
+  beds_gte = custom.child_value('bedrooms_gte')
+  beds_lte = custom.child_value('bedrooms_lte')
+  mls_acct = custom.child_value('mls_acct')
+  prop_type = custom.child_value('prop_type')
+  sqfeet_gte = custom.child_value('tot_heat_sqft_gte')
+  sqfeet_lte = custom.child_value('tot_heat_sqft_lte')
+  acreage_gte = custom.child_value('acreage_gte')
+  acreage_gte = acreage_gte.blank? ? '' : (acreage_gte.to_f > 10 ? number_with_delimiter(acreage_gte.to_f, :precision => 1) : number_with_delimiter(acreage_gte.to_f, :precision => 0))
+  acreage_lte = custom.child_value('acreage_lte')
+  acreage_lte = acreage_lte.blank? ? '' : (acreage_lte.to_f > 10 ? number_with_delimiter(acreage_lte.to_f, :precision => 1) : number_with_delimiter(acreage_lte.to_f, :precision => 0))
+  elem_school = custom.child_value('elem_school')
+  middle_school = custom.child_value('middle_school')
+  high_school = custom.child_value('high_school')
+  remarks = custom.child_value('remarks_like')
+  street = custom.child_value('street_name_like')
+  waterfront = custom.child_value('waterfront')
+  subdivision = custom.child_value('subdivision')
+  style = custom.child_value('style')
+end
+%>
+
+<div class="search-wrapper" id="residential-search-form">
+  <div class="form-wrapper">
+    <form action="/residential/search" method="get" id='search-form'>
+      <div class="grid-row">
+        <div class="unit1of3">
+          <section>
+            <label>Price Range</label>
+          </section>
+          
+          <section class="select-section">
+            <div class="select-wrapper">
+              <select class="custom" id="current_price_gte" name="current_price_gte">
+                <option value="" selected="selected">Select</option>
+                <% (10000..50000).step(10000) do |x| %>
+                  <option value="<%= x %>" <% if custom && x.to_s == price_gte %>selected<% end %>><%= number_to_currency(x, :precision => 0) %></option>
+                <% end %>
+                <% (100000..1000000).step(50000) do |x| %>
+                  <option value="<%= x %>" <% if custom && x.to_s == price_gte %>selected<% end %>><%= number_to_currency(x, :precision => 0) %></option>
+                <% end %>                
+              </select>
+            </div>
+            
+            <span class="to">to</span>
+            
+            <div class="select-wrapper">
+              <select class="custom" id="current_price_lte" name="current_price_lte">
+                <option value="" selected="selected">Select</option>
+                <% (10000..50000).step(10000) do |x| %>
+                  <option value="<%= x %>" <% if custom && x.to_s == price_lte %>selected<% end %>><%= number_to_currency(x, :precision => 0) %></option>
+                <% end %>
+                <% (100000..1000000).step(50000) do |x| %>
+                  <option value="<%= x %>" <% if custom && x.to_s == price_lte %>selected<% end %>><%= number_to_currency(x, :precision => 0) %></option>
+                <% end %>
+              </select>
+            </div>
+          </section>
+        </div>
+        
+        <div class="unit1of3">
+          <div>
+            <label>How Many Beds?</label>
+          </div>
+          
+          <section class="select-section">
+            <div class="select-wrapper">
+              <select class="custom" id="bedrooms_gte" name="bedrooms_gte">
+                <option value="">Any</option>
+                <% (1..6).each do |x| %>
+                  <option value="<%= x %>" <% if custom && x.to_s == beds_gte %>selected<% end %>><%= x %></option>
+                <% end %>               
+              </select>
+            </div>
+            
+            <span class="to">to</span>
+            
+            <div class="select-wrapper">
+              <select class="custom" id="bedrooms_lte" name="bedrooms_lte">
+                <option value="">Any</option>
+                <% (1..6).each do |x| %><option value="<%= x %>" <% if custom && x.to_s == beds_lte %>selected<% end %>><%= x %></option><% end %>
+              </select>
+            </div>
+          </section>
+        </div>
+        
+        <div class="unit1of3">
+          <section>
+            <label for="prop_type">Property Type</label>
+          </section>
+
+          <div class="select-wrapper">
+            <select class="custom" id="prop_type" name="prop_type">
+              <option value="">Select</option>
+              <% CabooseRets::ResidentialProperty.pluq('prop_type').each do |f| %>
+                <option value="<%= f %>" <% if custom && f == prop_type %>selected<% end %>> <%= f.titleize %></option>
+              <% end %>
+            </select>
+          </div>
+   
+        </div>
+      </div>
+      
+      <div class="grid-row">
+        <div class="unit1of3">
+          <label for="mls_acct">MLS #</label>
+          <input class="search-input" id="mls_acct" name="mls_acct" type="text" class="fix_placeholder" placeholder="Enter Here" <% if custom %>value="<%= mls_acct %>"<% end %> />
+        </div> 
+      
+        <div class="unit1of3">
+          <label for="tot_heat_sqft">Square Feet</label>
+          
+          <section class="select-section">
+            <div class="select-wrapper">
+              <select class="custom" id="tot_heat_sqft_gte" name="tot_heat_sqft_gte">
+                <option value="" selected="selected">Select</option>
+                <% (250..4000).step(250) do |x| %>
+                  <option value="<%= x %>" <% if custom && x.to_s == sqfeet_gte %>selected<% end %>><%= number_with_delimiter(x) %></option>
+                <% end %>
+              </select>
+            </div> 
+            
+            <span class="to">to</span>
+            
+            <div class="select-wrapper">
+              <select class="custom" id="tot_heat_sqft_lte" name="tot_heat_sqft_lte">
+                <option value="" selected="selected">Select</option>
+                <% (250..4000).step(250) do |x| %>
+                  <option value="<%= x %>" <% if custom && x.to_s == sqfeet_lte %>selected<% end %>><%= number_with_delimiter(x) %></option>
+                <% end %>
+              </select>
+            </div> 
+          </section> 
+                    
+        </div>
+        
+        <div class="unit1of3">
+					<label for="acreage">Acreage</label>		
+					<section class="select-section">
+						<div class="select-wrapper">
+							<select class="custom" id="acreage_gte" name="acreage_gte">
+								<option value="" selected="selected">Select</option>
+								<% (0.0...10 ).step(0.5) do |x| %><option value="<%= x %>" <% if custom && x.to_s == acreage_gte %>selected<% end %>><%= number_with_delimiter(x, :precision => 1) %></option><% end %>
+								<% (10...20  ).step(  1) do |x| %><option value="<%= x %>" <% if custom && x.to_s == acreage_gte %>selected<% end %>><%= number_with_delimiter(x, :precision => 0) %></option><% end %>
+								<% (20...100 ).step(  5) do |x| %><option value="<%= x %>" <% if custom && x.to_s == acreage_gte %>selected<% end %>><%= number_with_delimiter(x, :precision => 0) %></option><% end %>
+								<% (100..1000).step( 50) do |x| %><option value="<%= x %>" <% if custom && x.to_s == acreage_gte %>selected<% end %>><%= number_with_delimiter(x, :precision => 0) %></option><% end %>																
+							</select>
+						</div> 						
+						<span class="to">to</span>						
+						<div class="select-wrapper">
+							<select class="custom" id="acreage_lte" name="acreage_lte">
+								<option value="" selected="selected">Select</option>
+								<% (0.0...10 ).step(0.5) do |x| %><option value="<%= x %>" <% if custom && x.to_s == acreage_lte %>selected<% end %>><%= number_with_delimiter(x, :precision => 1) %></option><% end %>
+								<% (10...20  ).step(  1) do |x| %><option value="<%= x %>" <% if custom && x.to_s == acreage_lte %>selected<% end %>><%= number_with_delimiter(x, :precision => 0) %></option><% end %>
+								<% (20...100 ).step(  5) do |x| %><option value="<%= x %>" <% if custom && x.to_s == acreage_lte %>selected<% end %>><%= number_with_delimiter(x, :precision => 0) %></option><% end %>
+								<% (100..1000).step( 50) do |x| %><option value="<%= x %>" <% if custom && x.to_s == acreage_lte %>selected<% end %>><%= number_with_delimiter(x, :precision => 0) %></option><% end %>
+							</select>
+						</div> 
+					</section> 										
+				</div>
+                
+      </div>
+      
+      <div class="grid-row">
+        <div class="unit1of3">
+          <label for="elem_school">Elementary School</label>
+          <div class="select-wrapper">
+            <select class="custom" id="elem_school" name="elem_school">
+              <option value="">Select</option>
+              <% CabooseRets::ResidentialProperty.pluq('elem_school').each do |f| %>
+                <% next if f.blank? %>
+                <option value="<%= f %>" <% if custom && f == elem_school %>selected<% end %>><%= f.titleize %></option>
+              <% end %>
+            </select>
+          </div>
+        </div> 
+
+        <div class="unit1of3">
+          <label for="middle_school">Middle School</label>
+          <div class="select-wrapper">
+            <select class="custom" id="middle_school" name="middle_school">
+              <option value="">Select</option>
+              <% CabooseRets::ResidentialProperty.pluq('middle_school').each do |f| %>
+                <% next if f.blank? %>
+                <option value="<%= f %>" <% if custom && f == middle_school %>selected<% end %>><%= f.titleize %></option>
+              <% end %>               
+            </select>
+          </div>
+        </div> 
+
+        <div class="unit1of3">
+          <label for="high_school">High School</label>
+          <div class="select-wrapper">
+            <select class="custom" id="high_school" name="high_school">
+              <option value="">Select</option>
+              <% CabooseRets::ResidentialProperty.pluq('high_school').each do |f| %>
+                <% next if f.blank? %>
+                <option value="<%= f %>" <% if custom && f == high_school %>selected<% end %>><%= f.titleize %></option>
+              <% end %>
+            </select>
+          </div>
+        </div> 
+      </div>
+
+      <div class="grid-row">
+        <div class="unit1of3">
+          <label for="address_like">Street</label>
+          <input id="address_like" name="address_like" type="text" class="fix_placeholder" placeholder="Street" <% if custom %>value="<%= street %>"<% end %> />
+        </div> 
+        
+        <div class="unit1of3">
+          <label for="neighborhood">Neighborhood</label>
+          <div class="select-wrapper">
+              <select class="custom" id="subdivision" name="subdivision">
+              <option value="">Select</option>
+              <% CabooseRets::ResidentialProperty.pluq('subdivision').each do |f| %>
+              <option value="<%= f %>" <% if custom && f == subdivision %>selected<% end %>><%= f.titleize %></option>
+              <% end %>
+            </select>
+          </div>
+        </div> 
+        
+        <div class="unit1of3">
+          <label for="remarks_like">Search Keyword</label>
+          <input id="remarks" name="remarks_like" type="text" class="fix_placeholder" placeholder="Keywords" <% if custom %>value="<%= remarks %>"<% end %> />
+        </div> 
+        
+      </div>
+      
+      <div class="grid-row">
+
+        <div class="unit1of3">
+          <label for="latest">Show listings created when?</label>
+          <div class="select-wrapper">              
+            <select class="custom" id="date_created_gte" name="date_created_gte">
+              <option value="">All Listings</option>
+              <% d = DateTime.now - 3  %><option value="<%= d.strftime('%F') %>">In the past 3 days</option>
+              <% d = DateTime.now - 7  %><option value="<%= d.strftime('%F') %>">In the past 7 days</option>
+              <% d = DateTime.now - 30 %><option value="<%= d.strftime('%F') %>">In the past month</option>
+            </select>
+          </div>
+        </div> 
+
+        
+        <div class="unit1of3">
+          <label for="latest">Waterfront</label>
+          <div class="select-wrapper">              
+            <select class="custom" id="waterfront" name="waterfront">
+              <option value="">Any</option>
+              <% CabooseRets::ResidentialProperty.pluq("waterfront").each do |w| %>
+                <% next if w.blank? %>
+                <option value="<%= w %>" <% if custom && w == waterfront %>selected<% end %>><%= w.titleize %></option>
+              <% end %>
+            </select>
+          </div>
+        </div>
+
+        <% if true %>
+
+        <div class="unit1of3">
+          <label for="latest">Style</label>
+          <div class="select-wrapper">              
+            <select class="custom" id="style" name="style">
+              <option value="">Any</option>
+              <% CabooseRets::ResidentialProperty.pluq("style").each do |w| %>
+                <% next if w.blank? %>
+                <option value="<%= w %>" <% if w == style %>selected<% end %>><%= w.titleize %></option>
+              <% end %>
+            </select>
+          </div>
+        </div>
+      </div>
+
+        <div class="grid-row" style="margin-top:20px;">
+          <div class="unit1of1">
+            <div class="submit-btn" style="text-align:center;">
+              <input class="btn alternate" type="submit" value="Search" />          
+            </div>
+          </div>
+        </div>
+
+        <% else %>    
+          <div class="unit1of3">
+            <div class="submit-btn">
+              <input class="btn alternate" type="submit" value="Search" />          
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="content_wrapper" id='block_<%= block.id %>'>          
+  <div class="content_body home-content">    
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>    
+      <%= raw controller_view_content %>
+    <% elsif post && post.body %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <% block.children.each do |b| %><%= raw block.render(b, local_assigns) %><% end %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row borderBoth hideMobile">
+
+<div class="fourteen columns offset-by-one">
+        
+<div class="roundedBox"><br>
+<p class="alignCenter"><span class="larger">Find out more about IRIS: &nbsp; </span><a href="/contact-us/" class="button">Contact Us</a></p>
+<br>
+</div>
+</div>
+</div> 
+ 
+<div class="row">&nbsp;</div>

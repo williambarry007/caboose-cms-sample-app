@@ -1,0 +1,40 @@
+<%
+top_color = block.child_value('top_color') 
+bottom_color = block.child_value('bottom_color')
+photo = block.child_value('photo')
+name = block.child_value('sponsor_name')
+url = block.child_value('visible_url')
+click = block.child_value('clickthru_url')
+%>
+
+<div class="home-ad-block" id="block_<%= block.id %>">
+	<% if (photo.url && !photo.url.include?('placehold')) || editing %>
+		<% if false %>
+		<div class="top" style="background-color:<%= top_color %>;">
+			<div class="constrain">
+				<h4 class="title">Premier Sponsor</h4>
+			</div>
+		</div>
+		<% end %>
+		<div class="image-wrapper">
+			<% if !editing %><a href="<%= click %>" target="_blank" title="<%= name %>" class="click-link"><% end %>
+				<img src="<%= photo.url(:huge) %>" alt="<%= name %>" />
+			<% if !editing %></a><% end %>
+		</div>
+		<% if !url.blank? && false %>
+			<div class="bottom" style="background-color:<%= bottom_color %>;">
+				<div class="constrain">
+					<a href="<%= click %>" target="_blank" title="<%= name %>" class="click-link"><%= url.gsub("http://","").gsub("https://","") %></a>
+				</div>
+			</div>
+		<% end %>
+	<% end %>
+</div>
+
+<% content_for :js do %>
+	<script>
+		$(".click-link").click(function(event) {
+			ga('send', 'event', 'premier-sponsor', 'click', $(this).attr("title"), 1);
+		});
+	</script>
+<% end %>

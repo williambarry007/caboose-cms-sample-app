@@ -1,0 +1,62 @@
+<% media_category = block.child_value('media_category') %>
+<% cat = Caboose::MediaCategory.where(:id => media_category).last %>
+<% images = [] %>
+<% media = [] %>
+<% columns = block.child_value('columns').blank? ? 4 : block.child_value('columns').to_i %>
+<% if cat %>
+	<% media = cat.media.all %>
+<% else %>
+	<% images = block.children.where(:block_type_id => 1046).order(:sort_order).all %>
+<% end %>
+<div class="photo-gallery-block flip clearfix col-<%= columns %>" id="block_<%= block.id %>">
+	<% if media.count > 0 %>
+		<div class="gallery-container">
+			<% media.each_with_index do |m, index| %>
+				<% next if index >= columns %>
+				<% back = media[index+columns] %>
+				<% src_small = m.image.url ? m.image.url(:large) : "" %>
+				<% src_small2 = back ? back.image.url(:large) : "" %>
+				<% src_large = m.image.url ? m.image.url(:huge) : "" %>
+				<% src_large2 = back ? back.image.url(:huge) : "" %>
+				<% next if src_small.blank? || src_small.include?('placehold') %>
+					<a class="gallery-image gallery-image-<%= block.id %>" href="<%= src_large %>" rel="gallery-<%= block.id %>">
+						<% if m %><div class="image-holder front" id="m-<%= m.id %>" style="background-image:url(<%= src_small %>);"></div><% end %>
+						<% if back %><div class="image-holder back" id="m-<%= back.id %>" style="background-image:url(<%= src_small2 %>);"></div><% end %>
+					</a>
+					<% if back %><a style="display:none;" href="<%= src_large2 %>" rel="gallery-<%= block.id %>" class="gallery-image gallery-image-<%= block.id %>"></a><% end %>
+			<% end %>
+		</div>
+	<% else %>
+		<% if editing %>
+			<p style="border:1px dashed gray;padding:10px;">Empty photo gallery block. Click to edit.</p>
+		<% end %>
+	<% end %>
+</div>
+
+<% content_for :css do %>
+	<style>
+		@import url("https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css");
+	</style>
+<% end %>
+<% content_for :js do %>
+	<% if !editing %>
+		<script src="https://cdn.rawgit.com/nnattawat/flip/v1.0.19/dist/jquery.flip.min.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js" type="text/javascript"></script>
+		<script>
+			$(document).ready(function() {
+				$(".gallery-image").flip({
+					trigger: 'hover'
+				});
+				$(".image-holder.back").css("opacity","1");
+				$(".gallery-image-<%= block.id %>").fancybox({
+					'transitionIn'	:	'fade',
+					'transitionOut'	:	'fade',
+					'speedIn'		:	600, 
+					'speedOut'		:	200, 
+					'overlayShow'	:	false,
+					'titleShow' : false
+				});
+			});
+		</script>
+	<% end %>
+<% end %>

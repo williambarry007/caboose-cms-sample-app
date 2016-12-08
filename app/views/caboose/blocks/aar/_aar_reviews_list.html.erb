@@ -1,0 +1,133 @@
+<% reviews = Aar::Review.where(:status => "Approved").order("date_submitted DESC").all %>
+<div class="reviews-block" id="block_<%= block.id %>">
+  <div class="clearfix">
+	<div class="review-button">
+		<a href="/education/course-reviews/submit-a-review" title="Submit Course Review" class="btn">Submit a Review</a>
+	</div>
+	<% if reviews.count < 1 %>
+		<p>Sorry, there are no reviews yet. Check back later!</p>
+  </div>
+	<% else %>
+		<div class="filter">
+			<div style="margin-bottom:8px;">	
+				<label for="text-filter">Filter:</label>
+				<input type="text" id="text-filter" placeholder="Course or Instructor" />
+			</div>
+			<div>
+				<label for="sort-options">Sort:</label>
+				<select class="sort-options">
+				  <option value="date" selected>Date</option>
+				  <option value="course">Course</option>
+				  <option value="instructor">Instructor</option>
+				  <option value="rating-hl">Rating High to Low</option>
+				  <option value="rating-lh">Rating Low to High</option>
+				</select>
+			</div>
+		</div>
+  </div>
+		<div class="reviews-list" id="review-container">
+			<% reviews.each_with_index do |r,i| %>
+				<div class="review" data-course='<%= r.course %>' data-index="<%= i %>" data-rating="<%= r.stars %>">
+					<h2 class="course"><%= r.course %></h2>
+					<h4 class="instructor">Instructor: <%= r.instructor %></h4>
+					<div class="rateit" data-rateit-value="<%= r.stars %>" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+					<% if !r.content.blank? %>
+						<div class="content"><%== r.content %></div>
+					<% end %>
+					<h5 class="reviewer">Reviewed by <%= r.first_name %> <%= r.last_name %> on <span class="date"><%= r.date_submitted.strftime("%B %-d, %Y") %></span></h5>
+				</div>
+			<% end %>
+		</div>
+	<% end %>
+</div>
+
+<% content_for :css do %>
+	<%= stylesheet_link_tag "rateit.css" %>
+<% end %>
+<% content_for :js do %>
+	<%= javascript_include_tag "rateit.js" %>
+	<script>
+$(document).ready(function() {
+var $grid = $('#review-container'),
+    $sizer = $grid.find('.review');
+
+$grid.shuffle({
+  itemSelector: '.review',
+  sizer: $sizer
+});
+
+
+$('#text-filter').on('keyup change', function() {
+  var val = this.value.toLowerCase();
+  $grid.shuffle('shuffle', function($el, shuffle) {
+    if (shuffle.group !== 'all' && $.inArray(shuffle.group, $el.data('groups')) === -1) {
+      return false;
+    }
+    var text = $.trim( $el.find('.course').text() + $el.find('.instructor').text() ).toLowerCase();
+    return text.indexOf(val) !== -1;
+  });
+});
+
+$("#clear-filter").click(function(event) {
+	event.preventDefault();
+	$(".filter").val("").trigger("change");
+	$("#text-filter").val("").trigger("change");
+	show_all();
+});
+
+$('.sort-options').on('change', function() {
+  var sort = this.value,
+      opts = {};
+  console.log("changed");
+  console.log("sort: " + sort);
+  if ( sort === 'date' ) {
+    opts = {
+      by: function($el) {
+        return $el.data('index');
+      }
+    };
+  } else if ( sort === 'course' ) {
+    opts = {
+      by: function($el) {
+        return $el.find('.course').text().toLowerCase();
+      }
+    };
+  } else if ( sort === 'instructor' ) {
+    opts = {
+      by: function($el) {
+        return $el.find('.instructor').text().toLowerCase();
+      }
+    };
+  } else if ( sort === 'rating-hl' ) {
+  	console.log("h to l");
+    opts = {
+    	reverse: true,
+      by: function($el) {
+        return $el.data('rating');
+      }
+    };
+  } else if ( sort === 'rating-lh' ) {
+    opts = {
+      by: function($el) {
+        return $el.data('rating');
+      }
+    };
+  }
+  $grid.shuffle('sort', opts);
+});
+
+// $(".filter").on('change', function() {
+// 	show_all();
+// 	var location = $(".filter.location").val();
+// 	var level = $(".filter.level").val();
+// 	var product_service = $(".filter.product-service").val();
+// 	$grid.shuffle('shuffle', function($el, shuffle) {
+// 	  return ( (location == "" || $el.data("location") == location) && ($el.data("level") == level || level == "") && ($el.data("product-service") == product_service || product_service == "") );
+// 	});
+// 	hide_empty();
+// });
+
+});
+
+	</script>
+<% end %>

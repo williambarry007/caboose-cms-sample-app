@@ -1,0 +1,84 @@
+<div class="product-index">          
+  <div class="constrain">  
+
+    <div class="product-navigation">
+      <div class="breadcrumbs">
+        <ul>
+          <li><a href="/products" title="All Products">All Products</a></li>
+          <li><a href="#">Search Results</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <% if defined?(query) && !query.blank? %>
+
+      <% @products = Caboose::Product.where(:site_id => @site.id, :status => "Active").where("title ILIKE ?","%#{query}%").all %>
+
+      <% if @products.count > 0 %>
+
+        <div class="product-grid">
+          <% @products.each do |p| %>
+            <% next if p.nil? %>
+            <% next if p.status != Caboose::Product::STATUS_ACTIVE %>
+            <% op1 = p.option1_media && p.option1 == 'Color' %>
+            <% op2 = p.option2_media && p.option2 == 'Color' %>
+            <% op3 = p.option3_media && p.option3 == 'Color' %>
+            <% colors = op1 ? p.option1_values_with_media : (op2 ? p.option2_values_with_media : (op3 ? p.option3_values_with_media : nil)) %>
+            <div class="product-unit">
+              <div class="contain">
+                <% if p.on_sale %><div class="product-sale">SALE</div><% end %>
+                <% first_color = (colors && colors.first) ? colors.first[0] : '' %>
+                <% opt = op1 ? 'option1' : (op2 ? 'option2' : (op3 ? 'option3' : 'sku')) %>
+                <% var = p.variants.where("#{opt} = '#{first_color}'").first %>
+                <% img = var ? var.product_images.first.url(:large) : (p.featured_image ? p.featured_image.url(:large) : '//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg') %>
+                <a href="/products/<%= p.id %>" title="<%= p.title %>" class="image-holder" style="background-image:url(<%= img %>);"></a>
+                <% if colors && colors.count > 0 %>
+                  <div class="color-swatches">
+                    <% colors.each_with_index do |c, index| %>
+                      <% name = c[0] %>
+                      <% so = op1 ? 'option1' : (op2 ? 'option2' : (op3 ? 'option3' : 'sku')) %>
+                      <% v = p.variants.where("#{so} = '#{name}'").first %>
+                      <% i = v ? v.product_images.first : false %>
+                      <% if c[1] %>
+                        <a href="<%= i ? i.url(:large) : '' %>" title="<%= name %>" class="swatch <% if index == 0 %>active<% end %>">
+                          <img src="<%= c[1] ? c[1].image.url(:thumb) : '' %>" alt="<%= name %>" />
+                        </a>
+                      <% end %>
+                    <% end %>
+                  </div>
+                <% end %>
+                <div class="product-meta">
+                  <a href="/products/<%= p.id %>" class="product-title"><%= p.title %></a>
+                  <% min_price = number_to_currency(p.price_range[0]) %>
+                  <% max_price = number_to_currency(p.price_range[1]) %>
+                  <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+                  <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+                    <h4 class="product-price"><%= display_price %></h4>
+                  <% end %>
+                </div>
+                <div class="product-desc">
+                  <%== p.description %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+      <% else # no products matching query %>
+
+        <div class="no-products">
+          <p>Sorry, no products were found.</p>
+        </div>
+
+      <% end %>
+
+    <% else # empty query %>
+
+      <div class="no-products">
+        <p>Sorry, no products were found.</p>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<%
+desc = block.child_value('description')
+fp = block.child_value('featured_photo')
+gallery_id = block.child_value('gallery')
+cat = Caboose::MediaCategory.where(:id => gallery_id).first
+name = block.child_value('name')
+max_capacity = block.child_value('max_capacity')
+media = cat ? cat.media.order(:sort_order).all : []
+columns = 8
+%>
+
+<div class="venue-block constrain" id="block_<%= block.id %>">
+	<% if fp && fp.url && !fp.url.include?('placehold') %><img class="featured" src="<%= fp.url(:large) %>" alt="<%= name %>" /><% end %>
+	<h3 class="name"><%= name %></h3>
+	<% if !max_capacity.blank? %><h5 class="max">Max Capacity: <%= max_capacity %></h5><% end %>
+	<div class="richtext"><%== desc %></div>
+	<% if cat && media.count > 0 %>
+	<div class="photo-gallery-block clearfix col-<%= columns %>">
+		
+			<div class="gallery-container">
+				<% media.each_with_index do |m, index| %>
+					<% src_small = m.image.url ? m.image.url(:large) : "" %>
+					<% src_large = m.image.url ? m.image.url(:huge) : "" %>
+					<% next if (index == 0 && fp && fp.url && !fp.url.include?('placehold')) || src_small.blank? || src_small.include?('placehold') %>
+					<% if editing %>
+						<div class="gallery-image">
+					<% else %>
+						<a class="gallery-image gallery-image-<%= cat.id %>" rel="gallery-<%= cat.id %>" href="<%= src_large %>" id="gallery-image-<%= index %>" title="<%= m.name %>">
+					<% end %>
+						<div class="image-holder" style="background-image:url(<%= src_small %>);"></div>
+					<% if editing %>
+						</div>
+					<% else %>
+						</a>
+					<% end %>
+				<% end %>
+			</div>
+
+	</div>
+			<% end %>
+</div>
+
+<% content_for :css do %>
+	<style>
+		@import url("https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css");
+	</style>
+<% end %>
+<% content_for :js do %>
+	<% if !editing && cat %>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js" type="text/javascript"></script>
+		<script>
+			$(document).ready(function() {
+				$("a.gallery-image-<%= cat.id %>").fancybox({
+					'transitionIn'	:	'fade',
+					'transitionOut'	:	'fade',
+					'speedIn'		:	600, 
+					'speedOut'		:	200, 
+					'overlayShow'	:	false,
+					'titleShow' : false
+				});
+			});
+		</script>
+	<% end %>
+<% end %>

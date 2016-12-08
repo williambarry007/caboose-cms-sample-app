@@ -1,0 +1,11 @@
+<div id="sidr" style="display:none;">
+  <p class="logo">Sweet Home Food Bar</p>
+  <div class="nav">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <% Caboose::Page.where(:parent_id => 13, :hide => false).order(:sort_order).all.each do |p| %>
+        <li><%== ApplicationHelper.nav_link(p) %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<section id="block_<%= block.id %>" class="menu-right">
+  <% block.children.each do |child| %><%= block.render(child, local_assigns) %><% end %>
+  <% if modal %><p>Click to add menu items to the right column.</p><% end %>
+</section>
+

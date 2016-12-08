@@ -1,0 +1,102 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <h1>get in touch</h1>
+    <span id="line"></span>
+    <div class="grid-row">
+      <div class="unit1of2">
+        <div id="address">
+          <span class="icon-location"></span>
+          <%= raw block.render(block.child('address'), local_assigns) %>
+        </div>
+        <div id="phone">
+          <span class="icon-phone"></span>
+          <p><%= block.child_value('phone_number') %></p>
+        </div>
+        <div id="email">
+          <span class="icon-mail"></span>
+          <p><%= block.child_value('email') %></p>
+        </div>
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+      </div>
+      <div class="unit1of2">
+        <div class="contact-form-block clearfix">
+          <form id="contact-form">
+            <input type="hidden" name="block_id" value="96693" />
+            <input type="text" name="name" placeholder="name">
+            <input type="email" name="email_required" placeholder="e-mail">
+            <textarea name="message_required" placeholder="your message" rows="4"></textarea>
+            <a href="#" class="btn" id="submit-contact-form">submit</a>
+          </form>
+          <div id="message"></div>
+        </div>
+      </div>
+      <section class="nine">
+        <a href="http://www.nine.is" target="_blank">
+          <%= render 'svg/nine' %>
+        </a>
+      </section>
+    </div>
+  </div>
+</footer>
+
+<% content_for :css do %>
+  <style>
+    #block_<%= block.id %> > div > h1 {
+      letter-spacing: 6px;
+      margin-top: 30px;
+      font-size: 2.5em;
+    }
+    #block_<%= block.id %> > div > #line {
+      background: white;
+      width: 100px;
+      height: 2px;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+    #address, #phone, #email {
+      height: 70px;
+    }
+    #address > span, #phone > span, #email > span {
+      font-size: 20px;
+    }
+    #address {
+      margin-top: 30px;
+    }
+    #phone {
+      padding-top: 8px;
+    }
+    #block_97358, #phone > p, #email > p {
+      width: 93%;
+      float: right;
+    }
+    .contact-form-block {
+      padding: 0 0 50px 0;
+    }
+    #contact-form > input, #contact-form > textarea {
+      background-color:#33415e !important;
+      color: #858d9e !important;
+      border-bottom-color: #333;
+      padding-top: 30px;
+    }
+    #submit-contact-form {
+      float: left !important;
+      background: white;
+      color: #33415e;
+      margin-top: 30px;
+    }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <%= javascript_include_tag "form_submit" %>
+  <script>
+    $(document).ready(function() {
+      $("#submit-contact-form").click(function(event) {
+        event.preventDefault();
+        submit_form("contact-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

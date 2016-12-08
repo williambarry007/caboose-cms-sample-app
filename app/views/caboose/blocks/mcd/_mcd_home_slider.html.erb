@@ -1,0 +1,96 @@
+<%
+  mc = Caboose::MediaCategory.where(:id => 1080).first
+  media = mc ? mc.media.all : false
+
+  slides = media
+  autoslide = "Yes"
+  height = "600px"
+  arrow_color = "#fff"
+  width = "100%"
+  interval = 6
+  transition = "Slide"
+  slide_function = "fade"
+  begin
+    ms = interval.to_i * 1000
+  rescue
+    ms = 6000
+  end
+  arrow_position = "280px"
+%>
+
+  <div class="slider-block-container home-slider" id="block_<%= block.id %>">
+
+    <% if slides.size > 0 %>
+
+      <div class="slider-container" id="slider-container-<%= block.id %>">
+
+        <div class="bid-day-banner">
+          <div class="contain">
+              <h3>Bid Day Flower</h3>
+              <h5>Headquarters</h5>
+          </div>
+        </div>
+
+        <div class="bid-day-button">
+          <a href="/bid-day" class="btn">Order Now</a>
+        </div>
+
+        <div class="left-nav" id="nav-left-<%= block.id %>">
+          <div class="arrow icon-left-big"></div>
+        </div>
+        <div class="text-overlay">
+          <div class="table">
+            <div class="table-cell">
+              <div class="content">
+                <div class="richtext"><%== block.child_value('text_overlay') %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="liquid-slider" id="slider-<%= block.id %>">
+          <% slides.each_with_index do |slide, index| %>
+            <% img_url = slide.image.url(:huge) %>
+            <div class="slide clearfix" id="slide-<%= index %>">
+              <div class="slider-slide clearfix" style="background-image:url(<%= img_url %>);">
+                <div class="overlay" id="overlay-<%= index %>"></div>
+      
+              </div>
+            </div>
+
+          <% end %><!-- end slide --> 
+        </div>
+        <div class="right-nav" id="nav-right-<%= block.id %>">
+          <div class="arrow icon-right-big"></div>
+        </div>
+      </div>
+
+    <% else %>
+      <% if editing %>
+        <p style="padding:10px;border:1px solid #000;">Empty slider container. Click to add slides.</p>
+      <% end %>
+    <% end %>
+
+    <% content_for :js do %>
+      <script>
+        $(document).ready(function() {
+          $("#slider-<%= block.id %>").liquidSlider({
+            autoSlide: <%= autoslide == "Yes" ? true : false %>,
+            autoSlideInterval: <%= ms %>,
+            autoHeight: false,
+            slideEaseFunction: "<%= slide_function %>",
+            dynamicArrows: false,
+            dynamicTabs: false
+          });
+          var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+          $("#nav-left-<%= block.id %>").click(function() {
+            api.setNextPanel('left');
+            api.updateClass($(this)); 
+          });
+          $("#nav-right-<%= block.id %>").click(function() {
+            api.setNextPanel('right');
+            api.updateClass($(this)); 
+          });
+        });
+      </script>
+    <% end %>
+  </div>

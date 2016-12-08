@@ -1,0 +1,26 @@
+<% ss1 = block.child_value("laptop_screenshot").url(:large) %>
+<% ss2 = block.child_value("mobile_screenshot").url(:large) %>
+<% title = block.child_value('title') %>
+<% link = block.child_value('link') %>
+<% align = block.child_value("align").blank? ? "right" : block.child_value("align") %>
+
+<div class="project-profile-block <%= align %>" id="block_<%= block.id %>">
+	<div class="screenshots-wrapper">
+		<div class="desktop-wrapper">
+			<div class="macbook-holder"></div>
+			<div class="screenshot-holder" style="background-image:url(<%= ss1 %>);"></div>
+		</div>
+		<div class="mobile-wrapper">
+			<div class="iphone-holder"></div>
+			<div class="screenshot-holder" style="background-image:url(<%= ss2 %>);"></div>
+		</div>
+		<div class="text-wrapper">
+			<div class="table">
+				<div class="table-cell">
+					<h3 class="title"><%= title %></h3>
+					<a href="<%= link %>" class="btn" title="<%= title %>" target="_blank">Visit Site</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

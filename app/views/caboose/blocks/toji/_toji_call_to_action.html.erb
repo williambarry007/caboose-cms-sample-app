@@ -1,0 +1,48 @@
+<div id="block_<%= block.id %>" class="call-to-action">
+  <section>
+    <ul>
+      <li>
+        <a href="<%= block.child_value('portal_link') %>">
+          <i><img src="//d9hjv462jiw15.cloudfront.net/assets/toji/images/user.png" /></i>
+          <header>Login to <strong>MERGE</strong> OrthoEMR</header>
+          <em>Your patient portal for access to your data</em>
+        </a>
+      </li>
+      
+      <li>
+        <span>
+          <i><img src="//d9hjv462jiw15.cloudfront.net/assets/toji/images/clock.png" /></i>
+          <header>Office Hours</header>
+          <p>If you need a doctor outside of our office hours, please contact <%= block.child_value('office_number') %></p>
+          <small><%= block.child_value('office_days') %></small><br />
+          <small><%= block.child_value('office_hours') %></small>
+        </span>
+      </li>
+      
+      <li>
+        <a id="phone-link" data-href="tel:<%= block.child_value('office_number') %>" style="cursor:pointer;">
+          <i><img src="//d9hjv462jiw15.cloudfront.net/assets/toji/images/calendar.png" /></i>
+          <header>Make an Appointment <strong>Today</strong></header>
+          <p><small><%= block.child_value('appointment_number') %></small></p>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <% content_for :js do %>
+    <script>
+      $(document).ready(function() {
+        $("#phone-link").click( function(event) {
+          event.preventDefault(); 
+          if ( $(window).width() < 768 ) {
+            window.location = $(this).data("href"); 
+          }
+          else {
+            window.location = "/contact"; 
+          }
+        });
+      });
+    </script>
+  <% end %>
+</div>
+

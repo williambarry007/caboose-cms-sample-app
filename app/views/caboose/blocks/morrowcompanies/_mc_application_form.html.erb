@@ -1,0 +1,30 @@
+<div class="application-form-block" id="block_<%= block.id %>">
+	<h3>Submit an Application</h3>
+	<form id="application-form" action="/morrow/applications" method="POST" enctype="multipart/form-data">
+		<input type="file" name="application_file" accept=".pdf, .doc, .docx" />
+		<input type="hidden" name="block_id" value="<%= block.id %>" />
+		<input type="hidden" name="form_name" value="Application" />
+		<input type="hidden" name="page_uri" value="<%= page.uri %>" />
+		<br />
+		<br />
+		<input type="submit" class="btn" value="Submit" />
+	</form>
+	<div id="a-message"></div>
+	<% if params[:senta] && params[:senta] == 'true' %>
+		<div id="message">
+			<p class="note success">Thanks for submitting your application!</p>
+		</div>
+	<% elsif params[:errora] && params[:errora] == 'true' %>
+		<div id="message">
+			<p class="note error">Sorry, there was an error submitting the form.</p>
+		</div>
+	<% end %>
+</div>
+
+<% content_for :js do %>
+<script>
+	$('#application-form').submit(function() {
+		$('#a-message').html('<p class="note loading">Uploading application...</p>');
+	});
+</script>
+<% end %>

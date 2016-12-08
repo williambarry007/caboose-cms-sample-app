@@ -1,0 +1,39 @@
+<div id="sidr" style="display:none;">
+  <form action="/search" method="post" id="search">
+    <input type="text" name="q" id="q" placeholder="Enter Keywords">
+    <input type="submit" value="Search" class="btn">
+  </form>
+  <div class="nav">
+    <ul class="level-1">
+      <li id="home"><a href="/" title="City Of Northport">Home</a></li>
+      <% Caboose::Page.where(:parent_id => 11, :hide => false).order(:sort_order).all.each do |p| %>
+        <li class="level-1-link" id="<%= p.slug %>"><%== ApplicationHelper.nav_link(p, editing, false) %>
+          <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+          <% if subpages.count > 0 %>
+            <ul class="submenu level-2">
+              <a href="#" class="icon-close close-dropdown"></a>
+              <% subpages.each do |s| %>
+                <li class="level-2-link" id="<%= s.slug %>">
+                  <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                  <% if grandchildren.count > 0 %>
+                    <span><%= s.menu_title.blank? ? s.title : s.menu_title %></span>
+                    <ul class="level-3">
+                      <% grandchildren.each do |g| %>
+                        <% next if g.id == 800 %>
+                        <li class="level-3-link" id="<%= g.slug %>"><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <%== ApplicationHelper.nav_link(s, editing, false) %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </li>
+      <% end %>
+      <li id="pay-my-water-bill"><a href="/pay-my-water-bill" title="Pay My Water Bill">Pay My Water Bill</a></li>
+      <li id="employee-email"><a href="/employee-email" title="Employee Email">Employee Email</a></li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<%
+s1 = Caboose::Setting.where(:site_id => 73, :name => "current_goal").first
+s2 = Caboose::Setting.where(:site_id => 73, :name => "goal_status").first
+goal = 5000
+status = 3500
+if s1
+	goal = s1.value.to_f
+end
+if s2
+	status = s2.value.to_f
+end
+diff = number_to_currency(goal - status, :precision => 0)
+img = block.child_value('background_image')
+photo = (img && img.url && !img.url.include?('placehold')) ? img.url(:huge) : "http://d9hjv462jiw15.cloudfront.net/media/755_18770_huge_1_huge.jpg"
+title = block.child_value('title').blank? ? "That They May Be <span class='cursive'>One</span> in Truth" : block.child_value('title')
+%>
+
+<div class="donate-graph" id="block_<%= block.id %>" style="background-image:url(<%= photo %>);">
+	<h2 class="title"><%== title %></h2>
+	<div class="percent-wrap" data-width="400">
+		<div id="mobile-percent" class="conceal percent-amt"><%= ((status / goal) * 100).to_i %>% <span class="cursive">funded</span></div>
+		<div class="content">
+			<div class="table">
+				<div class="table-cell">
+					<div class="main"><%== block.child_value('main_text') %></div>
+					<p id="percentage" class="reveal percent-amt"><%= ((status / goal) * 100).to_i %>% <span class="cursive">funded</span></p>
+					<p class="to-go"><%= diff %> to go</p>
+					<form action="/stripe/charge" action="post" id="donate-graph-form">
+						<div class="field" id="give">
+							<input type="text" name="amount" class="input-amount" placeholder="$7.00" />
+							<input type="submit" id="submit-donate-graph-form" class="btn" value="Donate" />
+						</div>
+					</form>
+					<div id="message"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

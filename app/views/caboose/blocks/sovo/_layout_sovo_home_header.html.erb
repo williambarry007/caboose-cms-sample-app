@@ -1,0 +1,29 @@
+<% text = block.child_value('banner_text') %>
+<header class="main home" id="block_<%= block.id %>">
+  <nav class="reveal">
+    <div class="constrain">
+      <ul>
+        <% Caboose::Page.where(:parent_id => 915, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+      <% if @invoice && @invoice.item_count > 0 %>
+        <span class="number" id="cart_item_count"><%= @invoice.item_count %></span>
+      <% end %>
+      <a href="/cart" title="Cart" id="cart-link" class="icon-cart"><span>My Cart</span></a>
+    </div>
+  </nav>
+  <div class="bottom">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/sovo/images/main_logo.png" alt="Sovo Style" />
+    </a>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+  <% if !text.blank? %>
+    <div class="banner reveal">
+      <%= text %>
+    </div>
+  <% end %>
+</header>

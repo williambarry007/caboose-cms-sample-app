@@ -1,0 +1,31 @@
+<%
+parent = block.child_value('parent_page')
+show_parent = block.child_value('show_parent_page')
+style = block.child_value('style')
+subpages = !parent.blank? ? Caboose::Page.where(:parent_id => parent.to_i, :hide => false).order(:sort_order).all : []
+pp = !parent.blank? ? Caboose::Page.find(parent.to_i) : nil
+%>
+
+<div class="subnavigation-block <%= style %>" id="block_<%= block.id %>">
+	<% if editing %>
+		<p style="border:1px dashed gray;padding:10px;margin-bottom:10px;">This block automatically lists the published subpages of the selected parent page. The links cannot be edited directly.</p>
+	<% end %>
+	<% if subpages.count > 0 %>
+		<ul>
+			<% if show_parent == "Yes" %>
+				<% if style == "Buttons" %>
+					<li><a href="/<%= pp.uri %>" title="<%= pp.title %>" class="btn"><%= pp.menu_title.blank? ? pp.title : pp.menu_title %></a></li>
+				<% else %>
+					<li><%== ApplicationHelper.nav_link(pp, editing, false) %></li>
+				<% end %>
+			<% end %>
+			<% subpages.each do |s| %>
+				<% if style == "Buttons" %>
+					<li><a href="/<%= s.uri %>" title="<%= s.title %>" class="btn"><%= s.menu_title.blank? ? s.title : s.menu_title %></a></li>
+				<% else %>
+					<li><%== ApplicationHelper.nav_link(s, editing, false) %></li>
+				<% end %>
+			<% end %>
+		</ul>
+	<% end %>
+</div>

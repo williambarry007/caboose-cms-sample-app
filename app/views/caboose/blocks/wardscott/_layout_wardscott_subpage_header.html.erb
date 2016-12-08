@@ -1,0 +1,35 @@
+<header class="sub" id="block_<%= block.id %>">
+  <div class="top">
+    <div class="constrain">
+      <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+      <a class="logo-link" href="/">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg" alt="Ward Scott Architecture">
+      </a>
+      <a class="icon-menu-5 conceal" href="#" id="show-menu"></a>
+    </div>
+  </div>
+  <div class="bottom reveal">
+    <% left_nav = [65,503,508] %>
+    <% right_nav = [505,506,507] %>
+    <div class="constrain">
+      <nav class="left">
+        <ul>
+          <% left_nav.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(Caboose::Page.find(p), editing, false) %></li>
+          <% end %>
+        </ul>
+      </nav>
+      <nav class="right">
+        <ul>
+          <% right_nav.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(Caboose::Page.find(p), editing, false) %></li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div class="subpage-title">
+    <span><%= page.title %></span>
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/wardscott/images/icons/up_arrow.png" id="arrow" />
+  </div>
+</header>

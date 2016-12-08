@@ -1,0 +1,33 @@
+<%
+page_title = page ? page.custom_field_value('page_title') : nil
+%>
+<header class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <img src="<%= site.logo.url(:large) %>" alt="<%= site.description %>" />
+    </a>
+    <div class="right clearfix">
+      <% if page_title && page_title.strip.length > 0 %>
+        <h2 class="page-title"><%= page.menu_title %></h2>
+      <% end %>
+      <div class="button-wrapper">
+        <div class="left"><span><%= block.child_value("price") %></div>
+        <div class="right"><a href="#" title="Buy Now" class="btn show-buy-modal">Buy Now</a></div>
+        <div class="buy-modal clearfix">
+          <a class="icon-close close-buy-modal"></a>
+          <div class="option">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/amazon.png" alt="Amazon" />
+            <a href="<%= block.child_value('amazon_url') %>" title="Buy on Amazon" class="buy btn" target="_blank">Buy Now</a>
+          </div>
+          <div class="option">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/ibooks.png" alt="iBooks" />
+            <a href="<%= block.child_value('ibooks_url') %>" title="Buy on iBooks" class="buy btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</header>

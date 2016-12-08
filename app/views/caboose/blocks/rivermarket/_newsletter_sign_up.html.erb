@@ -1,0 +1,37 @@
+<%
+  heading = block.child_value("heading")
+  details = block.child_value("details")
+%>
+
+
+<div id="block_<%= block.id %>">
+  <div class="newsletter-sign-up">
+    <div class="constrain">
+      <h1 class="title"><%= heading %></h1>
+      <p class="meta"><%= details %></p>
+      <form id="newsletter-form">
+        <input type="hidden" value="Newsletter Signup Form" name="form_name">
+        <input type="hidden" value="<%= block.id %>" name="block_id">
+        <input type="email" name="email_address_required" placeholder="Enter email address here">
+        <a href="#" class="green btn" id="submit-form">Submit</a>
+      </form>
+      <div id="message"></div>
+    </div>
+  </div>
+</div>
+
+<% content_for :js do %>
+
+  <%= javascript_include_tag "form_submit" %>
+  
+  <script>
+    $(document).ready(function() {
+      $('#submit-form').click(function(event) {
+        event.preventDefault(); 
+        submit_form("newsletter-form");
+        return false;
+      });
+    });
+   </script>
+
+<% end %>

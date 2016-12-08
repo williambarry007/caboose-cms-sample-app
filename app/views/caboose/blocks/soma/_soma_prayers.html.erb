@@ -1,0 +1,121 @@
+<%
+text = block.child_value('intro_text')
+%>
+
+<div class="prayers-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="intro richtext"><%== text %></div>
+		<a href="#" id="show-prayer-form" class="btn color-outline share">Share Your Prayer Request</a>
+		<div class="form-wrapper">
+			<form id="prayer-form">
+				<div class="field">
+					<label for="name">Name</label>
+					<input type="text" name="name" id="name" />
+				</div>
+				<div class="field">
+					<label for="body">Request</label>
+					<textarea name="body" id="body"></textarea>
+				</div>
+				<div class="field clearfix" style="max-width:240px;margin:15px auto 8px auto;">
+					<label for="private" style="width:90%;float:right;">Private (send only to Pastor Shaun)</label>
+					<input type="checkbox" name="private" style="width:10%;float:left;" id="private">
+				</div>
+				<a href="#" id="submit-prayer-form" class="btn alternate">Submit</a>
+			</form>
+			<div id="message"></div>
+		</div>
+		<div class="prayers-wrapper">
+			<% prayers = Soma::Prayer.where(:private => false, :status => "Approved").order("date_submitted DESC").limit(30) %>
+			<% if prayers.count > 0 %>
+				<% prayers.each do |p| %>
+					<div class="prayer">
+						<div class="top clearfix">
+							<div class="left">
+								<h5 class="name"><%= p.name %></h5>
+								<h6 class="date"><%= p.date_submitted.strftime("%B %-d, %Y") %></h6>
+							</div>
+							<div class="right">
+								<p class="count">Prayed for <span class='number'><%= pluralize(p.count, 'time') %></span></p>
+								<a href="#" id="<%= p.id %>" class="btn white i-prayed" data-current="<%= p.count %>">I Prayed For This</a>
+								<span class="thanks" style="display:none;">Thanks for praying!</span>
+							</div>
+						</div>
+						<div class="bottom">
+							<div class="body richtext"><%== p.body %></div>
+						</div>
+					</div>
+				<% end %>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<% content_for :js do %>
+	<script>
+		function increment_prayer(prayer_id, current_count) {
+			var btn = $(".i-prayed#" + prayer_id);
+			var thanks = btn.next(".thanks");
+			var count = btn.prev(".count");
+			$.ajax({
+		    url: '/soma/prayers/' + prayer_id + '/increment',
+		    type: 'post',
+		    success: function(resp) {
+		    	if (resp.success) {
+		    		if (current_count == 0) {
+							count.html("Prayed for <span class='number'>1 time</span>");
+						}
+						else {
+							count.html("Prayed for <span class='number'>" + (current_count + 1).toString() + " times</span>");
+						}
+						btn.hide();
+						thanks.show();
+		    	}
+		    	else {
+		    		btn.hide();
+		    		thanks.html("You've already prayed for this!");
+		    		thanks.show();
+		    	}
+		    }
+		  });
+		}
+		function new_prayer(name, body, is_private) {
+			$.ajax({
+		    url: '/soma/prayers/new',
+		    type: 'post',
+		    data: {
+		    	name: name,
+		    	body: body,
+		    	is_private: is_private,
+		    	block_id: <%= block.id %>
+		    },
+		    success: function(resp) {
+		    	if (resp.success) {
+		    		$("#prayer-form").slideUp();
+		    		$("#prayer-form").next("#message").html("<p class='note success'>" + resp.success + "</p>");
+		    	}
+		    	else {
+		    		$("#prayer-form").next("#message").html("<p class='note error'>" + resp.error + "</p>");
+		    	}
+		    }
+		  });
+		}
+		$(".i-prayed").click(function(event) {
+			event.preventDefault();
+			var id = $(this).attr("id");
+			var current = $(this).data("current");
+			increment_prayer(id, current);
+		});
+		$("#submit-prayer-form").click(function(event) {
+			event.preventDefault();
+			$("#prayer-form").next("#message").html("<p class='note loading'>Submitting form...</p>");
+			var name = $(this).parent().find("#name").val();
+			var body = $(this).parent().find("#body").val();
+			var is_private = $(this).parent().find("#private").is(":checked");
+			new_prayer(name, body, is_private);
+		});
+		$("#show-prayer-form").click(function(event) {
+			event.preventDefault();
+			$(".form-wrapper").slideToggle();
+		});
+	</script>
+<% end %>

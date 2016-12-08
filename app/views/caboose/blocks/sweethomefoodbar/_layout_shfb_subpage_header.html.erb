@@ -1,0 +1,59 @@
+<div id="block_<%= block.id %>">
+  <header class="sub">
+    <div class="top">
+      <div class="constrain">
+        <a href="/" class="logo-link" title="Home">
+          <div class="logo">
+            <span>Sweet Home Food Bar</span>
+          </div>
+        </a>
+        <nav class="reveal">
+          <ul>
+            <li><a href="/" title="Home">Home</a></li>
+  
+
+            <li><a href="<%= Time.now.hour < 12 ? Caboose::Page.find_by_slug('morning-menu').slug : Caboose::Page.find_by_slug('afternoon-menu').slug %>" title="Menu">Menu</a></li>
+            
+
+            <% Caboose::Page.where(:parent_id => 13, :hide => false).order(:sort_order).all.each do |p| %>
+              <% next if Caboose::Page.where('slug LIKE ? OR slug LIKE ? OR slug LIKE ?', '%menu', '%night', '%list').pluck(:id).include?(p.id) %>
+              <li><%== ApplicationHelper.nav_link(p) %></li>
+            <% end %>
+            
+
+
+          </ul>
+
+
+        </nav>
+        <a class="icon-menu conceal" href="#" id="show-menu" title="Show Menu"></a>
+      </div>
+    </div>
+    <div class="bottom reveal">
+      <div class="left">
+
+      </div>
+      <div class="right">
+        
+      </div>
+      <div class="constrain holder">
+        <h1><%= page.title %></h1>
+     <!--    <h2>Breakfast Served All Day</h2> -->
+      </div>
+    </div>
+  </header>
+
+  <% if Caboose::Page.where('slug LIKE ? OR slug LIKE ? OR slug LIKE ?', '%menu', '%night', '%list').pluck(:id).include?(page.id) %>
+    <div class="menu-selector reveal">
+      <div class="constrain">
+        <ul>
+          <% Caboose::Page.where('slug LIKE ? OR slug LIKE ? OR slug LIKE ?', '%menu', '%night', '%list').where(:hide => false).order(:sort_order).each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p) %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render :partial => "caboose/blocks/sweethomefoodbar/mobile_navigation", :locals => {:editing => editing, :site => site} %>
+</div>

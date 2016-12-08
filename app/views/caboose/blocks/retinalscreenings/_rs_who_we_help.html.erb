@@ -1,0 +1,26 @@
+<div class="container" style="clear:both;" id="block_<%= block.id %>">
+	
+			
+		<div class="viewItemRow hideMobile">
+				
+			<div class="clearfix">
+				
+				<% img = block.child_value('image').url(:large) %>
+				<div id="picture"><img src="<%= img %>" width="305" height="344" alt="<%= block.child_value('title') %>" /></div>
+				
+				<div id="content">
+					
+					<h2><%= block.child_value('title') %></h2>
+					
+					<%== block.child_value('main_text') %>
+					
+					
+					<a href="<%= block.child_value('link') %>" class="button">Learn More</a>
+				
+				</div>
+			
+			</div>
+		
+		</div>
+
+</div>

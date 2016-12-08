@@ -1,0 +1,116 @@
+<%
+  testimonials = Caboose::Block.where(:block_type_id => 2624).order(:sort_order).all
+%>
+
+<% if modal %>
+  <% if block.child("animation") %>
+    <div id="block_<%= block.child('animation').id %>" style="text-decoration:underline;cursor:pointer;">
+      Animation: <%= block.child_value('animation') %>
+    </div>
+  <% end %>
+  <% if block.child("arrow_color") %>
+    <div id="block_<%= block.child('arrow_color').id %>" style="text-decoration:underline;cursor:pointer;">
+      Arrow Color: <%= block.child_value('arrow_color') %>
+    </div>
+  <% end %>
+  <% if block.child("background_color") %>
+    <div id="block_<%= block.child('background_color').id %>" style="text-decoration:underline;cursor:pointer;">
+      Background Color: <%= block.child_value('background_color') %>
+    </div>
+  <% end %>
+  <% if block.child("duration") %>
+    <div id="block_<%= block.child('duration').id %>" style="text-decoration:underline;cursor:pointer;">
+      Slide Duration: <%= block.child_value('duration') %>
+    </div>
+  <% end %>
+  <% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+<% else %>
+
+  <div class="testimonial-slider-container" id="block_<%= block.id %>">
+    <% if testimonials.size > 0 %>
+      <div class="slider-container" id="slider-container-<%= block.id %>">
+      	<h3 class="slider-title"><%= block.child_value('title') %></h3>
+        <div class="left-nav" id="nav-left-<%= block.id %>">
+          <span class="arrow icon-left-big"></span>
+        </div>
+        <div class="liquid-slider" id="slider-<%= block.id %>" data-size="<%= testimonials.count %>">
+          <% testimonials.each_with_index do |t, index| %>
+            <%
+              name = t.child_value('name')
+              #company = t.child_value('company')
+              quote = t.child_value('quote')
+              photo = t.child_value('photo')
+            %>
+            <div class="slide clearfix" id="slide-<%= index %>" <% if index > 0 %>style="display:none;"<% end %>>
+              <div class="slider-slide clearfix">
+                <div class="slide-content">
+                  <div class="image" style="background-image:url(<%= photo.url(:large) %>);"></div>
+                  <div class="content-holder">
+                    <div class="quote richtext">
+                    	<%== quote %>
+										</div>
+                    <h4 class="meta"><span class="name"><%= name %></span></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %><!-- end slide --> 
+        </div>
+        <div class="right-nav" id="nav-right-<%= block.id %>">
+          <span class="arrow icon-right-big"></span>
+        </div>
+      </div>
+    <% else %>
+      <% if editing %>
+        <p style="padding:10px;border:1px solid #000;">Empty testimonial slider. Click to add testimonials.</p>
+      <% end %>
+    <% end %>
+
+    <% content_for :css do %>
+			<style>
+				#slider-<%= block.id %>-wrapper {
+          max-width: none !important;
+        }
+        <% if block.child_value("background_color") != "main" %>
+          #block_<%= block.id %> {
+            background-color: <%= block.child_value('background_color') %>;
+          }
+        <% end %>
+        #block_<%= block.id %> .arrow,  #block_<%= block.id %> .slider-title, #block_<%= block.id %> {
+          color: <%= block.child_value('arrow_color') %>;
+        }
+			</style>
+    <% end %>
+
+    <% content_for :js do %>
+      <% duration = block.child_value('duration').to_i * 1000 %>
+      <% animation = block.child_value('animation') == "Slide" ? "easeInOutSine" : "fade" %>
+      <script>
+        $(document).ready(function() {
+          $("#slider-<%= block.id %> .slide").show();
+          $("#slider-<%= block.id %>").liquidSlider({
+            autoSlide: true,
+            autoSlideInterval: <%= duration %>,
+            autoHeight: true,
+            slideEaseFunction: "<%= animation %>",
+            dynamicArrows: false,
+            dynamicTabs: false
+          });
+          var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+          $("#nav-left-<%= block.id %>").click(function() {
+            api.setNextPanel('left');
+            api.updateClass($(this)); 
+          });
+          $("#nav-right-<%= block.id %>").click(function() {
+            api.setNextPanel('right');
+            api.updateClass($(this)); 
+          });
+        });
+      </script>
+    <% end %>
+  </div>
+<% end %>

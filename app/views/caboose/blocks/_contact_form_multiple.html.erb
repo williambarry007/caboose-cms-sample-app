@@ -1,0 +1,129 @@
+<%
+departments = block.children.where(:block_type_id => 2046).all
+%>
+
+<% if modal %>
+
+	<% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+
+  <% if block.child("description") %>
+    <div id="block_<%= block.child('description').id %>" style="text-decoration:underline;cursor:pointer;">
+      Description: Click to Edit
+    </div>
+  <% end %>
+
+  <% if block.child("to_address") %>
+    <div id="block_<%= block.child('to_address').id %>" style="text-decoration:underline;cursor:pointer;">
+      Default Notification Email: <%= block.child_value('to_address') %>
+    </div>
+  <% end %>
+
+  <% if block.child("show_captcha") %>
+    <div id="block_<%= block.child('show_captcha').id %>" style="text-decoration:underline;cursor:pointer;">
+      Show Captcha: <%= block.child_value('show_captcha') %>
+    </div>
+  <% end %>
+
+  <p>You may add multiple departments, each with its own notification email address.</p>
+
+  <% if departments.count > 0 %>
+	  <p>Departments:</p>
+	  <ul>
+	    <% departments.each_with_index do |d,i| %>
+	      <% name = d.child_value('title') %>
+	      <li id="block_<%= d.id %>" style="text-decoration:underline;cursor:pointer;">
+	        <%= name.blank? ? ("Department #{(i + 1).to_s}") : name %>
+	      </li>
+	    <% end %>
+	  </ul>
+  <% end %>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new department!</a>
+  <% elsif block.post %>
+    <a href='/admin/pages/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new department!</a>
+  <% end %>
+
+<% else %>
+
+<div class="contact-form-block clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="text">
+			<h3 class="section-title"><%= block.child_value('title') %></h3>
+			<div class="content"><%== block.child_value('description') %></div>
+		</div>
+		<form id="contact_form">
+			<input type="hidden" name="block_id" value="<%= block.id %>" />
+			<input type="hidden" name="form_name" value="Contact Form" />
+			<div class="grid-row">
+				<div class="unit1of3" style="padding-right:2%;">
+					<input type="text" name="name" placeholder="Your Name">
+				</div>
+				<div class="unit1of3" style="padding-left:1%;padding-right:1%;">
+					<input type="email" name="email_required" placeholder="Email Address">
+				</div>
+				<div class="unit1of3" style="padding-left:2%;">
+					<input type="text" name="subject" placeholder="Subject">
+				</div>
+			</div>
+			<div class="grid-row <% if departments.count > 0 %>bottom<% end %>">
+				<% if departments.count > 0 %>
+					<div class="unit1of3" style="padding-right:2%;">
+						<h6>Department</h6>
+						<div class="select-holder">
+							<select name="department" class="custom">
+								<option value="">General</option>
+								<% departments.each do |d| %>
+									<option value="<%= d.id %>"><%= d.child_value('title') %></option>
+								<% end %>
+							</select>
+							<span class="icon-down-big"></span>
+						</div>
+					</div>
+				<% end %>
+				<% if departments.count == 0 %>
+					<div class="unit1of1">
+				<% else %>
+					<div class="unit2of3" style="padding-left:1%;">
+				<% end %>
+					<textarea name="message_required" placeholder="Message" rows="4"></textarea>
+				</div>
+			</div>
+			<% if block.child_value('show_captcha') && block.child_value('show_captcha') == "Yes" %>
+				<div class="recaptcha clearfix">
+					<div style="margin:10px 0;" class="g-recaptcha clearfix" data-sitekey="6LcOOQATAAAAAK0PVSzlqmm0X_RggYhM7GMuot4X"></div>
+				</div>
+			<% end %>
+			<div class="bottom clearfix">
+				<a href="#" class="btn" id="submit-contact-form">Send</a>
+			</div>
+		</form>
+		<div id="message"></div>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		.recaptcha > div > div {
+			float: right;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<%= javascript_include_tag "form_submit" %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-contact-form").click(function(event) {
+				event.preventDefault();
+				submit_form("contact_form"); 
+				return false;
+			});
+		});
+	</script>
+<% end %>
+<% end %>

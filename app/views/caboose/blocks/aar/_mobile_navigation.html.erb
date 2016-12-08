@@ -1,0 +1,50 @@
+<div class="mobile-menu" id="sidr" style="display:none;">
+  <div class="nav">
+    <ul class="level-1">
+      <li id="home"><a href="/" title="Home">Home</a></li>
+      <% top_pages = Caboose::Page.where(:parent_id => 959, :hide => false).order(:sort_order) %>
+      <% top_pages.each_with_index do |p,i| %>
+        <li class="level-1-link" id="<%= p.slug %>">
+          <%== ApplicationHelper.nav_link(p) %>
+          <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+          <% if subpages.count > 0 %>
+            <ul class="submenu level-2">
+       <!--        <a href="#" class="icon-close close-dropdown"></a> -->
+              <% subpages.each do |s| %>
+                <li class="level-2-link">
+                  <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                  <% if grandchildren.count > 0 && s.id != 1215 %>
+                    <span><%== s.title %></span>
+                    <ul class="level-3">
+                      <% grandchildren.each do |g| %>
+                        <li class="level-3-link">
+                          <a href="/<%= g.uri %>" title="<%= g.title %>"><%== g.title %></a>
+                        </li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <a href="/<%= s.uri %>" title="<%= s.title %>"><%== s.title %></a>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </li>
+      <% end %>
+      <% user = controller ? controller.logged_in_user : nil %>
+      <% if user && user.id != 2 && user.id != 13883 %>
+        <li><a href="/logout" title="Logout">Logout</a></li>
+        <li><a href="/my-account" title="Account">Account</a></li>
+      <% else %>
+        <li><a href="#" title="Login" class="show-login">Login</a></li>
+      <% end %>
+    </ul>
+  </div>
+  <img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/mobile_logo.png" alt="Alabama Association of Realtors" class="logo">
+  <div class="socials">
+    <%== ApplicationHelper.social_links(site.id, "white", "outline") %>
+  </div>
+  <div class="copyright">
+    copyright &copy; <%= DateTime.now.strftime("%Y") %> Alabama Realtors
+  </div>
+</div>

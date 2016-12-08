@@ -1,0 +1,27 @@
+<%
+color = block.child_value('color')
+height = block.child_value('height')
+margin = block.child_value('margin')
+css_margin = "20px 0"
+if margin == "None"
+	css_margin = "0"
+elsif margin == "Small"
+	css_margin = "10px 0"
+elsif margin == "Large"
+	css_margin = "40px 0"
+elsif margin == "Huge"
+	css_margin = "100px 0"
+end
+%>
+<div class="line-break-block clearfix" id="block_<%= block.id %>">
+	<div class="line" style="height:<%= height %>px;background-color:<%= color %>;"></div>
+</div>
+<% content_for :css do %>
+	<style>
+		#block_<%= block.id %> .line {
+			width: 100%;
+			clear: both;
+			margin: <%= css_margin %>;
+		}
+	</style>
+<% end %>

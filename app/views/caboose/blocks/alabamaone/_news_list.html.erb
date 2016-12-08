@@ -1,0 +1,88 @@
+<% post_limit = block.child_value("posts_to_show").blank? ? 10 : block.child_value("posts_to_show").to_i %>
+<% page_number = 1 %>
+<% 
+	off_set = 0 
+	begin
+		if params[:page]
+ 			off_set = (params[:page].to_i - 1) * post_limit
+ 			page_number = params[:page].to_i
+		end
+	rescue
+		off_set = 0
+	end
+	if off_set < 0 
+		off_set = 0
+	end
+%>
+
+<% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").offset(off_set).limit(post_limit) %>
+
+<% if block.child_value('post_category') != "All" %>
+	<% cat = Caboose::PostCategory.where(:id => block.child_value('post_category')).last %>
+	<% if cat %>
+		<% posts = cat.posts.where(:site_id => site.id, :published => true).order("created_at DESC").offset(off_set).limit(post_limit) %>
+	<% end %>
+<% end %>
+<% post_count = Caboose::Post.where(:site_id => site.id, :published => true).count %>
+
+
+<div class="news-list-block" id="block_<%= block.id %>">
+	<div class="constrain">
+	
+		<div class="news-list-title">
+			<h2 class="text"><span class="one">ONE</span><span class="news">news</span></h2>
+		</div>
+
+
+		<% if posts.count > 0 %>
+			<% posts.each_with_index do |p| %>
+				<div class="post-unit flexbox">
+          <div class="post-text">
+          	<h6 class="post-date"><%== (p.created_at - 6.hours).strftime("%B %-d, %Y") %></h6>
+					  <h4 class="post-title"><%= p.title %></h4>
+					  <% src_text = p.preview %>
+					  <% if p.preview.blank? && !p.body.blank? %>
+							<% src_text = p.body %>
+					  <% end %>
+					  <% if !src_text.blank? %>
+	            <div class="post-excerpt">
+	              <% 
+	                html = Nokogiri::HTML( src_text ) 
+	                text = html.at('body').inner_text
+	                words = text.blank? ? "" : text.split[0..30] 
+	              %>
+	              <% if !words.blank? && words.count > 29 %>
+	              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+	              <% else %>
+									<%= words.blank? ? "" : words.join(' ') %>
+	              <% end %>
+	            </div>
+	          <% end %>
+            <% if p.custom_field_value('redirect_url').blank? %>
+            	<a href="<%= p.uri %>" class="btn">Read More</a>
+            <% else %>
+							<a href="<%= p.custom_field_value('redirect_url') %>" target="_blank" class="btn">Read More</a>
+            <% end %>
+          </div>
+          <% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+						<div class="image-holder" style="overflow:hidden;">
+							<img src="<%= p.image.url(:large) %>" />
+						</div>
+					<% else %>
+						<div class="image-holder" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/<%= site.name %>/images/placeholder.png');"></div>
+					<% end %>
+				</div>
+			<% end %>
+			<div class="page-buttons">
+				<% if page_number > 1 %>
+					<a href="/<%= page.uri %>?page=<%= page_number - 1 %>" class="prev btn">Previous Page</a>
+				<% end %>
+				<% if page_number < (post_count.to_f / post_limit.to_f) %>
+					<a href="/<%= page.uri %>?page=<%= page_number + 1 %>" class="next btn">Next Page</a>
+				<% end %>
+			</div>
+		<% else %>
+			<p>Sorry, no news to display now. Check back later!</p>
+		<% end %>
+	</div>
+</div>

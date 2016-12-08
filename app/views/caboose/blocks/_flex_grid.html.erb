@@ -1,0 +1,112 @@
+<%
+units = block.children.where(:block_type_id => 3160).order(:sort_order).all
+padding = block.child('settings').child_value('padding')
+padding = '0' if padding.blank?
+bg_color = block.child('settings').child_value('background_color')
+bg_color = 'transparent' if bg_color.blank?
+halign = block.child('settings').child_value('h_alignment')
+valign = block.child('settings').child_value('v_alignment')
+constrain = block.child('settings').child_value('constrain')
+spacing = block.child('settings').child_value('spacing')
+spacing = '10px' if spacing.blank?
+unit_width = block.child('settings').child_value('unit_width')
+cbp = block.child('settings').child_value('cbp')
+cbp = '800px' if cbp.blank?
+horizontal = {
+	'left' => 'flex-start',
+	'center' => 'center',
+	'right' => 'flex-end',
+	'justify' => 'space-between',
+	'center justify' => 'space-around'
+}
+vertical = {
+	'top' => 'flex-start',
+	'center' => 'center',
+	'bottom' => 'flex-end',
+	'baseline' => 'baseline',
+	'stretch' => 'stretch'
+}
+%>
+
+<% if modal %>
+
+	<%== block.render(block.child('settings'), local_assigns) %>
+	
+  <p>Grid Units:</p>
+  <ul>
+    <% units.each_with_index do |s,i| %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= "Unit #{(i + 1).to_s}" %>
+      </li>
+    <% end %>
+  </ul>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new unit!</a>
+  <% elsif block.post %>
+    <a href='/admin/posts/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new unit!</a>
+  <% end %>
+
+<% else %>
+
+<div class="flex-grid-container" id="block_<%= block.id %>">
+	<% if units.count == 0 && editing %>
+		<div style="padding:15px;border:1px dashed gray;" class="empty">Empty Grid</div>
+	<% else %>
+		<% if constrain == '1' %><div class="constrain"><% end %>
+			<div class="flexbox">
+				<% units.each do |b| %>
+			    <%== block.render(b, local_assigns) %>
+			  <% end %>
+			</div>
+		<% if constrain == '1' %></div><% end %>
+	<% end %>
+</div>
+
+<% end %>
+
+<% content_for :css do %>
+<style>
+#block_<%= block.id %> {
+	padding: <%= padding %>;
+	background-color: <%= bg_color %>;
+}
+#block_<%= block.id %> > .flexbox, #block_<%= block.id %> > .constrain > .flexbox {
+	-webkit-justify-content: <%= horizontal[halign] %>;
+	justify-content: <%= horizontal[halign] %>;
+	-webkit-align-items: <%= vertical[valign] %>;
+	align-items: <%= vertical[valign] %>;
+}
+#block_<%= block.id %> > .flexbox > .flex-grid-unit, #block_<%= block.id %> > .constrain > .flexbox > .flex-grid-unit {
+	margin-right: <%= spacing %>;
+	<% if !unit_width.blank? %>
+	  -webkit-box-flex: 0 1 <%= unit_width %> !important;
+	  -moz-box-flex:  0 1 <%= unit_width %> !important;
+	  -webkit-flex:  0 1 <%= unit_width %> !important;
+	  -ms-flex:  0 1 <%= unit_width %> !important;
+	  flex:  0 1 <%= unit_width %> !important;
+	<% end %>
+}
+#block_<%= block.id %> > .flexbox > .flex-grid-unit:last-of-type, #block_<%= block.id %> > .constrain > .flexbox > .flex-grid-unit:last-of-type {
+	margin-right: 0;
+}
+@media all and (max-width: <%= cbp %>) {
+	#block_<%= block.id %> > .flexbox, #block_<%= block.id %> > .constrain > .flexbox {
+		-webkit-flex-direction: column;
+		flex-direction: column;
+	}
+	#block_<%= block.id %> > .flexbox > .flex-grid-unit, #block_<%= block.id %> > .constrain > .flexbox > .flex-grid-unit {
+		margin-right: 0;
+		margin-bottom: <%= spacing %>;
+		-webkit-box-flex:0 1 auto !important;
+	  -moz-box-flex: 0 1 auto !important;
+	  -webkit-flex: 0 1 auto !important;
+	  -ms-flex: 0 1 auto !important;
+	  flex: 0 1 auto !important;
+	  width: 100%;
+	}
+	#block_<%= block.id %> > .flexbox > .flex-grid-unit:last-of-type, #block_<%= block.id %> > .constrain > .flexbox > .flex-grid-unit:last-of-type {
+		margin-bottom: 0;
+	}
+}
+</style>
+<% end %>

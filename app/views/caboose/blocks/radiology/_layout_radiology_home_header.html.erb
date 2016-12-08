@@ -1,0 +1,38 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="l-left">
+      <a href="#"title="Search" id="show-search-form">
+        <span class="icon-search"></span>
+        <span class="text">Search</span>
+      </a>
+    </div>
+    <div class="l-center">
+      <a href="/patients" title="Patients" class="btn">Patients</a>
+      <a href="/physicians" title="Physicians" class="btn">Physicians</a>
+      <a href="/employee-portal" title="Employees" class="btn">Employees</a>
+    </div>
+    <div class="l-right">
+      <a id="show-menu" href="#" title="Menu">
+        <span class="text">Menu</span>
+        <span class='icon-menu-4'></span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<% if !editing %>
+  <div class="fullscreen-overlay" id="search-modal">
+    <div class="table modal-wrapper">
+      <div class="table-cell">
+        <div class="modal">
+          <a id="close-modal" class="icon-close"></a>
+          <h4 class="modal-title">Search</h4>
+          <form action="/search" method="get">
+            <input type="text" name="q" placeholder="Keywords" /><br />
+            <input type="submit" class="btn" value="Search" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

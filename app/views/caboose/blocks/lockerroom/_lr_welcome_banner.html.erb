@@ -1,0 +1,13 @@
+<div class="welcome-banner" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="logo">
+			<img src="//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/welcome.png" alt="50 Years" />
+		</div>
+		<div class="text">
+			<h4 class="title"><%= block.child_value('title') %></h4>
+			<div class="content">
+				<%== block.child_value('welcome_text') %>
+			</div>
+		</div>
+	</div>
+</div>

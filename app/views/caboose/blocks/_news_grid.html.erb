@@ -1,0 +1,44 @@
+<% columns = block.child_value('columns').blank? ? 4 : block.child_value('columns') %>
+<% title = !block.child('section_title') ? "Recent News" : block.child_value('section_title') %>
+<% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").limit(columns) %>
+<div class="news-grid-block" id="block_<%= block.id %>">
+	<h2 class="section-title"><%= title %></h2>
+	<div class="constrain">
+		<% if posts.count > 0 %>
+			<div class="grid-row">
+				<% posts.each_with_index do |p| %>
+					<div class="post-unit clearfix unit1of<%= columns %>">
+						<div class="contain">
+						  <h4 class="post-title"><%= p.title %></h4>
+						  <h6 class="post-date"><%= (p.created_at - 6.hours).strftime("%B %-d, %Y") %></h6>
+						  <% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+							<div class="image-holder" style="background-image:url(<%= p.image.url(:large) %>);"></div>
+							<% else %>
+								<div class="image-holder" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/<%= site.name %>/images/placeholder.png');"></div>
+							<% end %>
+							<% src_text = p.preview %>
+						  <% if p.preview.blank? && !p.body.blank? %>
+								<% src_text = p.body %>
+						  <% end %>
+						  <% if !src_text.blank? %>
+		            <div class="post-excerpt">
+		              <% 
+		                html = Nokogiri::HTML( src_text ) 
+		                text = html.at('body').inner_text
+		                words = text.blank? ? "" : text.split[0..30] 
+		              %>
+		              <% if !words.blank? && words.count > 29 %>
+		              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+		              <% else %>
+										<%= words.blank? ? "" : words.join(' ') %>
+		              <% end %>
+		            </div>
+		      		<% end %>
+		          <a href="<%= p.uri %>" title="<%= p.title %>" class="btn">Read More</a>
+		        </div>
+					</div>
+				<% end %>
+			<% end %>
+		</div>
+	</div>
+</div>

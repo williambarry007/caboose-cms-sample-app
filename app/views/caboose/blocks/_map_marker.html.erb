@@ -1,0 +1,77 @@
+<% if modal %>
+	<% if block.child("address") %>
+    <div id="block_<%= block.child('address').id %>" style="text-decoration:underline;cursor:pointer;">
+      Address: <span id="address"><%= block.child_value('address') %></span>
+    </div>
+  <% end %>
+  <% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+  <% if block.child("info_box_text") %>
+    <div id="block_<%= block.child('info_box_text').id %>" style="text-decoration:underline;cursor:pointer;">
+      Info Box Text: Click to Edit
+    </div>
+  <% end %>
+  <% if block.child("latitude") %>
+  	<div>Latitude: <span id="latitude"><%= block.child_value('latitude') %></span></div>
+  <% end %>
+  <% if block.child("longitude") %>
+  	<div>Longitude: <span id="longitude"><%= block.child_value('longitude') %></span></div>
+  <% end %>
+  <div style="height:22px;">
+		<span id="coordinates-message"></span>
+  </div>
+  <% content_for :caboose_js do %>
+		<script>
+			function save_coords(lat, lng) {
+				$.ajax({
+			    url: "/api/update-marker-coordinates",
+			    type: 'post',
+			    data: {
+			    	block_id: <%= block.id %>,
+			    	latitude: lat,
+			    	longitude: lng
+			    },
+			    success: function(resp) {
+			      if (resp.success) {
+			      	$("#coordinates-message").html("Coordinates updated!").show().delay(1000).fadeOut(200);
+			      	$("#latitude").html(lat);
+			      	$("#longitude").html(lng);
+			      }
+			      else if (resp.error) {
+			      	$("#coordinates-message").html("ERROR: " + resp.error).show().delay(1000).fadeOut(200);
+			      }
+			    }
+			  });
+			}
+			function get_coords(address) {
+				$.ajax({
+			    url: "<%= request.protocol %>maps.googleapis.com/maps/api/geocode/json",
+			    type: 'get',
+			    data: {
+			    	sensor: false,
+			    	address: address
+			    },
+			    success: function(data) {
+			  		if ( data.status != "ZERO_RESULTS") {
+			  			var lat = data['results'][0]['geometry']['location']['lat'];
+			      	var lng = data['results'][0]['geometry']['location']['lng'];
+			      	save_coords(lat, lng);
+			  		}
+			  		else {
+			  			$("#coordinates-message").html("Invalid address, coordinates not saved.").show().delay(2000).fadeOut(200);
+			  		}
+			    }
+			  });
+			}
+			$(window).load(function() {
+				var address = $("#address").html();
+				if (address != "") {
+					get_coords(address);
+				}
+			});
+		</script>
+  <% end %>
+<% end %>

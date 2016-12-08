@@ -1,0 +1,41 @@
+<div id="sidr" style="display:none;">
+  <img src="//d9hjv462jiw15.cloudfront.net/assets/osp/images/white_cotton.png" alt="Old State Company" class="logo" />
+  <% if false %>
+  <form id="search-form" action="/products" method="get">
+    <input type="text" name="query" placeholder="Search For Your Gear Now..." />
+    <input type="submit" value="Search" class="btn" />
+  </form>
+  <% end %>
+  <div class="nav">
+    <ul>
+      <li><a href="/" title="Home">Home</a></li>
+      <% Caboose::Page.where(:parent_id => 2218, :hide => false).order(:sort_order).all.each do |p| %>
+        <li><%== ApplicationHelper.nav_link(p, editing, false) %>
+          <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+          <% if subpages.count > 0 %>
+            <ul class="submenu">
+              <% subpages.each do |s| %>
+                <li>
+                  <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                  <% if grandchildren.count > 0 %>
+                    <span><%= s.menu_title.blank? ? s.title : s.menu_title %></span>
+                    <ul>
+                      <% grandchildren.each do |g| %>
+                        <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <%== ApplicationHelper.nav_link(s, editing, false) %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </li>
+      <% end %>
+      <li><a href="/cart" title="My Cart">My Cart</a></li>
+      <li><a href="/my-account" title="My Account">My Account</a></li>
+    </ul>
+  </div>
+  <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+</div>

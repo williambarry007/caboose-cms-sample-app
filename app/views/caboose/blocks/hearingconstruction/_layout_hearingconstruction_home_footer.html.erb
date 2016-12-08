@@ -1,0 +1,46 @@
+<%
+phone = block.child_value('phone_number')
+email = block.child_value('email_address')
+%>
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of3 left">
+        <h4 class="unit-title">About Hearing Construction</h4>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <% Caboose::Page.where(:parent_id => 1302, :hide => false).order(:sort_order).all.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+      <div class="unit1of3 middle">
+        <h4 class="unit-title">Call Us Today</h4>
+        <h3 class="phone">
+          <span style="display:block;margin:0;"><%= phone %></span>
+          <span style="display:block;margin:4px 0 2px 0;font-size:16px;">or</span>
+          <span style="display:block;margin:0;">1.205.759.9914</span>
+        </h3>
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+        <section class="nine">
+          <span>site loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+      <div class="unit1of3 right">
+        <h4 class="unit-title">Email Us For A Meeting</h4>
+        <p><%= email %></p>
+        <div class="houzz">
+          <h4 class="unit-title" style="margin-top:30px;">Find us on Houzz</h4>
+          <a href="http://www.houzz.com/pro/hearinghomes/hearing-construction" target="_blank" title="Houzz">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/hearingconstruction/images/houzz.png" alt="Houzz" width="40" height="40">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

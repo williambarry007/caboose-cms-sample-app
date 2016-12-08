@@ -1,0 +1,15 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="left">
+      <div class="profile"></div>
+      <h1>Billy Swift</h1>
+      <p class="bio">Disciple of Jesus, developer of the web, drinker of coffee... and other things.</p>
+    </div>
+    <div class="right">
+      <%== ApplicationHelper.social_links(site.id, "icon", "colored") %>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </div>
+  </div>
+</header>

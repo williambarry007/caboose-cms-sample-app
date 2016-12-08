@@ -1,0 +1,25 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <h5 id="email-title">MAIL:</h5>
+    <h3 id="email"><a href="mailto:scottie@scottiejones.com">SCOTTIE@SCOTTIEJONESPHOTOGRAPHY.COM</a></h3>
+    <h5 id="phone-title">PHONE:</h5>
+    <h3 id="phone">205-657-0104</h3>
+    <h5 id="social-title">SOCIAL MEDIA:</h5>
+    <%== ApplicationHelper.social_links(site.id, "circle", "black") %>
+    <!-- <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 1666, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav> -->
+    <hr>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

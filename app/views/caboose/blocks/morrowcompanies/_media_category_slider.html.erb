@@ -1,0 +1,54 @@
+<%
+  mcid = block.child_value('media_category')
+  mc = Caboose::MediaCategory.where(:id => mcid).first
+  media = mc && mc.media ? mc.media.all : []
+%>
+<div class="media-category-slider" id="block_<%= block.id %>">
+  <% if media.count > 0 %>
+    <div class="slider-container" id="slider-container-<%= block.id %>">
+      <div class="left-nav" id="nav-left-<%= block.id %>">
+        <div class="arrow icon-left-big"></div>
+      </div>
+      <div class="liquid-slider" id="slider-<%= block.id %>">
+        <% slide = media.first %>
+        <% bg_image = slide.image && !slide.image.url.include?('placehold') ? slide.image.url(:large) : '' %>
+        <div class="slide clearfix" id="slide-0">
+          <div class="slider-slide" style='background-image:url(<%= bg_image %>);'></div>
+        </div>
+      </div>
+      <div class="right-nav" id="nav-right-<%= block.id %>">
+        <div class="arrow icon-right-big"></div>
+      </div>
+      <div class="title-bar">
+        <h4><%= mc.name %></h4>
+      </div>
+    </div>
+  <% end %>
+</div>
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      <% media.each_with_index do |slide, index| %>
+        <% bg_image = slide.image && !slide.image.url.include?('placehold') ? slide.image.url(:large) : '' %>
+        <% next if index == 0 || bg_image.blank? %>
+        $("#slider-<%= block.id %>").append($('<div/>').addClass('slide clearfix').attr('id','slide-<%= index %>').append( $('<div/>').addClass('slider-slide').css('background-image','url(<%= bg_image %>)') ));
+      <% end %>
+      $("#slider-<%= block.id %>").liquidSlider({
+        autoSlide: false,
+        autoHeight: false,
+        slideEaseFunction: "easeInOutSine",
+        dynamicArrows: false,
+        dynamicTabs: false
+      });
+      var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+      $("#nav-left-<%= block.id %>").click(function() {
+        api.setNextPanel('left');
+        api.updateClass($(this)); 
+      });
+      $("#nav-right-<%= block.id %>").click(function() {
+        api.setNextPanel('right');
+        api.updateClass($(this)); 
+      });
+    });
+  </script>
+<% end %>

@@ -1,0 +1,22 @@
+<nav class="overlay-nav" id="main-nav-overlay" style="display:none;">
+  <a id="close-menu" href="#" class="icon-close"></a>
+  <div class="table">
+    <div class="table-cell">
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 1284, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="socials">
+    <h4 class="social-title">Drink Social</h4>
+    <ul class='social-links'>
+      <li><a href='https://www.facebook.com/304379426305946' target='_blank' title='Facebook' class='icon-facebook white'></a></li>
+      <li><a href='https://www.twitter.com/blackwarriorbc' target='_blank' title='Twitter' class='icon-twitter white'></a></li>
+      <li><a href='https://www.instagram.com/blackwarriorbrewing' target='_blank' title='Instagram' class='icon-instagram white'></a></li>
+      <li><a href="https://untappd.com/BlackWarriorBrewingCo" target="_blank" title="Untappd" class="icon-untappd white"></a></li>
+    </ul>
+  </div>
+</nav>

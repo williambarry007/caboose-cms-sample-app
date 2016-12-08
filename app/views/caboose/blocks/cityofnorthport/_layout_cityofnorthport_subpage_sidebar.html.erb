@@ -1,0 +1,59 @@
+<% top_level = [603, 600, 605, 606, 604, 769] %>
+<% this_page = page %>
+<% this_parent = page.parent %>
+<% this_grandparent = this_parent.nil? ? Caboose::Page.find(11) : this_parent.parent %>
+<% this_grandparent = this_grandparent.nil? ? Caboose::Page.find(11) : this_grandparent %>
+
+
+<div class="left-sidebar" id="block_<%= block.id %>">
+  <div class="section-heading nav reveal">
+    <% label = "Main" %>
+    <% if top_level.include?(this_page.id) %><% label = this_page.title %><% end %>
+    <% if top_level.include?(this_parent.id) %><% label = this_parent.title %><% end %>
+    <% if top_level.include?(this_grandparent.id) %><% label = this_grandparent.title %><% end %>
+    <% label = this_parent.id == 603 ? page.title : (this_grandparent.id == 603 ? this_parent.title : label) %>
+    <h4><%= label %> Navigation</h4>
+    <div class="arrow down_arrow conceal"></div>
+  </div>
+  <div class="menu reveal">
+    <% np = this_parent.id == 603 ? page : (this_grandparent.id == 603 ? this_parent : nil) %>
+    <% nav_page = top_level.include?(page.id) ? page : page.parent %>
+    <% nav_page = top_level.include?(this_parent.id) ? this_parent : nav_page %>
+    <% nav_page = top_level.include?(this_grandparent.id) ? this_grandparent : nav_page %>
+    <% wp = np ? np : nav_page %>
+    <ul>
+      <% Caboose::Page.where(:parent_id => wp.id, :hide => false).order(:sort_order).all.each do |p| %>
+        <li><%== ApplicationHelper.nav_link(p, editing, false) %>
+          <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+          <% if subpages.count > 0 && wp.id != 11 && !request.original_url.include?('departments') %>
+            <ul>
+              <% subpages.each do |p| %>
+                <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="subpage-calendar">
+    <% events = Caboose::CalendarEvent.where("((cast(begin_date as date) >= ? and cast(begin_date as date) <= ?) or ( cast(end_date as date) >= ? and cast(end_date as date) <= ?))", Date.today, (Date.today + 6.months), Date.today, (Date.today + 6.months)).where(:calendar_id => 26).order(:begin_date).take(6) %>
+    <div class="section">
+      <h5 class="top-title">Upcoming Events</h5>
+      <% if events.count > 0 %>
+        <% events.each do |e| %>
+          <div class="news-post">
+            <h5 class="name"><%= e.name %></h5>
+            <h6 class="date"><%= e.begin_date.strftime("%B %-d, %Y") %><% if !e.all_day %><%= e.begin_date.strftime(" at %l:%M%P") %><% end %></h6>
+            <h6 class="location"><%= e.location %></h6>
+            <div class="post-body">
+              <%== e.description %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p style="padding:8px 10px 0 10px;">Sorry, there are no upcoming events.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

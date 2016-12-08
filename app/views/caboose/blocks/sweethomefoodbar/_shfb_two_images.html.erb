@@ -1,0 +1,7 @@
+<div class="constrain">
+  <ul id="block_<%= block.id %>" class="images grid-row">
+    <li class="unit1of2 first"><figure style="background-image: url(<%= block.child_value('first_image').url(:large) %>)"></figure></li>
+    <li class="unit1of2 last"><figure style="background-image: url(<%= block.child_value('second_image').url(:large) %>)"></figure></li>
+  </ul>
+</div>
+

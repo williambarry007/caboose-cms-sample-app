@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js ie lt-ie9 lt-ie8 lt-ie7" lang="en"><![endif]-->
+<!--[if IE 7]><html class="no-js ie ie7 lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if IE 8]><html class="no-js ie ie8 lt-ie9" lang="en"><![endif]-->
+<!--[if IE 9]><html class="no-js ie ie9" lang="en"><![endif]-->
+<!--[if !IE]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<!--[if lt IE 9]><script src="/html5shiv.js"></script><![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>Site Configuration</title>
+    <meta name="description" content="<%= page.meta_description %>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <%= raw css %>
+    <%= raw csrf_meta_tags %>
+  </head>  
+  <body>
+    <div id="container">
+      <%= render 'svg/caboose' %>
+      <h1 class="site-config-page-title" id="block_<%= block.id %>">Site Configuration</h1>
+      <p class="site-config-info">
+        These settings are used in various places throughout your site.<br />
+        Only you, the administrator, can see or edit this page.<br />
+        Fill in what you have available, and leave the rest blank.
+      </p>
+      <% children = block.children.order(:sort_order).all %>
+      <% children.each do |c| %>
+        <div class="site-config-field">
+          <h4 class="site-config-field-title"><%= c.block_type.description %></h4>
+          <div id="block_<%= c.id %>"><%= c.value %></div>
+        </div>
+      <% end %>
+      <div id="site-config-nine">
+        <span>built by:</span><br />
+        <a href="http://www.nine.is" target="_blank"><%= render 'svg/nine' %></a>
+      </div>
+      <% content_for :css do %>
+        <style>
+          body {
+            min-height: 100%;
+            width: 100%; 
+            background-color: rgb(214, 214, 214) !important;
+            background-image: none !important;
+            color: #404040 !important;
+          }
+          #container {
+            padding: 50px 5% 30px 5%;
+            text-align: center;
+          }
+          .caboose-open-modal {
+            background: none !important;
+          }
+          .caboose-open-modal:hover {
+            background: none !important;
+          }
+          .caboose-logo-svg {
+            width: 130px;
+            height: 130px;
+            fill: #404040;
+            stroke: #404040;
+            margin-bottom: 40px;
+          }
+          .site-config-page-title {
+            font-weight: bold !important;
+            margin-bottom: 20px !important;
+            font-size: 28px !important;
+            background: none !important;
+          }
+          .site-config-page-title:hover {
+            background: none !important;
+          }
+          .site-config-info {
+            margin-bottom: 40px !important;
+          }
+          .site-config-field {
+            margin-bottom: 30px;
+          }
+          .site-config-field-title {
+            color: #404040 !important;
+            font-size: 20px !important;
+            font-weight: normal !important;
+            margin-bottom: 6px !important;
+          }
+          .site-config-field > div {
+            color: #404040 !important;
+            background: #fff !important;
+            padding: 7px 20px 4px 20px !important;
+            display: inline-block !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            min-height: 30px !important;
+            min-width: 90px !important;
+          }
+          .site-config-field > div:hover {
+            background: #EFF1CA !important;
+          }
+          .delete_handle, .sort_handle, .select_handle {
+            display: none !important;
+          }
+          #site-config-nine {
+            margin-top: 80px !important;
+          }
+          #site-config-nine span {
+            font-size: 12px !important;
+            color: #404040 !important;
+          }
+          #site-config-nine .nine-logo-svg {
+            width: 100px;
+            height: 50px;
+            fill: #404040;
+          }
+          #site-config-nine .nine-logo-svg polygon {
+            stroke: #404040;
+          }
+        </style>
+      <% end %>
+    </div>
+    <%= raw js %>
+  </body>
+</html>

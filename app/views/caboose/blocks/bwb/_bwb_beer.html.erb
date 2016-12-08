@@ -1,0 +1,15 @@
+<% 
+name = block.child_value("name")
+abv = block.child_value('abv')
+bitterness = block.child_value('bitterness')
+color = block.child_value('color')
+description = block.child_value('description')
+%>
+
+<div class="beer-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<h3 class="name"><%= name %></h3>
+		<h4 class="details">ABV: <%= abv %>, Bitterness: <%= bitterness %>, Color: <%= color %></h4>
+		<div class="richtext"><%== description %></div>
+	</div>
+</div>

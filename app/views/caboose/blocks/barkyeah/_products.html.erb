@@ -1,0 +1,13 @@
+<%
+# Note: This block is in the content area for the /products pages.
+# It's set up like this so that each site can have custom views.
+
+if editing %><div id='block_<%= block.id %>'><p>Products block, click to edit</p></div><% # Something to click on when we're editing the page
+elsif @sale_categories                %><%= block.partial('product_sales'   , local_assigns) %><% # Products on sale
+elsif @product                        %><%= block.partial('product_details' , local_assigns) %><% # Single product
+elsif @category && params[:vendor_id] %><%= block.partial('vendor_products' , local_assigns) %><% # Products for vendor        
+elsif @category && params[:query]     %><%= block.partial('search_results'  , local_assigns) %><% # Products for search query  
+elsif @category                       %><%= block.partial('product_index'   , local_assigns) %><% # Products for category
+else %><p>Invalid product.</p><% #  Invalid product
+end 
+%>

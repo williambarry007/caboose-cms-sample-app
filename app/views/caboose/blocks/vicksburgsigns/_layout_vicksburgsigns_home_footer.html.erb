@@ -1,0 +1,18 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <% Caboose::Page.where(:parent_id => 1337, :hide => false).order(:sort_order).all.each do |p| %>
+        <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+      <% end %>
+    </ul>
+  </nav>
+  <div class="constrain">
+    <div class="nine">
+      <a href="http://www.nine.is" target="_blank">Designed by The Nine</a>
+      <p>|</p>
+      <a href="http://www.caboosecms.com" target="_blank">Powered by Caboose</a>
+    </div>
+    <%== ApplicationHelper.social_links(site.id, "square", "white") %>
+  </div>
+</footer>

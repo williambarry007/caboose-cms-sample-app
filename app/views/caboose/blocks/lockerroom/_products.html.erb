@@ -1,0 +1,26 @@
+<% 
+# Products on sale
+if @sale_categories       %><%= render :partial => "caboose/blocks/lockerroom/product_sales" %><%
+  
+# Single product
+elsif @product             %><%= render :partial => "caboose/blocks/lockerroom/product_details" %><%
+ 
+# Multiple products
+elsif @category
+  
+  # Products for vendor
+  if params[:vendor_id] %><%= render :partial => "caboose/blocks/lockerroom/vendor_products", :locals => { :vendor_id => params[:vendor_id] } %><%
+      
+  # Products for search query
+  elsif params[:query]  %><%= render :partial => "caboose/blocks/lockerroom/search_results", :locals => { :query => params[:query] } %><%
+      
+  # Products for category
+  else                  %><%= render :partial => "caboose/blocks/lockerroom/product_index" %><%
+  end 
+
+#  Invalid product
+else   
+  %><p>Invalid product.</p><%
+end 
+
+%>

@@ -1,0 +1,30 @@
+<div class="resume-form-block" id="block_<%= block.id %>">
+	<h3>Submit a Resume</h3>
+	<form id="resume-form" action="/morrow/resumes" method="POST" enctype="multipart/form-data">
+		<input type="file" name="resume_file" accept=".pdf, .doc, .docx" />
+		<input type="hidden" name="block_id" value="<%= block.id %>" />
+		<input type="hidden" name="form_name" value="Resume" />
+		<input type="hidden" name="page_uri" value="<%= page.uri %>" />
+		<br />
+		<br />
+		<input type="submit" class="btn" value="Submit" />
+	</form>
+	<div id="r-message"></div>
+	<% if params[:sent] && params[:sent] == 'true' %>
+		<div id="message">
+			<p class="note success">Thanks for submitting your resume!</p>
+		</div>
+	<% elsif params[:error] && params[:error] == 'true' %>
+		<div id="message">
+			<p class="note error">Sorry, there was an error submitting the form.</p>
+		</div>
+	<% end %>
+</div>
+
+<% content_for :js do %>
+<script>
+	$('#resume-form').submit(function() {
+		$('#r-message').html('<p class="note loading">Uploading resume...</p>');
+	});
+</script>
+<% end %>

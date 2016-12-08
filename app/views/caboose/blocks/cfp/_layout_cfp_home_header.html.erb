@@ -1,0 +1,38 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <img src="<%= asset_path 'cfp/images/vip.png' %>" alt="<%= site.description %>" />
+    </a>
+    <nav class="reveal">
+      <ul class="clearfix">
+        <li class="top-li">
+          <a href="/playoff-premium" title="Playoff Premium">
+            <img src="<%= asset_path 'cfp/images/football.png' %>" alt="Playoff Premium" width="28" class="playoff" />
+            <span class="text">Playoff Premium</span>
+          </a>
+          <% subpages = Caboose::Page.where(:parent_id => 3079, :hide => false).order(:sort_order).all %>
+          <div class="dropdown right">
+            <div class="contain">
+              <ul class="level-2">
+                <% subpages.each do |s| %>
+                  <li class="li-2">
+                    <%== ApplicationHelper.nav_link(s, editing, false) %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li>
+          <a href="http://www.sechospitality.com" target="_blank" title="SEC Hospitality">
+            <img src="<%= asset_path 'cfp/images/sec.png' %>" alt="SEC Hospitality" width="37" class="sec" />
+            <span class="text">SEC Hospitality</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</header>

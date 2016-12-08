@@ -1,0 +1,18 @@
+<%
+bg = block.child_value('banner_image')
+img_url = bg && bg.url && !bg.url.include?("placehold") ? bg.url(:huge) : '//d9hjv462jiw15.cloudfront.net/assets/radiology/images/running.jpg'
+%>
+
+<div class="dexa-header" id="block_<%= block.id %>" style="background-image:url(<%= img_url %>);">
+  <div class="constrain">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/radiology/images/white_logo.png" alt="The Radiology Clinic" width="220" height="53" />
+    </a>
+    <div class="text-wrapper">
+      <h5 class="meta"><%= block.child_value('meta') %></h5>
+      <h3 class="title"><%= block.child_value('title') %></h3>
+      <a href="<%= block.child_value('button_url') %>" class="btn white-outline"><%= block.child_value('button_text') %></a>
+    </div>
+  </div>
+  <div class="fade"></div>
+</div>

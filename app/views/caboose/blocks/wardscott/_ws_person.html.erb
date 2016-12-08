@@ -1,0 +1,56 @@
+<%
+img = block.child_value('photo')
+name = block.child_value('name')
+pn = block.child_value('post_nominals')
+title = block.child_value('title')
+education = block.child_value('education')
+experience = block.child_value('experience')
+pr = block.child_value('professional_registrations')
+pa = block.child_value('professional_affiliations')
+%>
+
+<div class="person-block" id="block_<%= block.id %>">
+	<div class="container clearfix">
+		<% if img && !img.url.include?('placehold') %>
+			<div class="image-holder" style="background-image:url(<%= img.url(:large) %>);"></div>
+		<% else %>
+			<div class="image-holder" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/<%= @site.name %>/images/placeholder.jpg');"></div>
+		<% end %>
+    <div class="text">
+		  <h4 class="name"><%= name %><%= pn.blank? ? "" : ", #{pn}" %></h4>
+		  <h6 class="title"><%= title %></h6>
+		  <% if !education.blank? %>
+        <div class="body">
+        	<h6>Education</h6>
+        	<div class="richtext">
+						<%== education %>
+        	</div>
+        </div>
+      <% end %>
+      <% if !experience.blank? %>
+        <div class="body">
+        	<h6>Experience</h6>
+        	<div class="richtext">
+						<%== experience %>
+        	</div>
+        </div>
+      <% end %>
+      <% if !pr.blank? %>
+        <div class="body">
+        	<h6>Professional Registrations</h6>
+        	<div class="richtext">
+						<%== pr %>
+        	</div>
+        </div>
+      <% end %>
+      <% if !pa.blank? %>
+        <div class="body">
+        	<h6>Professional Affiliations</h6>
+        	<div class="richtext">
+						<%== pa %>
+        	</div>
+        </div>
+      <% end %>
+    </div>
+	</div>
+</div>

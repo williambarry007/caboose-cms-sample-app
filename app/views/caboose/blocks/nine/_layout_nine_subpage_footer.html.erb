@@ -1,0 +1,50 @@
+<div class="footer-wrapper" id="block_<%= block.id %>" style="display:block !important;"> 
+  <section class="footer-grid-container clearfix">
+    <div class="grid-overlay"></div>
+
+    <% page_ids = "(942,943,944,945,946,947)" %>
+    <% pages = Caboose::Page.where("id in #{page_ids}").order(:sort_order).limit(6) %>
+
+    <% pages.each_with_index do |p,i| %>
+      <% next if i == 0 %>
+      <div class="grid-unit <%= i == 0 ? 'current-panel' : '' %>" id="page-<%= p.slug %>">
+        <% b = Caboose::Block.where(:page_id => p.id, :block_type_id => 1382).last %>
+        <% v = Caboose::Block.where(:page_id => p.id, :block_type_id => 1383).last %>
+        <% if v && !v.value.blank? %>
+          <div class="image-bg footer-video"></div>
+          <% content_for :js do %>
+            <script>
+              var footer_video = null;
+              $(document).ready(function() {
+                footer_video = $(".footer-video").vide("<%= v.value %>");
+              });
+            </script>
+          <% end %>
+        <% else %>
+          <% img = (b.media && b.media.image) ? b.media.image.url(:huge) : '' %>
+          <% if img && !img.include?('placehold') %>
+            <div class="image-bg" style="background-image:url(<%= img %>);"></div>
+          <% else %>
+            <div class="image-bg" style="background-color:#000;"></div>
+          <% end %>
+        <% end %>
+        <div class="content">
+          <div class="table">
+            <div class="table-cell">
+              <h2 class="unit-title"><%= p.title %></h2>
+              <h3 class="unit-subtitle"><%= p.menu_title %></h3>
+              <a href="page-<%= p.slug %>" class="btn white-outline"><%= p.page_tags.first.tag %></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+  </section>
+
+  <footer class="main page-footer">
+    <div class="constrain">
+      <%= render 'svg/nine' %>
+    </div>
+  </footer>
+</div>

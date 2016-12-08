@@ -1,0 +1,92 @@
+<% 
+user = controller ? controller.logged_in_user : nil
+post_limit = block.child_value('posts_to_show').blank? ? 1000 : block.child_value('posts_to_show').to_i
+posts = []
+ads = block.children.where(:block_type_id => 1350).all
+ind1 = rand(post_limit)
+ind2 = rand(post_limit)
+ind3 = rand(post_limit)
+pcf = Caboose::PostCustomFieldValue.select(:post_id).where(:key => 'hide_from_home_page', :value => '1').all.map{|p| p.post_id}
+where = pcf.count > 0 ? "id NOT IN (" + pcf.to_s.gsub('[','').gsub(']','') + ")" : ""
+%>
+
+<% if user && user.id != 2 && user.id != 114 %>
+  <% posts = Caboose::Post.where("created_at < ?",DateTime.now).where(where).where(:site_id => site.id, :published => true).order("created_at DESC").limit(post_limit) %>
+<% else %>
+  <% private_posts = Caboose::PostCategory.find(132).posts.all.map{|p| p.id} %>
+  <% private_posts = private_posts.blank? ? 0 : private_posts %>
+  <% posts = Caboose::Post.where("created_at < ?",DateTime.now).where("id NOT IN (?)", private_posts).where(where).where(:site_id => site.id, :published => true).limit(post_limit).order("created_at DESC") %>
+<% end %>
+
+<% if modal %>
+  <% if block.child("posts_to_show") %>
+    <div id="block_<%= block.child('posts_to_show').id %>" style="text-decoration:underline;cursor:pointer;">
+      Posts to Show: <%= post_limit %>
+    </div>
+  <% end %>
+  <p>Ads:</p>
+  <ul>
+    <% ads.each_with_index do |s,i| %>
+      <% name = s.child_value('name') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Ad #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new ad!</a>
+  <% elsif block.post %>
+    <a href='/admin/pages/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new ad!</a>
+  <% end %>
+<% else %>
+
+<div class="news-collage-block" id="block_<%= block.id %>">
+  <% if posts.count > 0 %>
+    <div class="posts-container clearfix">
+      <% posts.each_with_index do |p, index| %>
+        <% img_url = p.image.url(:large) %>
+        <div class="post-unit set">
+          <div class="contain">
+            <a href="<%= p.uri %>" title="<%= p.title %>">
+              <span class="image-holder">
+                <img src="<%= img_url %>" alt="<%= p.title %>">
+              </span>
+              <span class="title"><%= p.title %></span>
+            </a>
+          </div>
+        </div>
+        <% if (ads.count > 0 && index == ind1) %>
+          <%== block.render(ads[0], local_assigns) %>
+        <% end %>
+        <% if (ads.count > 1 && index == ind2) %>
+          <%== block.render(ads[1], local_assigns) %>
+        <% end %>
+        <% if (ads.count > 2 && index == ind3) %>
+          <%== block.render(ads[2], local_assigns) %>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <p>Sorry, there are no posts to show.</p>
+  <% end %>
+</div>
+
+<% content_for :js do %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.0.0/masonry.pkgd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.0/imagesloaded.js"></script>
+  <script>
+    $(document).ready(function() {
+      var $grid = $('.posts-container').masonry({
+        itemSelector: '.post-unit',
+        columnWidth: '.post-unit',
+        percentPosition: true,
+      });
+      $grid.imagesLoaded().progress( function() {
+        $grid.masonry('layout');
+      });
+      $(".post-unit").removeClass("set");
+    });
+  </script>
+<% end %>
+
+<% end %>

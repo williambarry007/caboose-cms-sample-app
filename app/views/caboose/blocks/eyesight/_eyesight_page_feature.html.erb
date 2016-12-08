@@ -1,0 +1,33 @@
+<%
+align = block.child_value('align')
+icon = block.child_value('icon').url(:large)
+photo = block.child_value('photo').url(:huge)
+title = block.child_value('title')
+body = block.child_value('main_text')
+btn_color = block.child_value('button_color')
+btn_text = block.child_value('button_text')
+btn_url = block.child_value('button_url')
+
+#icon = "//d9hjv462jiw15.cloudfront.net/assets/eyesight/images/icon.png"
+#photo = "//d9hjv462jiw15.cloudfront.net/assets/eyesight/images/laptop.jpg"
+%>
+
+<div class="page-feature-block <%= align %>" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="wrapper">
+			<div class="icon">
+				<img src="<%= icon %>" alt="<%= title %>" />
+			</div>
+			<div class="image-unit" style="background-image:url(<%= photo %>);">
+				
+			</div>
+			<div class="text-unit">
+				<h3 class="title"><%= title %></h3>
+				<div class="richtext"><%== body %></div>
+				<% if !btn_url.blank? && !btn_text.blank? %>
+					<a href="<%= btn_url %>" class="btn" style="background-color:<%= btn_color %>;"><%= btn_text %></a>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

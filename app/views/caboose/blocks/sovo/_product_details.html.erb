@@ -1,0 +1,52 @@
+<% p = @product %>
+
+<div class="product-details loading" id="product" data-id="<%= p.id %>">
+  <div class="loading-text">
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/osp/images/icons/loading.gif" width="35" height="35" />
+    <h3>Loading images...</h3>
+  </div>
+  <div class="constrain">
+    <% cat = @product.categories.first %>
+    <% if cat %>
+      <a href="<%= cat.url %>" id="back-button" class="btn" title="<%= cat.name %>"><span class="icon-left-big"></span>Back to <%= cat.name %></a>
+    <% end %>
+    <div id="product-images"></div>
+    <div class="left-text-wrapper">
+      <h1 class="product-title"><%= @product.title %></h1>
+      <div class="reflection"><%= @product.title %></div>
+      <% unless @product.description.nil? or @product.description.empty? %>
+        <div class="box"><%= raw @product.description %></div>
+      <% end %>
+    </div>
+    <section class="product-details-wrapper">
+      <div id="product-price"></div>
+      <% if !@product.caption.blank? %>
+        <div class="caption">
+          <%= @product.caption %>
+        </div>
+      <% end %>
+      <div id="product-options"></div>
+      <% if !@product.seo_title.blank? %>
+        <div class="seo-title">
+          <%= @product.seo_title %>
+        </div>
+      <% end %> 
+      <div id="add-to-cart"></div>
+      <% if !@product.seo_description.blank? %>
+        <div class="seo-message">
+          <%= @product.seo_description %>
+        </div>
+      <% end %>                             
+    </section>
+  </div>
+</div>
+
+<%= content_for :css do %>
+  <%= stylesheet_link_tag 'caboose/product_images' %>
+  <%= stylesheet_link_tag 'caboose/product_options' %>   
+<% end %>
+
+<%= content_for :js do %>
+  <%= javascript_include_tag 'caboose/cart_old' %>
+  <%= javascript_include_tag 'caboose/product' %>
+<% end %>

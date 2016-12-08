@@ -1,0 +1,98 @@
+<%
+name  = block.child_value('name')
+title = block.child_value('title')
+text  = block.child_value('text')
+%>
+
+<% if modal %>
+
+  <% if block.child("name") %>
+    <div id="block_<%= block.child('name').id %>" style="text-decoration:underline;cursor:pointer;">
+      Name: <%= block.child_value('name') %>
+    </div>
+  <% end %>
+  <% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+  <% if block.child("text") %>
+    <div id="block_<%= block.child('text').id %>" style="text-decoration:underline;cursor:pointer;">
+      Text: <%= block.child_value('text') %>
+    </div>
+  <% end %>
+  <% if block.child("circle_color") %>
+    <div id="block_<%= block.child('circle_color').id %>" style="text-decoration:underline;cursor:pointer;">
+      Circle Color: <%= block.child_value('circle_color') %>
+    </div>
+  <% end %>
+
+<% else %>
+
+	<div class='testimonial-container' id="block_<%= block.id %>">
+		<div id="circle-container">
+			<div class="testimonial-circle"></div>
+		</div>
+		<div id="text-container">
+			<p  class="testimonial-name"  ><%=name.upcase%></p>
+			<p   class="testimonial-title" ><%=title.upcase%></p>
+			<div id="divider"></div>
+			<p   class="testimonial-text"  ><%=text%></p>
+		</div>
+	</div>
+<% end %>
+
+<% content_for :css do %>
+	<style>
+		.testimonial-container {
+			margin-top: 10px;
+			margin-bottom: 10px;
+			display: inline-block;
+			height: 220px;
+			width: 100%;
+		}
+		#block_<%= block.id %> > #circle-container {
+			width: 110px;
+			height: 100%;
+			float: left;
+		}
+		#block_<%= block.id %> > #text-container {
+			width: calc(100% - 110px);
+			height: 100%;
+			float: right;
+			padding-left: 30px;
+		}
+		.testimonial-circle {
+				width: 110px;
+				height: 110px;
+				-webkit-border-radius: 55px;
+				-moz-border-radius: 55px;
+				border-radius: 55px;
+				background: #e9696e;
+			}
+		.testimonial-name {
+			text-align: left !important;
+			font-weight: bold;
+			margin-bottom: 16px;
+			font-size: 14px;
+			color: #333333;
+		}
+		.testimonial-title {
+			text-align: left !important;
+			font-style: italic;
+			font-size: 14px;
+			margin-bottom: 16px;
+			color: #262626;
+		}
+		#divider {
+			height: 3px;
+			background: #e9696e;
+			width: 60px;
+			margin-bottom: 16px;
+		}
+		.testimonial-text {
+			text-align: left;
+			color: #878787;
+		}
+	</style>
+<% end %>

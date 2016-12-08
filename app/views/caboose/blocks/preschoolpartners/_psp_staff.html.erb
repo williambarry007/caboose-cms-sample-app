@@ -1,0 +1,20 @@
+<%
+name = block.child_value('name')
+title = block.child_value('title')
+bio = block.child_value('bio')
+photo = block.child_value('photo')
+%>
+
+<div class="staff-block clearfix" id="block_<%= block.id %>">
+	<div class="image-wrapper">
+		<% img_url = (photo.url && !photo.url.include?("placehold")) ? photo.url(:large) : false %>
+		<% if img_url %>
+			<img src="<%= img_url %>" alt="<%= name %>">
+		<% end %>
+	</div>
+	<div class="text-wrapper">
+		<h4 class="name"><%= name %></h4>
+		<h5 class="title"><%= title %></h5>
+		<div class="bio richtext"><%== bio %></div>
+	</div>
+</div>

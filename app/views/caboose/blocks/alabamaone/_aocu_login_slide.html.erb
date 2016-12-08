@@ -1,0 +1,41 @@
+<%
+  bgimg = block.child_value('background_image')
+  bg_image = (bgimg.blank? || bgimg.url.include?('placehold')) ? "" : bgimg.url(:huge)
+  btn_url = block.child_value('button_link').blank? ? "" : block.child_value('button_link')
+  btn_text = block.child_value('button_text').blank? ? "" : block.child_value('button_text')
+  btn_color = block.child_value('button_color').blank? ? "Solid Color" : block.child_value('button_color')
+%>
+
+<div class="slide clearfix" id="slide-<%= block.id %>">
+  <div class="slider-slide clearfix">
+    <div class="slider-overlay"></div>
+    <div class="slide-content">
+      <div class="content-holder">
+        <span class="title"></span>
+        <div class="richtext slide-title"><%== block.child_value('title') %></div>
+        <div class="richtext body"><%== block.child_value('body') %></div>
+        <a href="<%= btn_url %>" class="green btn"><%= btn_text %></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :css do %>
+  <style>
+    #slide-<%= block.id %> .slider-slide {
+     background-image: url('<%= bg_image %>');
+     <% if !btn_url.blank? && !editing %>cursor:pointer;<% end %>
+    }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <% if !btn_url.blank? && !editing %>
+    <script>
+      $('#slide-<%= block.id %>').click(function(e) {
+        e.preventDefault();
+        window.location = '<%= btn_url %>';
+      });
+    </script>
+  <% end %>
+<% end %>

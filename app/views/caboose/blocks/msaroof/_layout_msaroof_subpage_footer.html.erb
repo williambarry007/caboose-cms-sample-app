@@ -1,0 +1,23 @@
+<%
+hf = Caboose::Block.where(:block_type_id => 3364).first
+%>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="flexbox">
+      <div class="contact">
+        <div class="richtext"><%== hf.child_value('contact_text') %></div>
+      </div>
+      <div class="about">
+        <div class="richtext"><%== hf.child_value('about_text') %></div>
+        <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+      </div>
+    </div>
+    <section class="nine">
+      <span>designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

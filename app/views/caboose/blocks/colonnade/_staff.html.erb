@@ -1,0 +1,24 @@
+<%
+name = block.child_value('name')
+title = block.child_value('title')
+bio = block.child_value('bio')
+photo = block.child_value('photo')
+%>
+
+<div class="person" id="block_<%= block.id %>">
+	<div class="contain">
+		<div class="image-holder" style="background-image:url(<%= photo.url(:large) %>);"></div>
+		<div class="text-wrapper">
+			<h3 class="name"><%= name %></h3>
+			<h4 class="title"><%= title %></h4>
+			<div class="bio richtext">
+				<%== bio %>
+				<% if !block.child_value('email_address').blank? %>
+					<p class="email">
+						<a href="mailto:<%= block.child_value('email_address') %>"><%= block.child_value('email_address') %></a>
+					</p>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

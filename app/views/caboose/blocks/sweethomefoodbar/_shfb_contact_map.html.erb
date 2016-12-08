@@ -1,0 +1,102 @@
+<div class="contact-map constrain" id="block_<%= block.id %>">
+
+<div class="grid-row">
+  <div class="unit1of3">
+    <div class="location">
+      <h4 class="sub-title">Location</h4>
+      <div class="content">
+        <%= raw block.child_value("location") %>
+      </div>
+    </div>
+    <div class="phone">
+      <h4 class="sub-title">Phone</h4>
+      <div class="content">
+        <%= block.child_value("phone") %>
+      </div>
+    </div>
+    <div class="email">
+      <h4 class="sub-title">Email</h4>
+      <div class="content">
+        <a href="mailto:<%= block.child_value("email_address") %>"><%= block.child_value("email_address") %></a>
+      </div>
+    </div>
+    <div class="social">
+      <h4 class="sub-title">Eat Well, be SOCIAL</h4>
+      <div class="content">
+        <a class="st-icon-facebook st-icon-circle" href="#" target="_blank"></a>
+        <a class="st-icon-twitter st-icon-circle" href="#" target="_blank"></a>
+        <a class="st-icon-instagram st-icon-circle" href="#" target="_blank"></a>
+      </div>
+    </div>
+  </div>
+  <div class="unit2of3">
+    <div id='contact_map' class='map' style="height: 400px;"></div>
+  </div>
+</div>
+
+
+
+
+<% 
+  id = "contact_map"
+  lat = "33.210596"
+  lng = "-87.566408"
+  zoom = "18"
+  info = "Sweet Home Food Bar"
+  height = "400"
+%>
+
+
+
+<% content_for :js do %>
+  <script>
+    var mapCanvasId, mapCenterLat, mapCenterLng, mapDefaultZoom;
+    var map_style = [{"featureType":"water","stylers":[{"visibility":"on"},{"color":"#acbcc9"}]},{"featureType":"landscape","stylers":[{"color":"#f2e5d4"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#c5c6c6"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#e4d7c6"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#fbfaf7"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#c5dac6"}]},{"featureType":"administrative","stylers":[{"visibility":"on"},{"lightness":33}]},{"featureType":"road"},{"featureType":"poi.park","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":20}]},{},{"featureType":"road","stylers":[{"lightness":20}]}];
+
+    mapCanvasId = "<%= id %>";
+    mapCenterLat = <%= lat %>;
+    mapCenterLng = <%= lng %>;
+    mapDefaultZoom = <%= zoom %>;
+    mapInfoWindow = "<p style='padding:8px;'><%= info %></p>";
+
+    function initialize() {
+      console.log("initialize"); 
+      var mapOptions = {
+        center: new google.maps.LatLng(mapCenterLat, mapCenterLng),
+        scrollwheel: false,
+        zoom: mapDefaultZoom,
+        styles: map_style
+      };
+      var map = new google.maps.Map(document.getElementById(mapCanvasId), mapOptions);
+
+      var marker = new google.maps.Marker({
+        position: {lat: mapCenterLat, lng: mapCenterLng},
+        map: map
+      });
+
+      if(mapInfoWindow != "") {
+        var info = new google.maps.InfoWindow({
+          content: mapInfoWindow
+        });
+
+        info.open(map, marker);
+
+        google.maps.event.addListener(marker, 'click', function() {
+          info.open(map,marker);
+        });
+      }
+    }
+
+    function loadScript() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = "https://maps.googleapis.com/maps/api/js?v=3key=AIzaSyDENedoxisMHbY-o895uaR7xp_bPFHo-24&sensor=false&callback=initialize";
+      document.body.appendChild(script);
+    }
+
+    window.onload = loadScript;
+
+  </script>
+<% end %>
+
+</div>

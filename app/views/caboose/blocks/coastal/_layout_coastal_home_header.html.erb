@@ -1,0 +1,23 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="left">
+      <a class="logo-link" href="/" title="Coastal Alabama Living">
+        <h1>Coastal Alabama Living</h1>
+      </a>
+      <p class="phone">Call Me Today <%= block.child_value('phone_number') %></p>
+    </div>
+    <div class="right">
+      <nav class="reveal">
+        <ul>
+          <% Caboose::Page.where(:parent_id => 1380, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+          <% end %>
+        </ul>
+      </nav>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+      <%== ApplicationHelper.social_links(site.id, "icon", "colored") %>
+    </div>
+  </div>
+</header>

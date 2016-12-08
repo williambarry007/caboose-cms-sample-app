@@ -1,0 +1,98 @@
+<%
+video = block.child_value('video_path')
+#video = '/assets/newfield/images/stocks2'
+bg_img = block.child_value('background_image')
+big_text = block.child_value('big_text')
+small_text = block.child_value('small_text')
+button_text = block.child_value('button_text')
+button_url = block.child_value('button_url')
+%>
+
+<header class="main home" id="block_<%= block.id %>" style="background-image:url(<%= bg_img.url(:huge) %>);">
+  <div class="overlay"></div>
+  <div class="top">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <h1><%= site.description %></h1>
+      </a>
+      <nav class="reveal">
+        <ul>
+          <% pages = Caboose::Page.where(:parent_id => 2081, :hide => false).order(:sort_order).all %>
+          <% pages.each_with_index do |p,i| %>
+            <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+            <li class="top-li">
+              <% if subpages.count > 0 %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+                <div class="dropdown <%= (pages.count - i < 3) ? 'right' : '' %>">
+                  <div class="contain">
+                    <ul class="level-2">
+                      <% subpages.each do |s| %>
+                        <li class="li-2">
+                          <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                          <% if grandchildren.count > 0 %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                            <ul class="level-3">
+                              <% grandchildren.each do |g| %>
+                                <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                              <% end %>
+                            </ul>
+                          <% else %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% else %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </div>
+  <div class="center constrain">
+    <div class="table">
+      <div class="table-cell">
+        <div class="m-right">
+          <div class="text-wrapper">
+            <div class="heading"><%== big_text %></div>
+            <div class="body">​<%== small_text %></div>
+          </div>
+        </div>
+        <div class="m-left">
+          <div class="form-holder">
+            <form action="/login" method="post">
+              <h4 class="title">Newsletter Login</h4>
+              <div class="field">
+                <label for="username">Username:</label>
+                <input type="text" name="username" />
+              </div>
+              <div class="field">
+                <label for="password">Password:</label>
+                <input type="password" name="password" />
+              </div>
+              <input type="submit" value="Login" class="alternate btn" />
+              <h6 class="not">Not a member yet? Sign up now.</h6>
+              <a href="/sign-up" class="alternate btn">Sign Up</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if !button_text.blank? %>
+    <div class="button-holder clearfix"><a href="<%= button_url %>" class="alternate btn"><%= button_text %></a></div>
+  <% end %>
+</header>
+
+<% content_for :js do %>
+<script>
+// $("header.main.home").vide('<%= video %>');
+</script>
+<% end %>

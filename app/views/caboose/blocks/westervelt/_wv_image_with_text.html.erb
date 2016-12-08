@@ -1,0 +1,13 @@
+<section class="image-with-text" id="block_<%= block.id %>">
+  <div class="constrain">
+    <h2 class="section-title"><%= block.child_value('section_title') %></h2>
+    <div class="container">
+      <div class="image">
+        <img src="<%= block.child_value('image').url(:large) %>">
+      </div>
+      <div class="text">        
+        <%== block.render('thetext', local_assigns) %>
+      </div>
+    </div>
+  </div>
+</section>

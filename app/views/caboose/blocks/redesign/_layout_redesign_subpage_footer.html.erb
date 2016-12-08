@@ -1,0 +1,23 @@
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <img src="<%= asset_path 'redesign/images/white_logo2.png' %>" alt="re(design)" class="logo" width="130" height="50" />
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+    <% if false %>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% pages = Caboose::Page.index_page(site.id) ? Caboose::Page.index_page(site.id).children.where(:hide => false).order(:sort_order).all : [] %>
+        <% pages.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <% end %>
+    <section class="nine">
+      <span>designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

@@ -1,0 +1,78 @@
+<%
+img1 = block.child_value('photo_1').url(:large)
+img2 = block.child_value('photo_2').url(:large)
+img3 = block.child_value('photo_3').url(:large)
+img4 = block.child_value('photo_4').url(:large)
+img5 = block.child_value('photo_5').url(:large)
+%>
+
+<div class="newsletter-gallery" id="block_<%= block.id %>">
+	<div class="grid-row">
+		<div class="unit1of4" style="background-image:url('<%= img1 %>');"></div>
+		<div class="unit1of2 form-unit">
+			<h5 class="newsletter-title"><%= block.child_value('newsletter_title') %></h5>
+			<%== ApplicationHelper.social_links(site.id, "icon", "colored") %>
+			<form id="newsletter-form">
+				<input type="hidden" name="block_id" value="<%= block.id %>" />
+				<input type="hidden" name="form_name" value="Newsletter Form" />
+				<input type="email" name="email" placeholder="Your email address" />
+				<a id="submit-newsletter-form" class="btn">Subscribe</a>
+			</form>
+			<div id="message"></div>
+		</div>
+		<div class="unit1of4" style="background-image:url('<%= img2 %>');"></div>
+	</div>
+	<div class="grid-row">
+		<div class="unit1of4" style="background-image:url('<%= img3 %>');"></div>
+		<div class="unit1of2 gallery-unit" style="background-image:url('<%= img5 %>');">
+			<div class="overlay"></div>
+			<div class="content">
+				<h5 class="gallery-title"><%= block.child_value('gallery_title') %></h5>
+				<% if !block.child_value('button_url').blank? %>
+					<a href="<%= block.child_value('button_url') %>" class="btn white-outline"><%= block.child_value('button_text') %></a>
+				<% end %>
+			</div>
+		</div>
+		<div class="unit1of4" style="background-image:url('<%= img4 %>');"></div>
+	</div>
+	<% content_for :js do %>
+		<script>
+			$(document).ready(function() {
+				function submit_newsletter(form_id) {
+				  var mess = $("#" + form_id).next("#message");
+				  mess.html("<p class='note loading'>Submitting form... </p>");
+				  var form = $("#" + form_id); 
+				  form.find("input, textarea").each(function() {
+				    if ( $(this).attr("placeholder") == $(this).val() ) {
+				      $(this).val("");
+				    }
+				  });
+				  $.ajax({
+				    url: '/mailchimp/subscribe',
+				    type: 'post',
+				    data: form.serialize(),
+				    success: function(resp) {
+				      if(resp.error) {
+				        form.find("input, textarea").each(function() {
+				          if ( $(this).val() == "" ) {
+				            $(this).val( $(this).attr("placeholder") );
+				          }
+				        });
+				        mess.html("<p class='note error'>" + resp.error + "</p>");
+				      } 
+				      if(resp.success) {
+				        form.slideUp(); 
+				        mess.html("<p class='note success'>" + resp.success + "</p>");
+				      }
+				    }
+				  });
+				}
+				$("#submit-newsletter-form").click(function(event) {
+					event.preventDefault();
+					submit_newsletter("newsletter-form"); 
+					return false;
+				});
+			});
+		</script>
+	<% end %>
+</div>

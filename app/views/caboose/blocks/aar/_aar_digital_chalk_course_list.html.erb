@@ -1,0 +1,51 @@
+<div class="digital-chalk" id="block_<%= block.id %>">
+	<% courses = DigitalChalkCourse.all_courses %>
+	<% courses.each do |c| %>
+		<%
+		rb = c['registrationBeginDate']
+		re = c['registrationEndDate']
+		db = c['beginDate']
+		de = c['endDate']
+		%>
+		<div class="course-block digital">
+			<% img_title = c['title'].parameterize("_") %>
+			<div class="image-holder" style="background-image:url(http://alabamarealtors.s3.amazonaws.com/uploads/<%= img_title %>.jpg);">
+				
+			</div>
+	    <div class="text">
+	      <h3 class="title"><%= c['title'] %></h3>
+	      <% if rb && re %>
+	      	<% if rb.to_date.month == re.to_date.month %>
+	      		<p class="meta">Registration: <%= rb.to_date.strftime("%B %-d") %> - <%= re.to_date.strftime("%-d, %Y") %></p>
+	      	<% else %>
+						<% if db.to_date.year == de.to_date.year %>
+							<p class="meta">Registration: <%= rb.to_date.strftime("%B %-d") %> - <%= re.to_date.strftime("%B %-d, %Y") %></p>
+						<% else %>
+							<p class="meta">Registration: <%= rb.to_date.strftime("%B %-d, %Y") %> - <%= re.to_date.strftime("%B %-d, %Y") %></p>
+						<% end %>
+	      	<% end %>
+	      <% else %>
+	      		<p class="meta">Registration: Open</p>
+	      <% end %>
+	      <% if db && de %>
+	      	<% if db.to_date.month == de.to_date.month %>
+	      		<p class="meta">Dates: <%= db.to_date.strftime("%B %-d") %> - <%= de.to_date.strftime("%-d, %Y") %></p>
+	      	<% else %>
+	      		<% if db.to_date.year == de.to_date.year %>
+							<p class="meta">Dates: <%= db.to_date.strftime("%B %-d") %> - <%= de.to_date.strftime("%B %-d, %Y") %></p>
+						<% else %>
+							<p class="meta">Dates: <%= db.to_date.strftime("%B %-d, %Y") %> - <%= de.to_date.strftime("%B %-d, %Y") %></p>
+						<% end %>
+	      	<% end %>
+	      <% else %>
+	      	<p class="meta">Dates: Ongoing</p>
+	      <% end %>
+	      <p class="meta">Cost: <%= number_to_currency(c['price']) %></p>
+	      <div class="description"><%== c['catalogDescription'] %></div>
+	      <div class="buttons">
+	        <a href="http://aar.digitalchalk.com" target="_blank" title="Register for <%= c['title'] %>" class="btn">Register Now</a>
+	      </div>
+	    </div>
+	  </div>
+	<% end %>
+</div>

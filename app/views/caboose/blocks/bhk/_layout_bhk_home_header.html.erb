@@ -1,0 +1,24 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <a class="logo-link" href="/" title="Home">
+      <h1 class="title">BHK</h1>
+      <div class="line"></div>
+      <h2 class="subtitle line-1">Investment Advisors, LLC</h2>
+      <h2 class="subtitle line-2">BHK Securities, LLC</h2>
+    </a>
+    <nav class="reveal">
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 951, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <div class="address reveal">
+      <a href="https://fcc.fccaccessonline.com/" target="_blank" class="btn" title="Account Login">Account Login</a>
+    </div>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</header>

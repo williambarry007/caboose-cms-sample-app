@@ -1,0 +1,62 @@
+<header class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain flexbox">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <img src="<%= site.logo.url(:large) %>" alt="<%= site.description %>" width="75" height="75" />
+      <span class="text">
+        <h1 class="title">SEC Championship<br />Hospitality</h1>
+        <h5 class="subtitle">Provided by The Colonnade Group</h5>
+      </span>
+    </a>
+    <nav class="reveal">
+      <ul class="flexbox">
+        <% pages = Caboose::Page.index_page(site.id) ? Caboose::Page.index_page(site.id).children.where(:hide => false).order(:sort_order).all : [] %>
+        <% pages.each_with_index do |p,i| %>
+          <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+          <li class="top-li">
+            <% if subpages.count > 0 %>
+              <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <div class="dropdown <%= (pages.count - i < 3) ? 'right' : '' %>">
+                <div class="contain">
+                  <ul class="level-2">
+                    <% subpages.each do |s| %>
+                      <li class="li-2">
+                        <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                        <% if grandchildren.count > 0 %>
+                          <%== ApplicationHelper.nav_link(s, editing, false) %>
+                          <ul class="level-3">
+                            <% grandchildren.each do |g| %>
+                              <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                            <% end %>
+                          </ul>
+                        <% else %>
+                          <%== ApplicationHelper.nav_link(s, editing, false) %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            <% else %>
+              <%== ApplicationHelper.nav_link(p, editing, false) %>
+            <% end %>
+          </li>
+        <% end %>
+        <% if !logged_in_user || logged_in_user.username == 'elo' || Caboose::VariantLimit.where(:user_id => logged_in_user.id).count > 0 %>
+          <li><a href="/renew">Renew</a></li>
+        <% end %>
+        <% if @invoice && @invoice.line_items.count > 0 %>
+          <li><a href="/cart">Cart</a></li>
+        <% end %>
+        <% if !logged_in_user || logged_in_user.username == 'elo' %>
+
+        <% else %>
+          <li><a href="/my-account" title="My Account">My Account</a></li>
+          <li><a href="/logout" title="Logout">Logout</a></li>
+        <% end %>
+      </ul>
+    </nav>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</header>

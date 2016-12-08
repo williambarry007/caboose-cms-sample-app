@@ -1,0 +1,98 @@
+<%
+  sc   = Caboose::SocialConfig.where(:site_id => site.id).last
+  fbid = sc ? sc.facebook_page_id : ''
+  fb   = FacebookCache.where(:site_id => site.id).order("date_created DESC").take(3)
+  fbp  = FacebookCache.where(:site_id => site.id, :post_type => 'photo').order("date_created DESC").first
+%>
+
+<% Caboose::log(fb) %>
+
+<div class="bradberry-social-grid-container" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="flexbox">
+      <div class='flex-grid-unit' id="unit1"></div>
+      <div class='flex-grid-unit'>
+        <div class="flexbox" id="unit2-container">
+          <div class='flex-grid-unit' id="unit2">
+            <% p = fb[0] %>
+            <% if p %>
+              <%
+                message = p.message.nil? ? "" : p.message.truncate(100)
+                story = p.story.nil? ? "" : p.story.truncate(100)
+                description = p.description.nil? ? "" : p.description.truncate(100)
+                link = p.link
+              %>
+              <div class="table"><div class="table-cell">
+                <div class="post facebook" data-href="<%= p.post_url %>">
+                  <div class="contain">
+                    <!-- <% if !story.blank? %><p class="post-story"><%== story %></p><% end %> -->
+                    <% if !link.blank? %><a href="<%= link %>" target="_blank"><% end %>
+                      <% if !message.blank? %><p class="post-body"><%== message %></p><% end %>
+                    <% if !link.blank? %></a><% end %>
+                  </div>
+                </div>
+              </div></div>
+            <% end %>
+          </div>
+          <div class='flex-grid-unit' id="unit3">
+            <% p = fb[1] %>
+            <% if p %>
+              <%
+                message = p.message.nil? ? "" : p.message.truncate(100)
+                story = p.story.nil? ? "" : p.story.truncate(100)
+                description = p.description.nil? ? "" : p.description.truncate(100)
+                link = p.link
+              %>
+              <div class="table"><div class="table-cell">
+                <div class="post facebook" data-href="<%= p.post_url %>">
+                  <div class="contain">
+                    <!-- <% if !story.blank? %><p class="post-story"><%== story %></p><% end %> -->
+                    <% if !link.blank? %><a href="<%= link %>" target="_blank"><% end %>
+                      <% if !message.blank? %><p class="post-body"><%== message %></p><% end %>
+                    <% if !link.blank? %></a><% end %>
+                  </div>
+                </div>
+              </div></div>
+            <% end %>
+          </div>
+        </div>
+        <div class="flexbox" id="unit4-container">
+          <div class='flex-grid-unit' id="unit4">
+            <% p = fb[2] %>
+            <% if p %>
+              <%
+                message = p.message.nil? ? "" : p.message.truncate(600)
+                story = p.story.nil? ? "" : p.story.truncate(600)
+                description = p.description.nil? ? "" : p.description.truncate(300)
+                link = p.link
+              %>
+              <div class="table"><div class="table-cell">
+                <div class="post facebook" data-href="<%= p.post_url %>">
+                  <div class="contain">
+                    <!-- <% if !story.blank? %><p class="post-story"><%== story %></p><% end %> -->
+                    <% if !link.blank? %><a href="<%= link %>" target="_blank"><% end %>
+                      <% if !message.blank? %><p class="post-body"><%== message %></p><% end %>
+                    <% if !link.blank? %></a><% end %>
+                  </div>
+                </div>
+              </div></div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :css do %>
+  <style>
+  #unit1 {
+    background-image: url("<%= fbp.picture %>");
+  }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+  </script>
+<% end %>

@@ -1,0 +1,42 @@
+<%
+name = block.child_value('name')
+title = block.child_value('title')
+email = block.child_value('email')
+phone = block.child_value('phone')
+url = block.child_value('profile_url')
+pic = block.child_value('picture')
+%>
+<% if name && name.strip.length > 0 %>
+<div class="gallery-item l-media staff" id="block_<%= block.id %>">
+  <figure class="gallery-img media-aside">
+    <% if !pic.url(:tiny).include? 'placehold' %>
+        <% if !url.blank? %>
+        <a href="<%= url %>"><img src="<%= pic.url(:tiny) %>" alt="<%= name %>" /></a>
+        <% else %>
+        <img src="<%= pic.url(:tiny) %>" alt="<%= name %>" />
+        <% end %>
+    <% else %>
+       <% if !url.blank? %>
+        <a href="<%= url %>"><img src="http://d2twyuu72t1mm8.cloudfront.net/uploads/651_tiny.png?1396452950" alt="<%= name %>" /></a>
+        <% else %>
+        <img src="http://d2twyuu72t1mm8.cloudfront.net/uploads/651_tiny.png?1396452950" alt="<%= name %>" />
+        <% end %>
+    <% end %>
+  </figure>
+  <div class="gallery-info media-body">
+    <h5 class="gallery-header"><%= name %></h5>
+    <ul>
+      <li style="font-size: 12px"><%= title %></li>
+      <% if !email.blank? %>
+             <li><a href="mailto:<%= email %>"><%= email %></a></li>
+      <% end %>
+      <% if !url.blank? %>
+             <li><a href="<%= url %>">Profile &rarr;</a></li>
+      <% end %>
+      <% if !phone.blank? %>
+             <li><%= phone %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<% end %>

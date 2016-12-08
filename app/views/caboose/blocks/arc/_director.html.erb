@@ -1,0 +1,19 @@
+<div class="director" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="grid-row">
+			<div class="unit1of4">
+				<% if block.child_value('photo') && !block.child_value('photo').url.include?('placehold') %>
+					<img src="<%= block.child_value('photo').url(:large) %>" alt="<%= block.child_value('name') %>" />
+				<% end %>
+			</div>
+			<div class="unit3of4">
+				<div class="top">
+					<h5 class="name"><%= block.child_value('name') %><%= block.child_value('arc_title').blank? ? "" : ", " %><span class="arc-title"><%= block.child_value('arc_title') %></span></h5>
+					<% if !block.child_value('job_title').blank? %>
+						<h6 class="job-title"><%= block.child_value('job_title') %></h6>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

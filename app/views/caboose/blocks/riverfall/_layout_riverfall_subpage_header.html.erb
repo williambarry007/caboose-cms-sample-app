@@ -1,0 +1,67 @@
+<header class="main subpage" id="block_<%= block.id %>">
+  <div class="top">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/riverfall/images/riverfall.png" alt="<%= site.description %>" width="140" height="62" />
+      </a>
+      <div class="right-wrapper">
+        <form action="/search" method="get" style="float:right;margin-right:0;">
+          <input type="text" placeholder="Search" name="q" />
+          <a href="#" id="submit-search" class="icon-search"></a>
+        </form>
+    <!--     <a href="#" id="show-virtual-login" class="btn show-virtual-login">
+          <span>Virtual Branch Login</span>
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/riverfall/images/lock.png" width="18" height="20" />
+        </a> -->
+        <nav class="small" style="clear:right;">
+          <ul>
+            <li><a href="/" title="Home">Home</a></li>
+            <li><a href="/rates" title="Rates">Rates</a></li>
+            <li><a href="/contact-us" title="Contact Us">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </div>
+  <div class="bottom">
+    <nav class="reveal">
+      <ul>
+        <% pages = Caboose::Page.where(:parent_id => 2979, :hide => false).order(:sort_order).all %>
+        <% pages.each_with_index do |p,i| %>
+          <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+          <li class="top-li">
+            <% if subpages.count > 0 %>
+              <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <div class="dropdown <%= (pages.count - i < 3) ? 'right' : '' %>">
+                <div class="contain">
+                  <ul class="level-2">
+                    <% subpages.each do |s| %>
+                      <li class="li-2">
+                        <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                        <% if grandchildren.count > 0 %>
+                          <%== ApplicationHelper.nav_link(s, editing, false) %>
+                          <ul class="level-3">
+                            <% grandchildren.each do |g| %>
+                              <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                            <% end %>
+                          </ul>
+                        <% else %>
+                          <%== ApplicationHelper.nav_link(s, editing, false) %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            <% else %>
+              <%== ApplicationHelper.nav_link(p, editing, false) %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+  </div>
+</header>

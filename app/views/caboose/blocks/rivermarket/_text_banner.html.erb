@@ -1,0 +1,33 @@
+<%
+  classes = []
+  classes << block.child_value("size")
+  classes << block.child_value("text_size")
+  classes << block.child_value("text_align")
+  if block.child_value("overlay") == 'black'
+    classes << "overlay"
+  end
+  img = ""
+  if block.child_value('background_image')
+    if !block.child_value('background_image').url.include?('placehold')
+      img = block.child_value('background_image').url(:original)
+    end
+  end
+  classes = classes.join(" ")
+%>
+
+<div id="block_<%= block.id %>">
+  <div class="text-banner <%= classes %>" style="background-image:url('<%= img %>');">
+    <div class="constrain">
+      <div class="content">
+        <% if modal %>
+          <% child_blocks = block.children.all %>
+        <% else %>
+          <% child_blocks = block.children.where("name is null or (name != ? AND name != ? AND name != ? AND name != ? AND name != ?)", "size", "text_size", "text_align", "overlay", "background_image").all %>
+        <% end %>
+        <% if child_blocks.count > 0 %>
+          <% child_blocks.each do |b| %><%= raw block.render(b, local_assigns) %><% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

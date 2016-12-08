@@ -1,0 +1,153 @@
+<div class="bill-form constrain" id="block_<%= block.id %>">
+
+	<form method="POST" action="https://www.merchante-solutions.com/jsp/tpg/secure_checkout.jsp" 
+	                    onsubmit="return doSubmit(this)">
+		<input type="hidden" name="profile_id" value="01001200900000000002">
+		<input type="hidden" name="transaction_amount" value="">
+		<input type="hidden" name="css_url" value="https://cabooseit.s3.amazonaws.com/assets/radiology/css/radiology.css">
+		<input type="hidden" name="cancel_url" value="https://www.tuscaloosaradiology.com/">
+		<input type="hidden" name="return_url" value="https://www.tuscaloosaradiology.com/">
+		<input type="hidden" name="logo_url" value="https://d9hjv462jiw15.cloudfront.net/assets/radiology/images/main_logo.png">
+		<input type="hidden" name="footer_url" value="https://d9hjv462jiw15.cloudfront.net/assets/radiology/images/main_logo.png">
+	
+		<section>
+			<h4 class="section-title">Patient Information</h4>
+			<div class="field clearfix">
+				<label class="req" for="invoice_number">Patient Account #</label>
+				<input type="text" name="invoice_number" maxlength="21" />
+			</div>
+			<div class="field clearfix">
+				<label class="req" for="patient_name">Patient Name</label>
+				<input type="text" name="patient_name" maxlength="40" />
+			</div>
+			<div class="field clearfix">
+				<label class="req" for="echo_phonenumber">Contact Phone</label>
+				<input type="text" name="echo_phonenumber" maxlength="40" />
+			</div>
+		</section>
+		<section>
+			<h4 class="section-title">Amount</h4>
+			<div class="field clearfix">
+				<label class="req" for="amount">Amount</label>
+				<input type="text" name="amount" value="" id="amount" />
+			</div>
+		</section>
+		<section>
+			<h4 class="section-title">Billing Information</h4>
+<!-- 			<div class="field clearfix">
+				<label for="cc_type">Card Type</label>
+				<select name="cc_type" size="1">
+		      <option value="">-Select-</option>
+		      <option value="VISA">VISA</option>
+		      <option value="MASTERCARD">MASTERCARD</option>
+		      <option value="DISCOVER">DISCOVER</option>
+		      <option value="AMEX">AMEX</option>
+		    </select>
+			</div>
+			<div class="field clearfix">
+				<label for="card_number">Card Number</label>
+				<input type="text" name="card_number" maxlength="16" />
+			</div>
+			<div class="field clearfix">
+				<label for="cc_exp_date">Card Expiration Date</label>
+				<select name="cc_exp_date.month" size="1" class="small">
+					<option value="">--</option>
+					<% 1.upto(12) do |i| %>
+						<option value="<%= i - 1 %>"><%= sprintf('%02d', i) %></option>
+					<% end %>
+		  	</select>
+		  	<select name="cc_exp_date.year" size="1" class="small">
+					<option value="">----</option>
+					<% curr = Time.now.year %>
+					<% curr.upto(curr + 10) do |y| %>
+						<option value="<%= y %>"><%= y %></option>
+					<% end %>
+		  	</select>
+			</div>
+			<div class="field clearfix">
+				<label class="req" for="cvv2">CVV2 (on back of card)</label>
+				<input type="text" name="cvv2" size="5" maxlength="4">
+			</div> -->
+			<div class="field clearfix">
+				<label class="req" for="cardholder_first_name">Cardholder First Name</label>
+				<input type="text" name="cardholder_first_name" size="30" maxlength="40" />
+			</div>
+			<div class="field clearfix">
+				<label class="req" for="cardholder_last_name">Cardholder Last Name</label>
+				<input type="text" name="cardholder_last_name" size="30" maxlength="40" />
+			</div>
+			<div class="field clearfix">
+				<label class="req" for="cardholder_street_address">Billing Address</label>
+				<input type="text" name="cardholder_street_address" size="30" maxlength="40" />
+			</div>
+			<div class="field clearfix">
+				<label for="cardholder_city">City</label>
+				<input type="text" name="cardholder_city" size="30" maxlength="40" />
+			</div>
+			<div class="field clearfix">
+				<label for="cardholder_state">State</label>
+				<input type="text" name="cardholder_state" size="30" maxlength="40" />
+			</div>
+			<div class="field clearfix">
+				<label class="req" for="cardholder_zip">Zip</label>
+				<input type="text" name="cardholder_zip" size="30" maxlength="40" />
+			</div>
+			<div class="field clearfix">
+				<label class="req" for="cardholder_email">Email</label>
+				<input type="text" name="cardholder_email" size="30" maxlength="40" />
+			</div>
+		</section>
+		<input type="submit" class="btn" value="Continue" name="subbut">
+	</form>
+	<div id="error"></div>
+</div>
+
+<% content_for :js do %>
+<script type="text/javascript">
+function doSubmit(thisform)
+{
+	var subbut = $("input[name='subbut']");
+	var returnhere1 = $("input[name='subbut']").addClass("disabled");
+	$("#error").html("");
+  with(thisform) { 
+    var error = "";
+    var amtsel = false;
+    if(invoice_number.value == "" || invoice_number.value == null)
+      error = error + "Please fill in the Patient Account # field.<br /> ";
+    if(patient_name.value == "" || patient_name.value == null)
+      error = error + "Please fill in the Patient Name field.<br /> ";
+    if(echo_phonenumber.value == "" || echo_phonenumber.value == null)
+      error = error + "Please fill in the Contact Phone field.<br /> ";
+    if(isNaN(amount.value) || amount.value == "" || amount.value == null)
+      error = error + "Invalid dollar amount.<br /> ";
+    if(cardholder_first_name.value == "" || cardholder_first_name.value == null)
+      error = error + "Please fill in the Cardholder First Name field.<br /> ";
+    if(cardholder_last_name.value == "" || cardholder_last_name.value == null)
+      error = error + "Please fill in the Cardholder Last Name field.<br /> ";
+   	if(cardholder_street_address.value == "" || cardholder_street_address.value == null)
+      error = error + "Please fill in the Billing Address field.<br /> ";
+    if(cardholder_zip.value == "" || cardholder_zip.value == null)
+      error = error + "Please fill in the Zip field.<br /> ";
+    if(cardholder_email.value == "" || cardholder_email.value == null)
+      error = error + "Please fill in the Email field.<br /> ";
+		transaction_amount.value = amount.value;
+    if(error != "") {
+      $("#error").html("<p class='note error'>" + error + "</p>");
+      var returnhere = $("input[name='subbut']").removeClass("disabled");
+      return false;
+    }
+    else {
+    	$("#error").html("");
+ //   	subbut.addClass("disabled");
+      subbut.disabled = true;
+      return true;
+    }
+  }
+} 
+
+function roundNumber(num, dec) {
+  var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+  return result;
+} 
+</script>
+<% end %>

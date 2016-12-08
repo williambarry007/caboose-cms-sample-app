@@ -1,0 +1,52 @@
+<% 
+hf = Caboose::Block.where(:block_type_id => 2877).last
+sc = Caboose::SocialConfig.where(:site_id => site.id).last
+%>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of4 left">
+        <h4 class="unit-title">Contact</h4>
+        <div class="contact richtext"><%== hf.child_value('contact_text') %><br /><a href="/contact" title="Contact Us" class="contact-link">Contact Us</a></div>
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/colcth/images/colonnade.png" alt="Colonnade Group" />
+      </div>
+      <div class="unit1of2 middle">
+        <h4 class="unit-title">Twitter</h4>
+        <% tweets = TwitterCache.where(:site_id => site.id).order("created_at DESC").limit(2) %>
+        <% if tweets && tweets.count > 0 %>
+          <ul class="tweets">
+            <% tweets.each do |t| %>
+              <li class="tweet">
+                <h6 class="username">@<%= sc.twitter_username %> <span class="date"><%= time_ago_in_words(t.created_at) %> ago</span></h6>
+                <%== t.body %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+        <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+      </div>
+      <div class="unit1of4 right">
+        <h4 class="unit-title">More Info</h4>
+        <ul class="links">
+<% if logged_in_user && logged_in_user.username != 'elo' && Colonnade::Campus.where(:site_id => site.id, :show_member_login => true).exists? %>
+            <li><a href="/logout">Logout</a></li>
+          <% elsif Colonnade::Campus.where(:site_id => site.id, :show_member_login => true).exists? %>
+            <li><a href="/dashboard" title="Member Login">Member Login</a></li>
+          <% end %>
+          <% if Colonnade::Campus.where(:site_id => site.id, :show_application => true).exists? %>
+            <li><a href="/apply" title="Apply Online">Employment Application</a></li>
+          <% end %>
+          <li><a href="http://www.colonnadegroup.com/" target="_blank" title="The Colonnade Group">The Colonnade Group</a></li>
+        </ul>
+        <p class="copyright">Copyright &copy; <%= DateTime.now.strftime("%Y") %> Colonnade Group. All rights reserved.</p>
+        <section class="nine">
+          <span>Powered and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>
+</footer>

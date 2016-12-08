@@ -1,0 +1,74 @@
+<%
+s1 = Caboose::Setting.where(:site_id => 73, :name => "current_goal").first
+s2 = Caboose::Setting.where(:site_id => 73, :name => "goal_status").first
+goal = 5000
+status = 3500
+if s1
+  goal = s1.value.to_f
+end
+if s2
+  status = s2.value.to_f
+end
+diff = number_to_currency(goal - status, :precision => 0)
+hf = Caboose::Block.where(:block_type_id => 1028).first
+%>
+
+<footer class="main home" id="block_<%= block.id %>">
+  <div id="triangle"></div>
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of3 left">
+        <div class="donate-graph footer">
+          <div class="percent-wrap" data-width="100">
+            <div id="mobile-percent" class="percent-amt"><%= ((status / goal) * 100).to_i %>% <span class="cursive">funded</span></div>
+            <div class="content">
+              <form action="/stripe/charge" action="post" id="donate-graph-footer-form">
+                <div class="field" id="give">
+                  <input type="hidden" name="amount" class="input-amount" placeholder="7" />
+                  <input type="submit" id="submit-donate-graph-footer-form" class="btn" value="Donate" />
+                </div>
+              </form>
+              <div id="message"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="unit1of3 center">
+        <img src="//cabooseit.s3.amazonaws.com/assets/utunum/images/footer_logo.png" alt="Ut Unum" class="logo" />
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <% Caboose::Page.where(:parent_id => 759, :hide => false).order(:sort_order).all.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+      </div>
+      <div class="unit1of3 right">
+        <div class="richtext">
+          <div class="field">
+            <span class="icon-mail"></span>
+            <a href="mailto:nate@utunum.com">NATE@UTUNUM.COM</a>
+          </div>
+          <div class="field">
+            <a href="#">JOIN THE NEWSLETTER</a>
+          </div>
+        </div>
+        <section class="nine">
+          <span>Designed and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<% content_for :js do %>
+  <script>
+  window.goal = <%= goal %>;
+  window.goal_status = <%= status %>;
+  </script>
+<% end %>

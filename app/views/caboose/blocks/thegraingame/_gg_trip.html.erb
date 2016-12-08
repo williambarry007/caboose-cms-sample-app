@@ -1,0 +1,119 @@
+<%
+lat = 0
+lng = 0
+zoom = 16
+begin
+  lat = block.child_value("latitude").to_f
+  lng = block.child_value("longitude").to_f
+  zoom = block.child_value("zoom_level").to_i
+rescue
+end
+title = block.child_value('title')
+location = block.child_value('location')
+cost = block.child_value('cost')
+photo = block.child_value('photo')
+desc = block.child_value('description')
+style = ""
+height = "300px"
+info = ""
+%>
+
+<div class="trip-block" id="block_<%= block.id %>">
+	<% if lat != 0 && lng != 0 %>
+    <div class="map-block-container" id="map-block-<%= block.id %>">
+      <div class='map' id="map-<%= block.id %>" data-lat="<%= lat %>" data-long="<%= lng %>" data-zoom="<%= zoom %>" data-info="<%= info %>" data-style="<%= style %>"></div>
+    </div>
+  <% else %>
+    <% if editing %>
+      <p style="padding:10px;border:1px solid #000;">Invalid map coordinates. Click to edit.</p>
+    <% end %>
+  <% end %>
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of2 left">
+        <h3 class="title"><%= title %></h3>
+        <% if !location.blank? %><h4 class="location"><%= location %></h4><% end %>
+        <% if photo.url && !photo.url.include?('placehold') %><img src="<%= photo.url(:large) %>" alt="<%= title %>" /><% end %>
+      </div>
+      <div class="unit1of2 right">
+        <% if !cost.blank? %><h4 class="cost">Cost: <%= cost %></h4><% end %>
+        <div class="richtext description"><%== desc %></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :css do %>
+  <style>
+    .map-block-container#map-block-<%= block.id %> {
+      width: 100%;
+      height: <%= height %>;
+    }
+    #map-<%= block.id %> {
+      width: 100%;
+      height: 100%;
+    }
+    .subpage-content {
+    	padding-top: 0;
+    }
+  </style>
+<% end %>
+<% content_for :js do %>
+  <script>
+    // Load Google Maps API and initialize each Map block on the page
+
+    function initialize_maps() {
+      $(".map-block-container").each(function(index, Element) {
+
+        var mapel = $(Element).find(".map"); 
+
+        var mapCanvasId, mapCenterLat, mapCenterLng, mapDefaultZoom, mapInfoWindow, style, style_code;
+
+        mapCanvasId = mapel.attr("id");
+        mapCenterLat = mapel.data("lat");
+        mapCenterLng = mapel.data("long");
+        mapDefaultZoom = mapel.data("zoom");
+        mapInfoWindow = mapel.data("info");
+        style = mapel.data("style"); 
+
+        style_code = ""
+        if (style == 'Colorful') {
+          style_code = [{"featureType":"administrative","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative.country","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#7a7a7a"}]},{"featureType":"administrative.country","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"administrative.province","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"administrative.province","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#d3dee0"}]},{"featureType":"administrative.province","elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"administrative.province","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"},{"visibility":"on"}]},{"featureType":"landscape.man_made","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#2c8fcd"},{"visibility":"on"}]}];
+        }
+
+        var mapOptions = {
+          center: new google.maps.LatLng(mapCenterLat, mapCenterLng),
+          scrollwheel: false,
+          styles: style_code,
+          zoom: mapDefaultZoom
+        };
+        var map = new google.maps.Map(document.getElementById(mapCanvasId), mapOptions);
+
+        // var marker = new google.maps.Marker({
+        //   position: {lat: mapCenterLat, lng: mapCenterLng},
+        //   map: map
+        // });
+
+        // if(mapInfoWindow != "") {
+        //   var info = new google.maps.InfoWindow({
+        //     content: mapInfoWindow
+        //   });
+        //   info.open(map, marker);
+        //   google.maps.event.addListener(marker, 'click', function() {
+        //     info.open(map,marker);
+        //   });
+        // }
+
+      });
+    }
+
+    function loadScript() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = "https://maps.googleapis.com/maps/api/js?v=3key=AIzaSyDENedoxisMHbY-o895uaR7xp_bPFHo-24&sensor=false&callback=initialize_maps";
+      document.body.appendChild(script);
+    }
+      
+    window.onload = loadScript;
+  </script>
+<% end %>

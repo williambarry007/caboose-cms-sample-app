@@ -1,0 +1,99 @@
+<% seen_first = false %>
+<% drop = post.custom_field_value('dropcap') %>
+<div class="post-details-wrapper" id="block_<%= block.id %>">
+	<div class="constrain">
+		<% user = logged_in_user %>
+    <% exclusive = post.post_categories.map{|c| c.id}.include?(132) && (!user || user.id == 2) %>
+		<div class="main-post-content">
+			<% if post.image && !post.image.url.blank? && !post.image.url.include?('placehold') %>
+				<img class="post-image" src="<%= post.image.url(:huge) %>" alt="<%= post.title %>" />
+			<% end %>
+			<div class="post-text">
+				<% if !post.subtitle.blank? %><h3 class="post-subtitle"><%= post.subtitle %></h3><% end %>
+				<h2 class="post-title"><%= post.title %></h2>
+				<div class="post-meta">
+					<% cat = post.post_categories.where("post_categories.id != ? AND post_categories.id != ?",121,132).first %>
+					<% if cat && !cat.name.blank? %><a href="/stories/<%= cat.name.downcase.gsub(' ','-') %>" title="<%= cat.name %>" class="post-category"><%= cat.name %></a><% end %>
+					<% ph = post.custom_field_value('photographer') %>
+					<% au = post.author %>
+					<% if !au.blank? || !ph.blank? %>
+						<% pl = post.custom_field_value('photographer_link') %>
+						<p class="post-authors">
+							<% if !au.blank? %><span class="author">Words by <a href="/stories?author=<%= au %>"><%= au %></a></span><% end %>
+							<% if !ph.blank? %><span class="photographer">Photos by <% if pl.blank? %><%= ph %><% else %><a href="<%= pl %>" target="_blank"><%= ph %></a><% end %></span><% end %>
+						</p>
+					<% end %>
+					<span class="post-date">on <%= post.created_at.in_time_zone(logged_in_user.timezone).strftime("%-m.%-d.%y") %></span>
+				</div>
+				<div class='share-icons clearfix'>
+					<div class="share-buttons">
+						<% url = "http://" + site.primary_domain.domain + post.uri %>
+						<a href="https://www.facebook.com/sharer/sharer.php?u=<%= url %>" target="_blank" title="Share on Facebook" class="holder" id="facebook" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-facebook white"></span></a>
+						<a href="https://twitter.com/home?status=<%= post.title + ' ' + url %>" title="Share on Twitter" target="_blank" class="holder" id="twitter" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-twitter white"></span></a>
+						<a href="https://plus.google.com/share?url=<%= url %>" title="Share on Google +" target="_blank" class="holder" id="google-plus" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-google-plus white"></span></a>
+						<a href="mailto:?subject=<%= post.title %>&amp;body=<%= url %>" title="Share by Email" class="holder" id="email"><span class="icon-mail white"></span></a>
+					</div>
+        </div>
+        <div style="position:relative;">
+	        <% if exclusive %>
+		        <div class="exclusive">
+		        	<p>Sorry, this story is for digital subscribers only.<br />
+		        	Please <a href="#" class="show-login" title="Login">login</a> or <a href="http://store.goodgritmag.com/collections/subscriptions/" title="Subscribe">subscribe</a>.</p>
+		        </div>
+		      <% end %>
+					<div class="post-block-container <% if exclusive %>blurred<% end %>">
+						<% block.children.each do |b| %>
+							<% if b.block_type_id == 309 && !seen_first %>
+								<div class="first-richtext <% if !drop || drop == '0' || drop == 0 %>no-drop<% end %>">
+							<% end %>
+			        <%= raw block.render(b, local_assigns) %>
+			        <% if b.block_type_id == 309 && !seen_first %>
+								</div>
+								<% seen_first = true %>
+							<% end %>
+			      <% end %>
+			      <% if exclusive %>
+							<div class="blur"></div>
+			      <% end %>
+					</div>
+				</div>
+			</div>
+			<% related = cat ? cat.posts.where("posts.id != ?", post.id).where(:published => true).order("created_at DESC").take(3) : [] %>
+			<% if related.count > 0 %>
+				<h2 class="related-title">Related Stories</h2>
+				<div class="related-stories">
+					<% related.each do |p| %>
+						<article id="post-<%= p.id %>">
+		    			<a href="<%= p.uri %>" title="<%= p.title %>">
+		    				<div class="image-holder lazy" data-src="<%= p.image.url(:large) %>">
+		              <% if p.post_categories.map{|c| c.id}.include?(132) %>
+		                <div class="exclusive-banner">SUBSCRIBER EXCLUSIVE</div>
+		              <% end %>
+		            </div>
+		    			</a>
+		    			<p class="subtitle"><%= p.subtitle %></p>
+		    			<a href="<%= p.uri %>" title="<%= p.title %>"><h3><%= p.title %></h3></a>
+		          <% if !p.preview.blank? %>
+		      			<div class="excerpt">
+		      				<% 
+		                html = Nokogiri::HTML( p.preview ) 
+		                text = html.at('body').inner_text
+		                words = text.blank? ? "" : text.split[0..30] 
+		              %>
+		              <% if !words.blank? && words.count > 29 %>
+		              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+		              <% else %>
+		      					<%= words.blank? ? "" : words.join(' ') %>
+		              <% end %>
+		      			</div>
+		          <% end %>
+		    		</article>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>

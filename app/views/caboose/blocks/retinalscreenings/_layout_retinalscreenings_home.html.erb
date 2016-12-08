@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Lato'>
+<%= raw css %>
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<link rel="stylesheet" href="//d9hjv462jiw15.cloudfront.net/assets/retinalscreenings/css/lteIE8.css">
+<![endif]-->
+<link rel="icon" type="image/png"            href="//d9hjv462jiw15.cloudfront.net/assets/retinalscreenings/images/IRIS-32.png">
+<link rel="apple-touch-icon"                 href="//d9hjv462jiw15.cloudfront.net/assets/retinalscreenings/images/IRIS-57.png"> 
+<link rel="apple-touch-icon" sizes="72x72"   href="//d9hjv462jiw15.cloudfront.net/assets/retinalscreenings/images/IRIS-72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="//d9hjv462jiw15.cloudfront.net/assets/retinalscreenings/images/IRIS-114.jpg">
+<title><%= raw block.page.head_title %></title>
+<meta name="description" content="<%= raw block.page.meta_description %>" />
+<meta property="og:title" content="<%= raw block.page.head_title %>" />
+<meta property="og:image" content="//d9hjv462jiw15.cloudfront.net/assets/retinalscreenings/images/IRIS-200.jpg"/>
+<meta property="og:url" content="www.retinalscreenings.com"/>
+<meta property="og:site_name" content="IRIS: Intelligent Retinal Imaging System"/>
+<meta property="og:description" content="<%= block.page.meta_description %>" />
+<meta name="keywords" content="<%= block.page.meta_keywords %>" />
+<%= raw csrf_meta_tags %>
+</head>
+<body class="home">
+<div class="wrapper" id='block_<%= block.id %>'>    
+  <%= raw block.partial('header', local_assigns) %>
+  <%= raw block.render('content', local_assigns) %>
+  <%= raw block.partial('footer', local_assigns) %>      
+</div>
+<%= raw js %>
+<script type="text/javascript">
+(function(d,s,i,r) {
+  if (d.getElementById(i)){return;}
+  var n=d.createElement(s),e=d.getElementsByTagName(s)[0];
+  n.id=i;n.src='//js.hs-analytics.net/analytics/'+(Math.ceil(new Date()/r)*r)+'/464109.js';
+  e.parentNode.insertBefore(n, e);
+})(document,"script","hs-analytics",300000);
+</script>
+</body>
+</html>

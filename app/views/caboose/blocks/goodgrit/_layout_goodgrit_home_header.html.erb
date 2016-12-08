@@ -1,0 +1,42 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <h1 class="title"><span class="good">Good</span><span class="grit">Grit</span></h1>
+    </a>
+    <div class="reveal">
+      <%== ApplicationHelper.social_links(site.id, "icon", "dark") %>
+    </div>
+    <nav class="reveal">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 879, :hide => false).order(:sort_order).all.each do |p| %>
+          <li class="li-1">
+            <%== ApplicationHelper.nav_link(p, editing, false) %>
+            <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+            <% if subpages.count > 0 %>
+              <div class="dropdown">
+                <ul>
+                  <% subpages.each do |s| %>
+                    <li class="li-2"><%== ApplicationHelper.nav_link(s, editing, false) %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+          </li>
+          <% if p.id == 880 && false # after About page show Exclusive Content link %>
+            <% user = controller.logged_in_user %>
+            <% if user && user.id != 2 %>
+              <li><a href="/stories/exclusive-content" title="Exclusive Content">Exclusive Content</a></li>
+            <% else %>
+              <li><a href="#" title="Login" class="show-login">Login</a></li>
+            <% end %>
+          <% end %>
+        <% end %>
+      </ul>
+    </nav>
+    <div class="tagline reveal"><p>The Character Of The South</p></div>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</header>

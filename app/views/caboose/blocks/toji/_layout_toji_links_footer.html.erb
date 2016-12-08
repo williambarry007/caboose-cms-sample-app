@@ -1,0 +1,97 @@
+<footer class="main" id="block_<%= block.id %>">
+  <div class="wrapper grid">
+    <section class="grid-unit-1of4" id="links">
+      <header>TOJI</header>
+      
+      <ul>
+        <li><a href="/">Home</a></li>
+        
+        <% Caboose::Page.where(:parent_id => 14, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p) %></li>
+        <% end %>
+      </ul>
+    </section>
+    
+    <section class="grid-unit-1of4">
+      <header>Newsletter</header>
+      
+      <div class="media">
+        <aside><img src="//d9hjv462jiw15.cloudfront.net/assets/toji/images/mail.png" style="padding: 6px 0 0"  /></aside>
+        <section>Sign up with your name and email to get updates and news articles.</section>
+      </div>
+      
+      <form id="subscribe-form">
+        <input name="form_name" type="hidden" value="Newsletter Form" />
+        <input name="block_id" type="hidden" value="51" /> 
+        <input name="name_required" type="text" placeholder="Name" />
+        <input name="email_required" type="text" placeholder="Email" />
+        <a href="#" id="submit-form" class="btn">Submit</a>
+      </form>
+      <div id="message"></div>
+
+    </section>
+    
+    <section class="grid-unit-1of4">
+      <header>Latest Tweets</header>
+      <% tweets = Twittery.latest_tweets("brking74", 3) %>
+      <% if tweets && tweets.count > 0 %>
+        <% tweets.each do |t| %>
+          <div class="media tweet">
+            <aside><span data-icon="d"></span></aside>
+            <section>
+              <p><%== Twittery.auto_link(t.text) %></p>
+              <small><em><%= time_ago_in_words(t.created_at) %> ago</em></small>
+            </section>
+          </div>
+        <% end %>
+      <% end %>
+    </section>
+    
+    <section class="grid-unit-1of4">
+      <header>Get in Touch</header>
+      
+      <address>
+        <div class="media">
+          <aside><img src="//d9hjv462jiw15.cloudfront.net/assets/toji/images/house.png" style="padding: 6px 0 0"  /></aside>
+          <section>3515 Watermelon Road<br />Northport, Alabama  35473</section>
+        </div>
+        
+        <div class="media">
+          <aside><img src="//d9hjv462jiw15.cloudfront.net/assets/toji/images/globe.png" style="padding: 6px 0 0"  /></aside>
+          <section style="padding: 6px"><a href="http://tuscaloosaorthopedics.com">tuscaloosaorthopedics.com</a></section>
+        </div>
+        
+        <div class="media">
+          <aside><img src="//d9hjv462jiw15.cloudfront.net/assets/toji/images/phone.png" style="padding: 6px 0 0"  /></aside>
+          <section style="padding: 6px"><a id="footer-phone-link" data-href="tel:2057225591" style="cursor:pointer;">205.722.5591</a></section>
+        </div>
+      </address>
+    </section>
+  </div>
+  
+  <div class="signature">
+    <a href="http://nine.is"><img src="///d9hjv462jiw15.cloudfront.net/assets/toji/images/nine.png" /></a>
+  </div>
+</footer>
+
+<% content_for :js do %>
+  <%= javascript_include_tag "form_submit" %>
+  <script>
+    $(document).ready(function() {
+      $('#submit-form').click(function(event) {
+        event.preventDefault(); 
+        submit_form("subscribe-form");
+        return false;
+      });
+      $("#footer-phone-link").click( function(event) {
+        event.preventDefault(); 
+        if ( $(window).width() < 768 ) {
+          window.location = $(this).data("href"); 
+        }
+        else {
+          window.location = "/contact"; 
+        }
+      });
+    });
+  </script>
+<% end %>

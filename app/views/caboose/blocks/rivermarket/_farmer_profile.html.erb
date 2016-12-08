@@ -1,0 +1,23 @@
+<%
+  img = ""
+  if block.child_value('background_image') 
+    if !block.child_value('background_image').url.include?('missing')
+      img = block.child_value('background_image').url(:original)
+    end
+  end
+  text = block.child_value('text')
+  classes = []
+  classes << block.child_value('text_align') 
+  classes = classes.join(" ")
+%>
+
+<div id="block_<%= block.id %>">
+  <div class="farmer-profile-block <%= classes %>" style="background-image:url('<%= img %>');">
+    <div class="overlay"></div>
+    <div class="constrain">
+      <div class="text">
+        <p><%= raw text %></p>
+      </div>
+    </div>
+  </div>
+</div>

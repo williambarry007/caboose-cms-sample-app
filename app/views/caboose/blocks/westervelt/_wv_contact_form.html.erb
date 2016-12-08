@@ -1,0 +1,24 @@
+<div id="block_<%= block.id %>">
+  <div class="contact-form">
+    <div class="constrain">
+      <div class="grid-row">
+
+      </div>
+    </div>
+  </div>
+
+  <% content_for :js do %>
+    <%= javascript_include_tag "form_submit" %> 
+
+    <script>
+      $(document).ready(function() {
+        $('#send_contact').click(function(e) {
+          e.preventDefault();
+          submit_form("contact_form");
+          return false;
+        });
+      });
+    </script>
+  <% end %>
+
+</div>

@@ -1,0 +1,92 @@
+<div class="investment-slider-block" id="block_<%= block.id %>">
+	<div class="bar intro">
+		<div class="constrain">
+			<h3 class="title"><%= block.child_value('title') %></h3>
+			<h5 class="subtitle"><%= block.child_value('subtitle') %></h5>
+			<span class="arrow"></span>
+		</div>
+	</div>
+	<div class="bar slider blue">
+		<div class="constrain">
+			<h3 class="title">Initial Investment</h3>
+			<div class="slider-holder"><div id="investment-slider"></div></div>
+			<span class="arrow"></span>
+		</div>
+	</div>
+	<div class="bar slider gold">
+		<div class="constrain">
+			<h3 class="title">Months Invested</h3>
+			<div class="slider-holder"><div id="months-slider"></div></div>
+			<span class="arrow"></span>
+		</div>
+	</div>
+	<div class="bar results">
+		<div class="constrain">
+			<div class="grid-row">
+				<div class="unit1of2 left">
+					<h4 class="name blue"><span>S&amp;P</span></h4>
+					<p class="value" id="sp-value">$5,084.00</p>
+					<p class="meta">portfolio value</p>
+				</div>
+				<span class="vs">vs</span>
+				<div class="unit1of2 right">
+					<h4 class="name green"><span>Newfield</span></h4>
+					<p class="value" id="nf-value">$6,125.00</p>
+					<p class="meta">portfolio value</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<% content_for :js do %>
+<script>
+	function format_as_currency(f) {
+	 return '$' + f.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+	}
+	function update_results(initial, months) {
+		// var initial = $("#investment-slider").slider("value");
+		// var months = $("#months-slider").slider("value");
+		$("#sp-value").text( format_as_currency( Math.floor(initial * Math.pow(1.017,(parseFloat(months) / 12.0))))  );
+		$("#nf-value").text( format_as_currency(Math.floor(initial * Math.pow(1.225,(parseFloat(months) / 12.0))))  );
+	}
+	function format_money(amount) {
+		var string = "$";
+		string += amount.toString().replace("0000","0k").replace("000","k").replace("500",".5k");
+		return string;
+	}
+
+	$(document).ready(function() {
+		$("#investment-slider").slider({
+			max: 25000,
+			min: 500,
+			step: 500,
+			value: 5000,
+			slide: function(event, ui) {
+				$("#investment-slider .ui-slider-handle").text( format_money(ui.value) );
+				update_results(ui.value, $("#months-slider").slider("value"));
+			},
+			change: function(event, ui) {
+				$("#investment-slider .ui-slider-handle").text( format_money(ui.value) );
+				update_results(ui.value, $("#months-slider").slider("value"));
+			}
+		});
+		$("#investment-slider .ui-slider-handle").text( format_money(3000) );
+		$("#months-slider").slider({
+			max: 24,
+			min: 1,
+			step: 1,
+			value: 12,
+			slide: function(event, ui) {
+				$("#months-slider .ui-slider-handle").text(ui.value);
+				update_results($("#investment-slider").slider("value"), ui.value);
+			},
+			change: function(event, ui) {
+				$("#months-slider .ui-slider-handle").text(ui.value);
+				update_results($("#investment-slider").slider("value"), ui.value);
+			}
+		});
+		$("#months-slider .ui-slider-handle").text( 12 );
+	});
+</script>
+<% end %>

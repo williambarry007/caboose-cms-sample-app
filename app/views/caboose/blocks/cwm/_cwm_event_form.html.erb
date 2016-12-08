@@ -1,0 +1,31 @@
+<div class="event-form" id="block_<%= block.id %>">
+	<form id="event-form">
+		<input type="hidden" name="form_name" value="Event Form">
+		<input type="hidden" name="block_id" value="<%= block.id %>">
+		<div class="grid-row">
+			<div class="unit1of2 left">
+				<input type="text" name="name_required" placeholder="Name">
+			</div>
+			<div class="unit1of2 right">
+				<input type="email" name="event_required" placeholder="Event">
+			</div>
+		</div>
+		<textarea name="about_event" cols="30" rows="10" placeholder="About Event"></textarea>
+		<a href="#" class="btn" id="submit-event-form">Invite</a>
+	</form>
+	<div id="message"></div>
+</div>
+
+<% content_for :js do %>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<%= javascript_include_tag "form_submit" %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-event-form").click(function(event) {
+				event.preventDefault();
+				submit_form("event-form"); 
+				return false;
+			});
+		});
+	</script>
+<% end %>

@@ -1,0 +1,35 @@
+<% slides = block.children.where(:block_type_id => 367).order(:sort_order).all %>
+<% if modal %>
+
+  <ul>
+    <% slides.each_with_index do |s,i| %>
+      <% name = s.child_value('title') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Slide #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new slide!</a>
+
+<% else %>
+
+<div class="fullcoverWrapper" id="block_<%= block.id %>">
+
+<div class="flexslider">
+<ul class="slides">
+  
+  <% slides.each do |s| %>
+    <% btn_url = s.child('advanced_options').child_value('button_link_url').blank? ? "" : s.child('advanced_options').child_value('button_link_url') 
+      bgimg = s.child_value('background_image')
+      bg_image = (bgimg.blank? || bgimg.url.include?('placehold')) ? "" : bgimg.url(:huge)
+    %>
+    <li>
+    	<% if !editing %><a href="<%= btn_url %>"><% end %>
+    		<img src="<%= bg_image %>" alt="<%= s.child_value('title') %>" />
+    	<% if !editing %></a><% end %>
+    </li>
+  <% end %>
+</ul>
+</div>
+</div>
+<% end %>

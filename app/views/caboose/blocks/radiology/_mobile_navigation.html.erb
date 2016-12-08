@@ -1,0 +1,35 @@
+<div class="delay-show">
+  <div id="sidr" style="display:none;">
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/radiology/images/white_logo.png" alt="The Radiology Clinic" width="180" class="logo" />
+    <div class="nav">
+      <ul class="level-1">
+        <li id="home"><a href="/" title="Home">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 1321, :hide => false).order(:sort_order).all.each do |p| %>
+          <li class="level-1-link" id="<%= p.slug %>"><%== ApplicationHelper.nav_link(p, editing, false) %>
+            <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+            <% if subpages.count > 0 %>
+              <ul class="submenu level-2">
+                <a href="#" class="icon-close close-dropdown"></a>
+                <% subpages.each do |s| %>
+                  <li class="level-2-link">
+                    <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                    <% if grandchildren.count > 0 %>
+                      <span><%= s.menu_title.blank? ? s.title : s.menu_title %></span>
+                      <ul class="level-3">
+                        <% grandchildren.each do |g| %>
+                          <li class="level-3-link"><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <%== ApplicationHelper.nav_link(s, editing, false) %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

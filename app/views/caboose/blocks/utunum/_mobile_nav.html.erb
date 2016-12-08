@@ -1,0 +1,24 @@
+<nav class="st-menu st-effect-7" id="sidemenu">
+  <a href="#close-menu" id="close-menu">+</a>
+  <ul>
+    <% home = Caboose::Page.find(759) %>
+    <li><%== ApplicationHelper.active_nav_link(home, editing, false, @page) %></li>
+    <% Caboose::Page.where(:parent_id => 759, :hide => false).order(:sort_order).all.each do |p| %>
+      <li><%== ApplicationHelper.active_nav_link(p, editing, false, @page) %>
+        <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+        <% if subpages.count > 0 %>
+          <ul>
+            <% subpages.each do |p| %>
+              <li><%== ApplicationHelper.active_nav_link(p, editing, false, @page) %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </li>
+    <% end %>
+    <li><a href="/cart">Cart</a></li>
+  </ul>
+  <div class="bottom">
+    <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/utunum/images/white_logo2.png" alt="Ut Unum" width="221" height="24" class="logo" />
+  </div>
+</nav>

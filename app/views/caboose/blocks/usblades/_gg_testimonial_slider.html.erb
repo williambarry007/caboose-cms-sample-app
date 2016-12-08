@@ -1,0 +1,97 @@
+<%
+  slides = block.children.where(:block_type_id => 1076).all
+%>
+
+<% if modal %>
+  <p>Testimonials:</p>
+  <ul>
+    <% slides.each_with_index do |s,i| %>
+      <% name = s.child_value('name') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Testimonial #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new testimonial!</a>
+<% else %>
+
+  <div class="testimonial-slider-container" id="block_<%= block.id %>">
+    <div class="overlay"></div>
+    <% if slides.size > 0 %>
+
+      <div class="slider-container" id="slider-container-<%= block.id %>">
+      	<h3 class="slider-title"><%= block.child_value('section_title') %></h3>
+        <div class="line"></div>
+        <div class="liquid-slider" id="slider-<%= block.id %>" data-size="<%= slides.count %>">
+          <% slides.each_with_index do |slide, index| %>
+            <%
+              name = slide.child_value('name')
+              title = slide.child_value('age')
+              company = slide.child_value('location')
+              quote = slide.child_value('quote')
+            %>
+            <div class="slide clearfix" id="slide-<%= index %>">
+              <div class="slider-slide clearfix">
+                <div class="slide-content">
+                  <div class="content-holder">
+                    <h3 class="title"><%= title %></h3>
+                    <div class="quote richtext">
+                    	<%== quote %>
+										</div>
+                    <h4 class="meta"><span class="name"><%= name %></span> / <span class="company"><%= company %></span></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <% end %><!-- end slide --> 
+        </div>
+        <div class="arrows clearfix">
+          <div class="left-nav" id="nav-left-<%= block.id %>">
+            <span class="arrow icon-left-big"></span>
+          </div>
+          <div class="right-nav" id="nav-right-<%= block.id %>">
+            <span class="arrow icon-right-big"></span>
+          </div>
+        </div>
+      </div>
+
+    <% else %>
+      <% if editing %>
+        <p style="padding:10px;border:1px solid #000;">Empty testimonial slider. Click to add testimonials.</p>
+      <% end %>
+    <% end %>
+
+    <% content_for :css do %>
+			<style>
+				#slider-<%= block.id %>-wrapper {
+          max-width: none !important;
+        }
+			</style>
+    <% end %>
+
+    <% content_for :js do %>
+      <script>
+        $(document).ready(function() {
+          $("#slider-<%= block.id %>").liquidSlider({
+            autoSlide: true,
+            autoSlideInterval: 6000,
+            autoHeight: true,
+            slideEaseFunction: "easeInOutSine",
+            dynamicArrows: false,
+            dynamicTabs: false
+          });
+          var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+          $("#nav-left-<%= block.id %>").click(function() {
+            api.setNextPanel('left');
+            api.updateClass($(this)); 
+          });
+          $("#nav-right-<%= block.id %>").click(function() {
+            api.setNextPanel('right');
+            api.updateClass($(this)); 
+          });
+        });
+      </script>
+    <% end %>
+  </div>
+<% end %>

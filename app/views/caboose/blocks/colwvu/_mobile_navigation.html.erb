@@ -1,0 +1,49 @@
+<div class="delay-show">
+  <div id="mmenu">
+    <ul>
+      <li><a href="/" title="Home">Home</a></li>
+      <% Caboose::Page.where(:parent_id => 2369, :hide => false).order(:sort_order).all.each do |p| %>
+        <li><%== ApplicationHelper.nav_link(p, editing, false) %>
+          <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+          <% if subpages.count > 0 %>
+            <ul class="submenu">
+              <% subpages.each do |s| %>
+                <li>
+                  <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                  <% if grandchildren.count > 0 %>
+                    <span><%= s.menu_title.blank? ? s.title : s.menu_title %></span>
+                    <ul>
+                      <% grandchildren.each do |g| %>
+                        <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <%== ApplicationHelper.nav_link(s, editing, false) %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </li>
+      <% end %>
+      <% campus = Colonnade::Campus.where(:site_id => site.id).first %>
+      <% venues = campus ? campus.venues.where(:parent_id => nil, :hide_in_menu => false).order(:name).all : [] %>
+      <% venues.each do |v| %>
+        <li class="top-li">
+          <a href="/venues/<%= v.id %>"><%= v.name %></a>
+          <% if v.children.where(:hide_in_menu => false).count > 0 %>
+            <div class="dropdown right">
+              <div class="contain">
+                <ul class="level-2">
+                  <% v.children.where(:hide_in_menu => false).each do |v2| %>
+                    <li><a href="/venues/<%= v2.id %>"><%= v2.name %></a></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

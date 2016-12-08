@@ -1,0 +1,22 @@
+<%
+bg = block.child_value('banner_image')
+img_url = bg && bg.url && !bg.url.include?("placehold") ? bg.url(:huge) : '//d9hjv462jiw15.cloudfront.net/assets/radiology/images/running.jpg'
+meta = block.child_value('meta').blank? ? "Now Offering" : block.child_value('meta')
+title = block.child_value('title').blank? ? "Life Insurance for Everyone" : block.child_value('title')
+button_url = block.child_value('button_url').blank? ? "#" : block.child_value('button_url')
+button_text = block.child_value('button_text').blank? ? "Learn More" : block.child_value('button_text')
+%>
+
+<div class="header" id="block_<%= block.id %>" style="background-image:url(<%= img_url %>);">
+  <div class="constrain">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <img src="/assets/tcu/images/logo.png" alt="<%= site.description %>" width="180" height="60" />
+    </a>
+    <div class="text-wrapper">
+      <h5 class="meta"><%= meta %></h5>
+      <h3 class="title"><%= title %></h3>
+      <a href="<%= button_url %>" class="btn white-outline"><%= button_text %></a>
+    </div>
+  </div>
+  <div class="fade"></div>
+</div>

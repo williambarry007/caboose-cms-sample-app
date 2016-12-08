@@ -1,0 +1,38 @@
+<%
+bg = block.child_value('background_image').url(:original)
+%>
+
+<header class="main home" id="block_<%= block.id %>">
+  <div class="top-wrapper">
+    <%= render :partial => "caboose/blocks/specialevents/nav", :locals => {:editing => editing, :site => site, :small => false} %>
+  </div>
+  <div class="banner" style="background-image:url(<%= bg %>);">
+    <div class="constrain">
+      <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+      <div class="text-wrapper">
+        <h1 class="title">Special Events</h1>
+        <h3 class="tagline"><%= block.child_value('tagline') %></h3>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-wrapper">
+    <%= render :partial => "caboose/blocks/specialevents/nav", :locals => {:editing => editing, :site => site, :small => true} %>
+  </div>
+</header>
+
+<% content_for :js do %>
+  <script>
+    $(window).scroll(function(e){ 
+      $el = $('header.main.home').find(".bottom-wrapper");
+      var diff = $('header.main.home').outerHeight();
+      if ( $(this).scrollTop() > diff ) { 
+    //    $('header.main.home').css("z-index",10);
+        $el.addClass("sticky");
+      }
+      else {
+        $el.removeClass("sticky"); 
+     //   $('.header.main.home').css("z-index",2);
+      }
+    });
+  </script>
+<% end %>

@@ -1,0 +1,36 @@
+<% title = block.child_value('title').blank? ? "Get STARTED Today!" : block.child_value('title') %>
+
+<div class="survey-form-block" id="block_<%= block.id %>">
+	<h2 class="title"><%= title %></h2>
+	<form id="survey-form">
+		<input type="hidden" name="form_name" value="Survey Form" />
+		<input type="hidden" name="block_id" value="<%= block.id %>" />
+		<div class="field">
+			<label for="name_required">What do your friends call you?</label>
+			<input type="text" name="name_required" placeholder="your name goes here..." />
+		</div>
+		<div class="field">
+			<label for="email_required">What's your electronic mail address?</label>
+			<input type="email" name="email_required" placeholder="your email goes here..." />
+		</div>
+		<div class="field">
+			<label for="phone_required">What are your digits?</label>
+			<input type="text" name="phone_required" placeholder="your phone number goes here..." />
+		</div>
+		<a href="#" id="submit-survey-form" title="Submit" class="alternate btn">SUBMIT</a>
+	</form>
+	<div id="message"></div>
+</div>
+
+<% content_for :js do %>
+	<%= javascript_include_tag "form_submit" %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-survey-form").click(function(event) {
+				event.preventDefault();
+				submit_form("survey-form"); 
+				return false;
+			});
+		});
+	</script>
+<% end %>

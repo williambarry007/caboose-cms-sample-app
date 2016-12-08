@@ -1,0 +1,56 @@
+<div id="block_<%= block.id %>" class="container">
+	<div class="row">
+		<a id="<%= block.child_value('anchor_id') %>"></a>
+		<div class="sixteen columns"><h2><%= block.child_value('title') %></h2></div>
+	</div>
+
+	<% children = block.children.where(:block_type_id => 876).all %>
+	<% if children.count > 0 %>
+
+	<div class="row teamRow">
+		
+		<% children.each_with_index do |c, index| %>
+			
+			<div class="four columns alignCenter" id="block_<%= c.id %>">
+				
+				
+
+				<% img = c.child_value('image').url(:large) %>
+				<% if !img.include?('placehold') %>
+				<p class="noMargin"><a href="#" class="teamLink" rel="<%= c.id %>">
+					<img src="<%= img %>" width="168" height="168" alt="<%= c.child_value('name') %>"/></a></p>
+				<% end %>
+				<h4><%= c.child_value('name') %></h4>
+				
+				<p><%= c.child_value('title') %></p>
+			
+			</div>
+			
+			<div class="teamDetailMobile" id="teamDetail<%= c.id %>">
+				
+				<div class="eight columns offset-by-one"><%== c.child_value('bio') %></div>
+				
+				<div class="five columns offset-by-one">
+					
+				<!-- 	{if team_quote != ""}<p class="testimonial"> &#8220;{team_quote}&#8221;</p>{/if} -->
+				
+				</div>
+			
+			</div>
+		
+			<% if index == 4 || index == 8 || index == 12 %>
+			</div>
+		
+			<div class="row teamDetailRow"></div>
+			
+			<div class="row teamRow">
+			<% end %>
+
+		<% end %>
+
+	</div>
+
+	<div class="row teamDetailRow"></div>
+
+	<% end %>
+</div>

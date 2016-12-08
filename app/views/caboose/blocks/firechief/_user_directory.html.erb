@@ -1,0 +1,75 @@
+<% active_subscribers = Caboose::Subscription.where(:site_id => 182, :status => 'active').all %>
+<div class="user-directory-block constrain">
+  <h2>Member Directory</h2>
+  <div class="table-wrapper">
+    <table class="display" width="100%" id="members">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Rank</th>
+          <th>Department</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% active_subscribers.each do |us| %>
+          <% u = us.user %>
+          <% next if u.blank? %>
+          <% fc = Firechief::Member.where(:user_id => u.id).first %>
+          <tr>
+            <td><%= u.first_name.blank? ? '' : u.first_name.titleize %></td>
+            <td><%= u.last_name.blank? ? '' : u.last_name.titleize %></td>
+            <td><%= fc ? fc.job_title : '' %></td>
+            <td><%= fc && !fc.department.blank? ? fc.department.titleize : '' %></td>
+            <td class='address'>
+              <p>
+                <% if !u.address.blank? %><%= u.address %><br /><% end %>
+                <% if !u.address2.blank? %><%= u.address2 %><br /><% end %>
+                <% if !u.city.blank? %><%= u.city %>, <% end %><%= u.state %> <%= u.zip %>
+              </p>
+            </td>
+            <td><%= u.phone %></td>
+            <td>
+              <% if !u.email.blank? %>
+                <a href="mailto:<%= u.email %>"><%= u.email %></a>
+              <% else %>
+                &nbsp;
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Rank</th>
+          <th>Department</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>Email</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+
+<% content_for :css do %>
+  <%= stylesheet_link_tag("//cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css") %>
+<% end %>
+
+<% content_for :js do %>
+  <script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#members').DataTable({
+        "order": [[ 1, "asc" ]],
+        "pageLength": 25
+      });
+    });
+  </script>
+<% end %>

@@ -1,0 +1,284 @@
+<div class="new-event-form" id="block_<%= block.id %>">
+	<form action="/aar-events/user/new" method="post" id="event-form">
+		<div class="field">
+			<label for="title">Title</label>
+			<input type="text" name="title" />
+		</div>
+		<div class="field">
+			<label for="location">Location</label>
+			<input type="text" name="location" />
+		</div>
+		<div class="grid-row">
+			<div class="unit1of4">
+				<div class="field">
+					<label for="begin_date">Begin Date</label>
+					<input type="text" name="begin_date" class="datepicker" />
+				</div>
+			</div>
+			<div class="unit1of4" style="padding-left:15px;">
+				<div class="field">
+					<label for="begin_time">Begin Time</label>
+					<select name="begin_time">
+						<option value="5:00 AM">5:00 AM</option>
+						<option value="5:15 AM">5:15 AM</option>
+						<option value="5:30 AM">5:30 AM</option>
+						<option value="5:45 AM">5:45 AM</option>
+						 
+						<option value="6:00 AM">6:00 AM</option>
+						<option value="6:15 AM">6:15 AM</option>
+						<option value="6:30 AM">6:30 AM</option>
+						<option value="6:45 AM">6:45 AM</option>
+						 
+						<option value="7:00 AM">7:00 AM</option>
+						<option value="7:15 AM">7:15 AM</option>
+						<option value="7:30 AM">7:30 AM</option>
+						<option value="7:45 AM">7:45 AM</option>
+						 
+						<option value="8:00 AM">8:00 AM</option>
+						<option value="8:15 AM">8:15 AM</option>
+						<option value="8:30 AM">8:30 AM</option>
+						<option value="8:45 AM">8:45 AM</option>
+						 
+						<option value="9:00 AM">9:00 AM</option>
+						<option value="9:15 AM">9:15 AM</option>
+						<option value="9:30 AM">9:30 AM</option>
+						<option value="9:45 AM">9:45 AM</option>
+						 
+						<option value="10:00 AM" selected>10:00 AM</option>
+						<option value="10:15 AM">10:15 AM</option>
+						<option value="10:30 AM">10:30 AM</option>
+						<option value="10:45 AM">10:45 AM</option>
+						 
+						<option value="11:00 AM">11:00 AM</option>
+						<option value="11:15 AM">11:15 AM</option>
+						<option value="11:30 AM">11:30 AM</option>
+						<option value="11:45 AM">11:45 AM</option>
+						 
+						<option value="12:00 PM">12:00 PM</option>
+						<option value="12:15 PM">12:15 PM</option>
+						<option value="12:30 PM">12:30 PM</option>
+						<option value="12:45 PM">12:45 PM</option>
+						 
+						<option value="1:00 PM">1:00 PM</option>
+						<option value="1:15 PM">1:15 PM</option>
+						<option value="1:30 PM">1:30 PM</option>
+						<option value="1:45 PM">1:45 PM</option>
+						 
+						<option value="2:00 PM">2:00 PM</option>
+						<option value="2:15 PM">2:15 PM</option>
+						<option value="2:30 PM">2:30 PM</option>
+						<option value="2:45 PM">2:45 PM</option>
+						 
+						<option value="3:00 PM">3:00 PM</option>
+						<option value="3:15 PM">3:15 PM</option>
+						<option value="3:30 PM">3:30 PM</option>
+						<option value="3:45 PM">3:45 PM</option>
+						 
+						<option value="4:00 PM">4:00 PM</option>
+						<option value="4:15 PM">4:15 PM</option>
+						<option value="4:30 PM">4:30 PM</option>
+						<option value="4:45 PM">4:45 PM</option>
+						 
+						<option value="5:00 PM">5:00 PM</option>
+						<option value="5:15 PM">5:15 PM</option>
+						<option value="5:30 PM">5:30 PM</option>
+						<option value="5:45 PM">5:45 PM</option>
+						 
+						<option value="6:00 PM">6:00 PM</option>
+						<option value="6:15 PM">6:15 PM</option>
+						<option value="6:30 PM">6:30 PM</option>
+						<option value="6:45 PM">6:45 PM</option>
+						 
+						<option value="7:00 PM">7:00 PM</option>
+						<option value="7:15 PM">7:15 PM</option>
+						<option value="7:30 PM">7:30 PM</option>
+						<option value="7:45 PM">7:45 PM</option>
+						 
+						<option value="8:00 PM">8:00 PM</option>
+						<option value="8:15 PM">8:15 PM</option>
+						<option value="8:30 PM">8:30 PM</option>
+						<option value="8:45 PM">8:45 PM</option>
+						 
+						<option value="9:00 PM">9:00 PM</option>
+						<option value="9:15 PM">9:15 PM</option>
+						<option value="9:30 PM">9:30 PM</option>
+						<option value="9:45 PM">9:45 PM</option>
+					</select>
+				</div>
+			</div>
+			<div class="unit1of4">
+				<div class="field">
+					<label for="end_date">End Date</label>
+					<input type="text" name="end_date" class="datepicker" />
+				</div>
+			</div>
+			<div class="unit1of4" style="padding-left:15px;">
+				<div class="field">
+					<label for="end_time">End Time</label>
+					<select name="end_time">
+						 
+						<option value="7:00 AM">7:00 AM</option>
+						<option value="7:15 AM">7:15 AM</option>
+						<option value="7:30 AM">7:30 AM</option>
+						<option value="7:45 AM">7:45 AM</option>
+						 
+						<option value="8:00 AM">8:00 AM</option>
+						<option value="8:15 AM">8:15 AM</option>
+						<option value="8:30 AM">8:30 AM</option>
+						<option value="8:45 AM">8:45 AM</option>
+						 
+						<option value="9:00 AM">9:00 AM</option>
+						<option value="9:15 AM">9:15 AM</option>
+						<option value="9:30 AM">9:30 AM</option>
+						<option value="9:45 AM">9:45 AM</option>
+						 
+						<option value="10:00 AM">10:00 AM</option>
+						<option value="10:15 AM">10:15 AM</option>
+						<option value="10:30 AM">10:30 AM</option>
+						<option value="10:45 AM">10:45 AM</option>
+						 
+						<option value="11:00 AM">11:00 AM</option>
+						<option value="11:15 AM">11:15 AM</option>
+						<option value="11:30 AM">11:30 AM</option>
+						<option value="11:45 AM">11:45 AM</option>
+						 
+						<option value="12:00 PM" selected>12:00 PM</option>
+						<option value="12:15 PM">12:15 PM</option>
+						<option value="12:30 PM">12:30 PM</option>
+						<option value="12:45 PM">12:45 PM</option>
+						 
+						<option value="1:00 PM">1:00 PM</option>
+						<option value="1:15 PM">1:15 PM</option>
+						<option value="1:30 PM">1:30 PM</option>
+						<option value="1:45 PM">1:45 PM</option>
+						 
+						<option value="2:00 PM">2:00 PM</option>
+						<option value="2:15 PM">2:15 PM</option>
+						<option value="2:30 PM">2:30 PM</option>
+						<option value="2:45 PM">2:45 PM</option>
+						 
+						<option value="3:00 PM">3:00 PM</option>
+						<option value="3:15 PM">3:15 PM</option>
+						<option value="3:30 PM">3:30 PM</option>
+						<option value="3:45 PM">3:45 PM</option>
+						 
+						<option value="4:00 PM">4:00 PM</option>
+						<option value="4:15 PM">4:15 PM</option>
+						<option value="4:30 PM">4:30 PM</option>
+						<option value="4:45 PM">4:45 PM</option>
+						 
+						<option value="5:00 PM">5:00 PM</option>
+						<option value="5:15 PM">5:15 PM</option>
+						<option value="5:30 PM">5:30 PM</option>
+						<option value="5:45 PM">5:45 PM</option>
+						 
+						<option value="6:00 PM">6:00 PM</option>
+						<option value="6:15 PM">6:15 PM</option>
+						<option value="6:30 PM">6:30 PM</option>
+						<option value="6:45 PM">6:45 PM</option>
+						 
+						<option value="7:00 PM">7:00 PM</option>
+						<option value="7:15 PM">7:15 PM</option>
+						<option value="7:30 PM">7:30 PM</option>
+						<option value="7:45 PM">7:45 PM</option>
+						 
+						<option value="8:00 PM">8:00 PM</option>
+						<option value="8:15 PM">8:15 PM</option>
+						<option value="8:30 PM">8:30 PM</option>
+						<option value="8:45 PM">8:45 PM</option>
+						 
+						<option value="9:00 PM">9:00 PM</option>
+						<option value="9:15 PM">9:15 PM</option>
+						<option value="9:30 PM">9:30 PM</option>
+						<option value="9:45 PM">9:45 PM</option>
+						 
+						<option value="10:00 PM">10:00 PM</option>
+						<option value="10:15 PM">10:15 PM</option>
+						<option value="10:30 PM">10:30 PM</option>
+						<option value="10:45 PM">10:45 PM</option>
+						 
+						<option value="11:00 PM">11:00 PM</option>
+						<option value="11:15 PM">11:15 PM</option>
+						<option value="11:30 PM">11:30 PM</option>
+						<option value="11:45 PM">11:45 PM</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="grid-row">
+			<div class="unit1of2">
+				<div class="field">
+					<fieldset>
+						<label for="calendar_id">Calendar</label>
+						<select name="calendar_id">
+							<%= Caboose::Calendar.where(:site_id => site.id).all.each do |c| %>
+								<option value="<%= c.id %>"><%= c.name %></option>
+							<% end %>
+						</select>
+					</fieldset>
+				</div>
+			</div>
+			<div class="unit1of2">
+				<div class="field">
+					<label for="all_day">All Day</label>
+					<select name="all_day">
+						<option value="1">Yes</option>
+						<option value="0">No</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="field">
+			<label for="description">Description</label>
+			<textarea name="description" rows="10"></textarea>
+		</div>
+		<input type="submit" value="Submit" class="btn" />
+	</form>
+	<div id="message"></div>
+</div>
+
+<% content_for :css do %>
+	<%= stylesheet_link_tag "jquery-ui/datepicker" %>
+<% end %>
+
+<% content_for :js do %>
+	<%= javascript_include_tag "jquery-ui/datepicker" %>
+	<script>
+		$(document).ready(function() {
+			$(".datepicker").datepicker();
+		});
+		function submit_form(form_id) {
+		  var mess = $("#" + form_id).next("#message");
+		  mess.html("<p class='note loading'>Submitting form... </p>");
+		  var form = $("#" + form_id); 
+		  form.find("input, textarea").each(function() {
+		    if ( $(this).attr("placeholder") == $(this).val() ) {
+		      $(this).val("");
+		    }
+		  });
+		  $.ajax({
+		    url: '/aar-events/user/new',
+		    type: 'put',
+		    data: form.serialize(),
+		    success: function(resp) {
+		      if(resp.error) {
+		        form.find("input, textarea").each(function() {
+		          if ( $(this).val() == "" ) {
+		            $(this).val( $(this).attr("placeholder") );
+		          }
+		        });
+		        mess.html("<p class='note error'>" + resp.error + "</p>");
+		      } 
+		      if(resp.success) {
+		        form.slideUp(); 
+		        mess.html("<p class='note success'>Your event has been submitted! After being approved, it will be added to our Calendar.</p>");
+		      }
+		    }
+		  });
+		}
+		$("#event-form").submit(function(event) {
+			event.preventDefault();
+			submit_form("event-form");
+		});
+	</script>
+<% end %>

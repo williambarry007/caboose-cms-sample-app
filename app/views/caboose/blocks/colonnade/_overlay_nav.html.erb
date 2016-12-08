@@ -1,0 +1,13 @@
+<nav class="overlay-nav" id="main-nav-overlay" style="display:none;">
+  <a id="close-menu" href="#" class="icon-close"></a>
+  <div class="table">
+    <div class="table-cell">
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 2226, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,15 @@
+<div class="farmer-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="image-wrapper">
+			<% img = block.child_value('photo').url(:thumb) %>
+			<% if block.child_value('photo').url.include?('placehold') %>
+				<% img = "http://cabooseit.s3.amazonaws.com/assets/rivermarket/images/farmer_placeholder.jpg" %>
+			<% end %>
+			<div class="image-holder" style="background-image:url(<%= img %>);"></div>
+		</div>
+		<div class="text-wrapper">
+			<h3 class="name" style="margin-bottom:5px;"><%= block.child_value('company_name') %></h3>
+			<div class="richtext" style="margin-top:10px;"><%== block.child_value('bio') %></div>
+		</div>
+	</div><span></span>
+</div>

@@ -1,0 +1,215 @@
+<% 
+api_key = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_api_key').exists?
+list_id = Caboose::Setting.where(:site_id => site.id, :name => 'mailchimp_list_id').exists?
+api_key = true
+list_id = true
+%>
+
+<div class="content_wrapper home" id='block_<%= block.id %>'>
+  <div class="content_body home-content">
+
+		<div class="video-loader loading">
+			<%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+			<img src="//placehold.it/640x360" alt="Loading Video..." style="width:100%;" />
+			<div class="overlay"></div>
+			<iframe id="video-iframe" src="https://player.vimeo.com/video/<%= @story && !@story.vimeo_url.blank? ? @story.vimeo_url : '184036326' %>?title=0&byline=0&portrait=0&autoplay=1" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+		</div>
+
+		<div class="constrain center-column">
+			<div class="title-bar">
+				<h2>This is not a poetry project. It’s a people project.</h2>
+			</div>
+
+			<div class="story-map-container">
+				
+				<div class="map-holder">
+					<img src="<%= asset_path 'whitman/images/alabama.png' %>" alt="Alabama" width="250" />
+					<div class="map-text">
+						<p>
+						<span class="size-1">A stranger travels throughout Alabama -</span>
+						<span class="size-4">the deep American south -</span>
+						<span class="size-3">asking folks to open up their lives to her.</span>
+						<span class="size-2">She asks for their voices so that together</span>
+						<span class="size-2">they can animate Walt Whitman’s</span>
+						<span class="size-5">Song of Myself.</span>
+						</p>
+					</div>
+				</div>
+
+				<div class="story" id="story-1">
+					<div class="left" style="background-image:url(<%= asset_path '/assets/whitman/images/person9.jpg' %>);">
+						<a href="#" class="table">
+							<div class="table-cell">
+								<img src="<%= asset_path 'whitman/images/play.png' %>" alt="Play" width="40" />
+							</div>
+						</a>
+					</div>
+					<div class="right">
+						<div class="table">
+							<div class="table-cell">
+								<h1 class="name">Virginia Mae</h1>
+								<h6 class="location">Birmingham, Alabama</h6>
+								<a href="#" class="btn">Watch Video</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="story" id="story-2">
+					<div class="left" style="background-image:url(<%= asset_path '/assets/whitman/images/person8.jpg' %>);">
+						<a href="#" class="table">
+							<div class="table-cell">
+								<img src="<%= asset_path 'whitman/images/play.png' %>" alt="Play" width="40" />
+							</div>
+						</a>
+					</div>
+					<div class="right">
+						<div class="table">
+							<div class="table-cell">
+								<h1 class="name">Bob Tedrow</h1>
+								<h6 class="location">Birmingham, Alabama</h6>
+								<a href="#" class="btn">Watch Video</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="story alternate" id="story-3">
+					<div class="left" style="background-image:url(<%= asset_path '/assets/whitman/images/person6.jpg' %>);">
+						<a href="#" class="table">
+							<div class="table-cell">
+								<img src="<%= asset_path 'whitman/images/play.png' %>" alt="Play" width="40" />
+							</div>
+						</a>
+					</div>
+					<div class="right">
+						<div class="table">
+							<div class="table-cell">
+								<h1 class="name">Diana</h1>
+								<h6 class="location">Tuscaloosa, Alabama</h6>
+								<a href="#" class="btn">Watch Video</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="story alternate" id="story-4">
+					<div class="left" style="background-image:url(<%= asset_path '/assets/whitman/images/person4.jpg' %>);">
+						<a href="#" class="table">
+							<div class="table-cell">
+								<img src="<%= asset_path 'whitman/images/play.png' %>" alt="Play" width="40" />
+							</div>
+						</a>
+					</div>
+					<div class="right">
+						<div class="table">
+							<div class="table-cell">
+								<h1 class="name">Mariam</h1>
+								<h6 class="location">Mobile, Alabama</h6>
+								<a href="#" class="btn">Watch Video</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="story" id="story-5">
+					<div class="left" style="background-image:url(<%= asset_path '/assets/whitman/images/person3.jpg' %>);">
+						<a href="#" class="table">
+							<div class="table-cell">
+								<img src="<%= asset_path 'whitman/images/play.png' %>" alt="Play" width="40" />
+							</div>
+						</a>
+					</div>
+					<div class="right">
+						<div class="table">
+							<div class="table-cell">
+								<h1 class="name">James Bond</h1>
+								<h6 class="location">Auburn, Alabama</h6>
+								<a href="#" class="btn">Watch Video</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="story" id="story-6">
+					<div class="left" style="background-image:url(<%= asset_path '/assets/whitman/images/person2.jpg' %>);">
+						<a href="#" class="table">
+							<div class="table-cell">
+								<img src="<%= asset_path 'whitman/images/play.png' %>" alt="Play" width="40" />
+							</div>
+						</a>
+					</div>
+					<div class="right">
+						<div class="table">
+							<div class="table-cell">
+								<h1 class="name">Robby White</h1>
+								<h6 class="location">Huntsville, Alabama</h6>
+								<a href="#" class="btn">Watch Video</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div class="mailchimp-form-block">
+				<% if api_key && list_id %>
+		      <div class="text"><div class="description richtext"><p>SIGN UP FOR NOTIFICATION OF NEXT VIDEO</p></div></div>
+					<form class="clearfix" id="newsletter-form">
+		        <input type="email" name="email" placeholder="Enter email address" />
+		        <a href="#" class="btn" id="submit-newsletter-form">Submit</a>
+		      </form>
+		      <div id="message"></div>
+				<% end %>
+			</div>
+
+		</div>
+
+  </div>
+</div>
+
+
+<% content_for :js do %>
+<script>
+$(window).load(function() {
+	$('.video-loader').removeClass('loading');
+});
+$(document).ready(function() {
+  function submit_newsletter(form_id) {
+    var mess = $("#" + form_id).next("#message");
+    mess.html("<p class='note loading'>Submitting form... </p>");
+    var form = $("#" + form_id); 
+    form.find("input, textarea").each(function() {
+      if ( $(this).attr("placeholder") == $(this).val() ) {
+        $(this).val("");
+      }
+    });
+    $.ajax({
+      url: '/mailchimp/subscribe',
+      type: 'post',
+      data: form.serialize(),
+      success: function(resp) {
+        if(resp.error) {
+          form.find("input, textarea").each(function() {
+            if ( $(this).val() == "" ) {
+              $(this).val( $(this).attr("placeholder") );
+            }
+          });
+          mess.html("<p class='note error'>" + resp.error + "</p>");
+        } 
+        if(resp.success) {
+          form.slideUp(); 
+          mess.html("<p class='note success'>" + resp.success + "</p>");
+        }
+      }
+    });
+  }
+  $("#submit-newsletter-form").click(function(event) {
+    event.preventDefault();
+    submit_newsletter("newsletter-form"); 
+    return false;
+  });
+});
+</script>
+<% end %>

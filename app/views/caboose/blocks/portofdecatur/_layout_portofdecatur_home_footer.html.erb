@@ -1,0 +1,71 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row buttons">
+      <div class="unit1of3">
+        <a href="/gallery" class="btn" title="Gallery">Gallery</a>
+      </div>
+      <div class="unit1of3">
+        <a href="/maps" class="btn" title="Maps">Maps</a>
+      </div>
+      <div class="unit1of3">
+        <a href="/contact" class="btn" title="Contact">Contact</a>
+      </div>
+    </div>
+    <div class="grid-row content">
+      <div class="unit1of3 industry-links">
+        <h4 class="unit-header">Industry Links</h4>
+        <% il = block.children.where(:block_type_id => 1293).last %>
+        <% if il && il.children.where(:block_type_id => 700).count > 0 %>
+          <ul class="links">
+            <% il.children.where(:block_type_id => 700).order(:sort_order).all.each do |l| %>
+              <li><a href="<%= l.child_value('url') %>" target="_blank" title="<%= l.child_value('name') %>"><%= l.child_value('name') %></a></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+      <div class="unit1of3 newsletter" style="height:1px;">
+
+      </div>
+      <div class="unit1of3 contact">
+        <h4 class="unit-header">Contact Us</h4>
+        <div class="mailing-address">
+          <%== block.child_value('address') %>
+        </div>
+        <div class="meta">
+          <span>Operations: <%= block.child_value('ops_phone') %></span>
+        </div>
+        <br />
+        <div class="meta">
+          <span>Marketing: <%= block.child_value('marketing_phone') %></span>
+        </div>
+        <br />
+        <div class="meta">
+          <span>Fax: <%= block.child_value('fax') %></span>
+        </div>
+        <br />
+        <div class="meta">
+          <span>Email: <a href="mailto:<%= block.child_value('email') %>"><%= block.child_value('email') %></a></span>
+        </div>
+        <h4 class="unit-header" style="margin-top:12px;">Location</h4>
+        <div class="street-address">
+          <%== block.child_value('location') %>
+        </div>
+      </div>
+    </div>
+    <div class="grid-row info">
+      <div class="unit1of2">
+        <div class="copyright">
+          &copy; <%= DateTime.now.strftime("%Y") %> PortofDecatur.com
+        </div>
+      </div>
+      <div class="unit1of2">
+        <section class="nine">
+          <span>site built and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>
+</footer>

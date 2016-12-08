@@ -1,0 +1,14 @@
+<%
+name = block.child_value("name")
+bio = block.child_value('bio')
+photo = block.child_value('photo')
+%>
+
+<div class="physician-block" id="block_<%= block.id %>">
+	<div class="image-holder">
+		<div class="overlay"></div>
+		<img src="<%= photo.url.include?('placehold') ? '//d9hjv462jiw15.cloudfront.net/assets/radiology/images/profile.png' : photo.url(:large) %>" alt="<%= name %>" />
+	</div>
+	<h4 class="name"><%= name %></h4>
+	<div class="richtext bio"><%== bio %></div>
+</div>

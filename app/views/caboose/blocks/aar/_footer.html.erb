@@ -1,0 +1,51 @@
+<% hf = Caboose::Block.where(:block_type_id => 1406).first %>
+
+<div class="main footer" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="about">
+      <h4>About Us</h4>
+      <%== hf.child_value('about_text') %>
+    </div>
+    <div class="navigate">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a title="About" href="/about/the-association">About</a></li>
+        <li><a title="Events" href="/events/calendar">Events</a></li>
+        <li><a title="Education" href="/edu">Education</a></li>
+        <li><a title="Government Affairs" href="/government-affairs/government-affairs-overview">Government Affairs</a></li>
+        <li><a title="Benefits" href="/benefits/member-service-providers">Benefits</a></li>
+        <li><a title="Media" href="/media/news">Media</a></li>
+        <li><a title="Contact" href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="social">
+      <h4>Social</h4>
+      <ul>
+        <% socials = Caboose::SocialConfig.where(:site_id => site.id).last %>
+        <% if socials %>
+          <% options = ["Facebook", "Twitter", "Instagram", "LinkedIn", "Google_Plus", "YouTube", "Vimeo", "Pinterest", "RSS"] %>
+          <% options.each do |o| %>
+            <% url = ApplicationHelper.social_config(site.id, (o.downcase + "_url")) %>
+            <% if !url.blank? %>
+              <% name = o.downcase.gsub("_feed","").gsub("_","-") %>
+              <li>
+                <span class="icon-outline-<%= name %> social-i"></span>
+                <a target="_blank" title="<%= o.gsub("_"," ") %>" href="<%= url %>"><%= o.gsub("_"," ") %></a>
+              </li>
+            <% end %>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+    <div class="touch">
+      <h4>Get In Touch</h4>
+      <%== hf.child_value('contact_text') %>
+    </div>
+    <div class="nine">
+      <p>Powered by</p>
+      <a href="http://www.nine.is" target="_blank" title="The Nine">
+        <%= render 'svg/nine' %>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="product-index free">
+
+	<% @category = Caboose::Category.find(201) %>
+
+	<% @category.category_memberships.reorder(:sort_order).all.each do |cm| %>
+	<% p = cm.product %>
+	<% next if !p.allow_gift_wrap %>
+	<div class="product-wrapper clearfix">
+		<div class="constrain">
+			<div class="left">
+
+				<div class="product-graphic-wrapper">
+					<div class="top">
+						<img src="<%= asset_path 'mss/images/main_logo.png' %>" alt="Differentiated Visual Tools" class="main-logo" />
+					</div>
+					<div class="middle">
+						<p class="product-info">
+							<% topic = p.categories.where("store_categories.parent_id = ?",209).last %>
+							<% if topic %><%= topic.name %><br /><% end %>
+							<% grade = p.categories.where("store_categories.parent_id = ?",204).last %>
+							<% if grade %><%= grade.name %><% end %>
+							<% if topic.blank? && grade.blank? %>
+								<%= p.caption %>
+							<% end %>
+						</p>
+					</div>
+					<div class="bottom clearfix">
+						<% if !p.seo_description.blank? %>
+							<a href="<%= p.seo_description %>" class="btn" target="_blank">How To Guide</a>
+						<% end %>
+						<% if !p.default1.blank? %>
+							<a href="<%= p.default1 %>" class="btn">Free Graphic Organizers</a>
+						<% end %>
+					</div>
+				</div>
+			</div>
+			<div class="right">
+				<h2 class="product-name">
+					<%= p.title %>
+				</h2>
+				<div class="free-text">
+					<%= p.custom_input %>
+				</div>
+				<% cat = Caboose::MediaCategory.where(:name => "#{p.id}_free").first %>
+				<% if cat && cat.media.count > 0 %>
+					<div class="free-images clearfix">
+						<h6>Free sample <%= p.title %></h6>
+						<% cat.media.each do |cm| %>
+							<div class="image-holder">
+								<img src="<%= cm.image.url(:large) %>" alt="<%= p.title %>" />
+								<p class="meta"><%= cm.description %></p>
+							</div>
+						<% end %>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+
+	<% end %>
+
+</div>

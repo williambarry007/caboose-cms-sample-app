@@ -1,0 +1,47 @@
+<div id="block_<%= block.id %>">
+  <div class="menu-container clearfix">
+    <% if block.children.count > 0 %>
+      <div class="grid-row">
+        <% lc = block.child('left_column') %>
+        <div class="unit1of2" id="block_<%= lc.id %>">
+          <% if lc.children.count > 0 %>
+            <% lc.children.each do |b| %><%= raw lc.render(b, local_assigns) %><% end %>
+          <% else %>
+            <% if editing %>
+              <div style="padding:10px;">
+                <p>Left column is empty. Click to add menu items.</p>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+        <% rc = block.child('right_column') %>
+        <div class="unit1of2" id="block_<%= rc.id %>">
+          <% if rc.children.count > 0 %>
+            <% rc.children.each do |b| %><%= raw rc.render(b, local_assigns) %><% end %>
+          <% else %>
+            <% if editing %>
+              <div style="padding:10px;">
+                <p>Right column is empty. Click to add menu items.</p>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <% if editing %>
+        <div style="padding:10px;border:1px solid gray;">
+          <p>Empty menu container. Click to edit.</p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<% if editing %>
+  <style>
+    .unit1of2 {
+      border: 1px dashed gray;
+      padding-bottom: 40px;
+    }
+  </style>
+<% end %>

@@ -1,0 +1,11 @@
+<div id="block_<%= block.id %>" class="testimonials">
+  <div class="wrapper">
+    <h1>Patient Testimonials</h1>
+  </div>
+  
+  <ul>
+    <% block.children.each do |child| %><%= block.render(child, local_assigns) %><% end %>
+    <% if modal %><li>Click to add testimonials.</li><% end %>
+  </ul>
+</div>
+

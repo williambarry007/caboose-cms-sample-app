@@ -1,0 +1,90 @@
+<div class="contact-form-block clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="text">
+			<h3 class="section-title"><%= block.child_value('title') %></h3>
+			<div class="content"><%== block.child_value('description') %></div>
+		</div>
+		<form id="contact_form">
+			<input type="hidden" name="block_id" value="<%= block.id %>" />
+			<input type="hidden" name="form_name" value="Contact Form" />
+			<div class="grid-row">
+				<div class="unit1of3" style="padding-right:2%;">
+					<input type="text" name="name" placeholder="Your Name">
+				</div>
+				<div class="unit1of3" style="padding-left:1%;padding-right:1%;">
+					<input type="email" name="email_required" placeholder="Email Address">
+				</div>
+				<div class="unit1of3" style="padding-left:2%;">
+					<input type="text" name="subject" placeholder="Subject">
+				</div>
+			</div>
+			<div class="grid-row">
+				<div class="unit1of1">
+					<textarea name="message_required" placeholder="Message" rows="4"></textarea>
+				</div>
+			</div>
+			<% if block.child_value('show_captcha') && block.child_value('show_captcha') == "Yes" %>
+				<div class="recaptcha clearfix">
+					<div style="margin:10px 0;" class="g-recaptcha clearfix" data-sitekey="6LcOOQATAAAAAK0PVSzlqmm0X_RggYhM7GMuot4X"></div>
+				</div>
+			<% end %>
+			<div class="bottom clearfix">
+				<a href="#" class="btn" id="submit-contact-form">Send</a>
+			</div>
+		</form>
+		<div id="message"></div>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		.recaptcha > div > div {
+			float: right;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<script>
+
+		function submit_form2(form_id) {
+		  var mess = $("#" + form_id).next("#message");
+		  mess.html("<p class='note loading'>Submitting form... </p>");
+		  var form = $("#" + form_id); 
+		  form.find("input, textarea").each(function() {
+		    if ( $(this).attr("placeholder") == $(this).val() ) {
+		      $(this).val("");
+		    }
+		  });
+		  $.ajax({
+		    url: '/form',
+		    type: 'post',
+		    data: form.serialize(),
+		    success: function(resp) {
+		      if(resp.error) {
+		        form.find("input, textarea").each(function() {
+		          if ( $(this).val() == "" ) {
+		            $(this).val( $(this).attr("placeholder") );
+		          }
+		        });
+		        mess.html("<p class='note error'>" + resp.error + "</p>");
+		      } 
+		      if(resp.success) {
+		        form.slideUp(); 
+		        mess.html("<p class='note success'>" + resp.success + "</p>");
+		        window.location = '/thank-you-for-contacting-us';
+		      }
+		    }
+		  });
+		}
+
+		$(document).ready(function() {
+			$("#submit-contact-form").click(function(event) {
+				event.preventDefault();
+				submit_form2("contact_form"); 
+				return false;
+			});
+		});
+	</script>
+<% end %>

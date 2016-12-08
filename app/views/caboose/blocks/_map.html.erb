@@ -1,0 +1,44 @@
+<% 
+  lat = 0
+  lng = 0
+  zoom = 16
+  begin
+    lat = block.child_value("latitude").to_f
+    lng = block.child_value("longitude").to_f
+    zoom = block.child_value("zoom_level").to_i
+  rescue
+  end
+  info = block.child_value("info_text").blank? ? "" : block.child_value("info_text")
+  height = block.child_value("height").blank? ? "400px" : block.child_value("height")
+  if !height.include?("px")
+    height = height + "px"
+  end
+  style = block.child_value("style").blank? ? "Normal" : block.child_value("style")
+  address = block.child_value('address')
+%>
+
+  <% if lat != 0 && lng != 0 %>
+    <div class="map-block-container" id="block_<%= block.id %>">
+      <div class='map' id="map-<%= block.id %>" data-lat="<%= lat %>" data-long="<%= lng %>" data-zoom="<%= zoom %>" data-info="<%= info %>" data-style="<%= style %>"></div>
+      <% content_for :css do %>
+        <style>
+          .map-block-container#block_<%= block.id %> {
+            width: 100%;
+            height: <%= height %>;
+          }
+          #map-<%= block.id %> {
+            width: 100%;
+            height: 100%;
+          }
+        </style>
+      <% end %>
+      <% content_for :js do %>
+        <%= javascript_include_tag "maps.js" %>
+      <% end %>
+    </div>
+  <% else %>
+    <% if editing %>
+      <p style="padding:10px;border:1px solid #000;">Invalid map coordinates. Click to edit.</p>
+    <% end %>
+  <% end %>
+

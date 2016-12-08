@@ -1,0 +1,54 @@
+<%
+  img = ""
+  if !block.child('image').nil? 
+    if !block.child('image').image.url.include?('missing')
+      img = block.child('image').image.url(:original)
+    end
+  end
+
+  title       = block.child('title').value
+  description = block.child('description').value
+  ingredients = block.child('ingredients').value unless block.child('ingredients').nil?
+  directions  = block.child('directions').value unless block.child('directions').nil?
+%>
+
+<div id="block_<%= block.id %>">
+  <div class="recipe-block" style="background-image:url('<%= img %>');">
+    <div class="overlay"></div>
+    <div class="constrain">
+      <div class="left">
+        <h1 class="title"><%= title %></h1>
+        <div class="description"><%= raw description %></div>
+        <a href="#modal-<%= block.id %>" rel="#modal-<%= block.id %>" class="btn yellow call-modal">View Recipe</a>
+      </div>
+      <div class="right">
+        <img src="<%= img %>" alt="<%= title %>">
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="instructions semantic-content" id="modal-<%= block.id %>" tabindex="-1" role="dialog" aria-labelledby="modal-label-<%= block.id %>" aria-hidden="true">
+  <div class="modal-inner">
+    <header>
+      <h2 id="modal-label-<%= block.id %>" class="modal-title">
+        <%= title %>
+      </h2>
+      <img src="<%= img %>" alt="<%= title %>">
+    </header>
+    <!-- <br> -->
+    <div class="modal-content" id="modal-contents-<%= block.id %>">
+      <h3>Ingredients:</h3>
+      <hr>
+      <%= if ingredients then raw ingredients else '' end -%>
+      <h3>Directions:</h3>
+      <hr>
+      <%= if directions then raw directions else '' end -%>
+    </div>
+    <footer>
+        <%= raw description %>
+    </footer>
+  </div>
+
+  <a href="#" class="modal-close">X</a>
+</section>

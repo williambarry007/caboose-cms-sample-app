@@ -1,0 +1,28 @@
+<% 
+photo = block.child_value("banner_image").url(:huge)
+#photo = "placehold"
+img = photo.include?('placehold') ? "//d9hjv462jiw15.cloudfront.net/assets/glentempleton/images/glen.jpg" : photo
+pos = block.child_value('position').blank? ? "center center" : block.child_value('position')
+%>
+
+<div class="header-wrapper subpage" id="block_<%= block.id %>" data-image-src="<%= img %>" data-parallax="scroll" data-position="<%= pos %>">
+  <div class="constrain">
+    <header class="main subpage">
+      <nav class="reveal">
+        <ul>
+          <li><a href="/" title="Home">Home</a></li>
+          <% Caboose::Page.where(:parent_id => 1236, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+          <% end %>
+        </ul>
+      </nav>
+      <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </header>
+    <div class="bottom subpage">
+      <h1 class="title">Glen<br />Templeton</h1>
+    </div>
+  </div>
+</div>

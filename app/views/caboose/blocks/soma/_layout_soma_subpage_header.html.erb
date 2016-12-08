@@ -1,0 +1,29 @@
+<header class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <a class="logo-link" href="/" title="Home">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/soma/images/black_logo.png" alt="Soma Church" class="logo" width="134" height="73" />
+    </a>
+    <nav class="reveal">
+      <ul>
+        <% Caboose::Page.where(:parent_id => 1248, :hide => false).order(:sort_order).all.each do |p| %>
+          <% grandchildren = p.children.where(:hide => false).order(:sort_order).all %>
+          <li>
+            <a <% if request.original_url.include?(p.slug) %> class="active" <% end %> href="/<%= p.uri %>" title="<%= p.title %>"><%= p.menu_title.blank? ? p.title : p.menu_title %></a>
+            <% if grandchildren.count > 0 %>
+              <div class="dropdown">
+                <ul>
+                  <% grandchildren.each do |g| %>
+                    <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </div>
+</header>

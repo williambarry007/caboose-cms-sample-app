@@ -1,0 +1,25 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <h3 class="share">Share Greatness</h3>
+    <h3 class="share-reflection">Share Greatness</h3>
+    <%== ApplicationHelper.social_links(site.id, "circle", "colored") %>
+    <nav>
+      <ul>
+        <li><a href="/return-policy" title="Return Policy">Return Policy</a></li>
+        <li><a href="/terms-and-conditions" title="Terms and Conditions">Terms and Conditions</a></li>
+        <li><a href="/privacy-policy" title="Privacy Policy">Privacy Policy</a></li>
+        <li><a href="/contact-us" title="Contact Us">Contact Us</a></li>
+      </ul>
+    </nav>
+    <div class="contact">
+      <%== block.child_value('contact_text') %>
+      &copy; <%= DateTime.now.strftime("%Y") %> SOVOStyle, LLC. All rights reserved.
+    </div>
+  </div>
+  <section class="nine">
+    <span>Designed and loved by:</span>
+    <a href="http://www.nine.is" target="_blank">
+      <%= render 'svg/nine' %>
+    </a>
+  </section>
+</footer>

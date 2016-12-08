@@ -1,0 +1,38 @@
+<% 
+photo = block.child_value("banner_image").url(:huge)
+img = photo.include?('placehold') ? "http://d9hjv462jiw15.cloudfront.net/assets/eyesight/images/home.jpg" : photo
+%>
+
+<div class="header-wrapper subpage" id="block_<%= block.id %>" data-image-src="<%= img %>" data-parallax="scroll">
+  <header class="main subpage">
+    <a class="logo-link" href="/" title="Home">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/eyesight/images/logo.png" alt="Eyesight Marketing" class="white" />
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/eyesight/images/dark_logo.png" alt="Eyesight Marketing" class="dark" style="display:none;" />
+    </a>
+    <nav class="reveal">
+      <ul>
+        <% Caboose::Page.where(:parent_id => 839, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+        <li>
+          <a href="/contact-us" class="block" title="Contact Us">
+            <span>CONTACT US</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+  </header>
+
+  <div class="header-banner subpage">
+    <div class="table">
+      <div class="table-cell">
+        <div class="richtext">
+          <%== block.child_value('banner_text') %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

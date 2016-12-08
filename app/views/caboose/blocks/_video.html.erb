@@ -1,0 +1,100 @@
+<%
+  url = block.child_value('url') 
+  source = "YouTube" 
+  if url && url.include?('vimeo') 
+    source = "Vimeo"
+  end 
+  autoplay = block.child_value('autoplay') 
+  width = block.child_value('width') 
+  height = block.child_value('height') 
+  align = block.child_value('alignment') 
+  mt = block.child_value('margin_top') 
+  ml = block.child_value('margin_left') 
+  mb = block.child_value('margin_bottom') 
+  mr = block.child_value('margin_right')
+  protocol = request.protocol
+%>
+
+<div class="video_page_block" id="block_<%= block.id %>">
+  <div style="text-align:center; width: 100%;">
+    <img style="width:24px; height:24px; margin-right: 10px; position: relative; top: 5px;" src='//dfqtg9731bovy.cloudfront.net/assets/loading.gif' />
+    <span>Loading video...</span>
+  </div>
+
+  <% content_for :css do %>
+    <style>
+      #block_<%= block.id %> {
+        <% if align != "Center" %>
+          display: inline-block;
+          float: <%= align %>;
+        <% end %>
+        margin: <%= mt %> <%= mr %> <%= mb %> <%= ml %>;
+        <% if align == "Center" %>
+          text-align: center;
+          margin-left: auto;
+          margin-right: auto;
+        <% end %>
+      }
+      @media screen and (max-width: 768px) {
+        #block_<%= block.id %> {
+          float: none;
+          width: 100%;
+          padding: 0 2%;
+          text-align: center; 
+          margin-left: 0;
+          margin-right: 0; 
+        }
+        #block_<%= block.id %> iframe {
+          width: 100%;
+        }
+      }
+    </style>
+  <% end %>
+
+  <% content_for :js do %>
+    <script>
+    $(document).ready(function() {
+        var video_block = $("#block_<%= block.id %>");
+        var source_url = "<%= url %>"; 
+        var source_type = "<%= source %>";
+        var autoplay = "<%= autoplay %>"; 
+        var width = "<%= width %>"; 
+        var height = "<%= height %>"; 
+        if (autoplay == "Yes") {
+          autoplay = 1; 
+        }
+        else {
+          autoplay = 0; 
+        }
+        if ( source_type == "YouTube" ) {
+          function ytVidId(url) {
+            var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+            return (url.match(p)) ? RegExp.$1 : false;
+          }
+          var video_id = ytVidId( source_url );
+          if ( video_id ){
+              var iframe = "<iframe id='ytplayer' type='text/html' width='" + width +  "' height='" + height +  "' " + 
+              "src='//www.youtube.com/embed/" + video_id + 
+              "?autoplay=" + autoplay + "&origin=http://arec.alabama.gov'frameborder='0'/>"; 
+              video_block.html(iframe); 
+          }
+          else{
+              video_block.html("<p>Error loading video.</p>"); 
+          }
+        }
+        else if ( source_type == "Vimeo" ) {
+          var regExp = /http(s)?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+          var match = source_url.match(regExp);
+          if ( match[3] ){
+              var iframe = "<iframe src='//player.vimeo.com/video/" + match[3] + "?autoplay=" + autoplay + 
+              "' width='" + width +  "' height='" + height +  "' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"; 
+              video_block.html(iframe); 
+          }
+          else{
+              video_block.html("<p>Error loading video.</p>"); 
+          }
+        }
+    });
+    </script>
+  <% end %>
+</div>

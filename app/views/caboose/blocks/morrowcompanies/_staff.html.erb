@@ -1,0 +1,41 @@
+<%
+name = block.child_value('name')
+title = block.child_value('title')
+bio = block.child_value('bio')
+photo = block.child_value('photo')
+email = block.child_value('email_address')
+phone = block.child_value('phone_number')
+style = block.child_value('photo_style').blank? ? 'Circle' : block.child_value('photo_style')
+linkd = block.child_value('linkedin_url')
+%>
+
+<div class="staff-block clearfix" id="block_<%= block.id %>">
+	<% img_url = (photo.url && !photo.url.include?("placehold")) ? photo.url(:large) : '//d9hjv462jiw15.cloudfront.net/assets/shared/default_profile.png' %>
+	<% if img_url && style != 'None' %>
+		<div class="image-wrapper">
+			<% if style == "Circle" %>
+				<div class="profile-image" style="background-image:url(<%= img_url %>);"></div>
+			<% elsif style == "Rectangle" %>
+				<img src="<%= img_url %>" alt="<%= name %>">
+			<% end %>
+		</div>
+	<% end %>
+	<div class="text-wrapper <% if style == 'None' %>full<% end %>">
+		<h4 class="name">
+			<p class="inside">
+				<%= name %>
+				<% if !linkd.blank? %>
+					<a href="<%= linkd %>" target="_blank" title="LinkedIn Profile" class="colored icon-circle-linkedin"></a>
+				<% end %>
+			</p>
+		</h4>
+		<% if !title.blank? %><h5 class="title"><%= title %></h5><% end %>
+		<% if !email.blank? %>
+			<a href="mailto:<%= email %>">Email</a>
+		<% end %>
+		<% if !phone.blank? %>
+			<p><%= phone %></p>
+		<% end %>
+		<div class="bio richtext"><%== bio %></div>
+	</div>
+</div>

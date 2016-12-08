@@ -1,0 +1,28 @@
+<%
+img            = block.child_value('image')
+heading        = block.child_value('heading')
+text           = block.child_value('html')
+image_location = block.child_value('image_location')
+%>
+<div class="two-column-row clearfix" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of2 left-column" id="lc-99967">
+        <% if image_location == 'left' %>
+          <div class="table"><div class="table-cell"><% if img %><img src='<%= img.url(:large) %>' style='width: 200px; max-height: 200px; margin-left:   10px; margin-right:  10px; margin-top: 10px; margin-bottom: 10px' alt='' /><% else %>Image<% end %></div></div>
+        <% else %>
+          <h1 class='heading-block'><% if heading && heading.length > 0 %><%= heading %><% else %>Heading<% end %></h1>
+          <div class='richtext-block'><% if text && text.length > 0 %><%= text %><% else %>Descriptive text<% end %></div>
+        <% end %>          
+      </div>
+      <div class="unit1of2 right-column" id="rc-99967">
+        <% if image_location == 'right' %>
+          <div class="table"><div class="table-cell"><% if img %><img src='<%= img.url(:large) %>' style='width: 200px; max-height: 200px; margin-left:   10px; margin-right:  10px; margin-top: 10px; margin-bottom: 10px' alt='' /><% else %>Image<% end %></div></div>
+        <% else %>
+          <h1 class='heading-block'><% if heading && heading.length > 0 %><%= heading %><% else %>Heading<% end %></h1>
+          <div class='richtext-block'><% if text && text.length > 0 %><%= text %><% else %>Descriptive text<% end %></div>
+        <% end %> 
+      </div>
+    </div>
+  </div>
+</div>

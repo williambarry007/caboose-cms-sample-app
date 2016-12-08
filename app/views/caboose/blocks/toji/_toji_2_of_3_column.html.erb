@@ -1,0 +1,3 @@
+<div class="column-2-of-3" id="block_<%= block.id %>">
+  <% block.children.each do |child| %><%= block.render(child, local_assigns) %><% end %>
+</div>

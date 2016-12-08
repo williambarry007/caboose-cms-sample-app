@@ -1,0 +1,355 @@
+<% 
+	# these will eventually be pulled from the site config settings
+	font1_url = "http://fonts.gstatic.com/s/arvo/v8/id5a4BCjbenl5Gkqonw_Rw.ttf"
+	font1_family = "Arvo"
+	font1_variant = "italic"
+
+	font2_url = "http://fonts.gstatic.com/s/shadowsintolight/v6/clhLqOv7MXn459PTh0gXYAW_5bEze-iLRNvGrRpJsfM.ttf"
+	font2_family = "Shadows Into Light"
+	font2_variant = "regular"
+
+	font3_url = "http://fonts.gstatic.com/s/playfairdisplay/v10/UC3ZEjagJi85gF9qFaBgIKqwMe2wjvZrAR44M0BJZ48.ttf"
+	font3_family = "Playfair Display"
+	font3_variant = "900"
+%>
+
+<div class="constrain" style="padding:30px;">
+<!-- 	<h4>Select your Font:</h4> -->
+
+	<div class="font-window">
+		<div class="page-links clearfix">
+			<a href="#" id="previous" class="btn page-link">Previous</a>
+			<a href="#" id="next" class="btn page-link">Next</a>
+		</div>
+		<ul class="font-list" data-min="0" data-max="10">
+			<li class="font-li clearfix selected" id="1" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="2" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="3" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="4" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="5" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="6" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="7" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="8" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="9" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+			<li class="font-li clearfix" id="10" data-family="" data-index="0">
+				<h2 class="font-name">Font Name</h2><h2 class="font-test">Grump wizards make toxic brew for the evil Queen and Jack.</h2>
+			</li>
+		</ul>
+	</div>
+	<form id="font-form">
+		<span>Select a font variant: </span><select id="variant-selector" name="font-variant"></select>
+	</form>
+	<div class="font-preview-box">
+		<h2 class="font-preview">Font Preview - <span class="family">Open Sans</span></h2>
+		<p class="font-preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia, expedita. Alias consequuntur, tenetur, asperiores quisquam voluptatibus deserunt itaque officiis quas beatae iusto at aliquam debitis, a nihil unde, dolore est. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa debitis corporis saepe eum alias eius cum eaque ipsam ducimus sunt, nobis ab quia vitae hic laudantium unde pariatur sapiente numquam.</p>
+		<a href="#" class="btn alternate font-preview" style="margin-top:20px;">Click Here</a>
+	</div>
+	<div class="set-buttons grid-row">
+		<div class="unit1of3">
+			<a href="#" class="set-font btn" id="1">Set as Heading Font</a>
+		</div>
+		<div class="unit1of3">
+			<a href="#" class="set-font btn" id="2">Set as Body Font</a><br />
+			<span>Bold:</span><select class="body-variant-selector" id="bold"></select><br />
+			<span>Italic:</span><select class="body-variant-selector" id="italic"></select><br />
+			<span>Bold Italic:</span><select class="body-variant-selector" id="bold-italic"></select>
+		</div>
+		<div class="unit1of3">
+			<a href="#" class="set-font btn" id="3">Set as Button Font</a>
+		</div>
+	</div>
+	<div class="final-box">
+		<h2 id="font1-preview">Your Selected Fonts - <span class="family"><%= font1_family %></span> <span class="variant"><%= font1_variant %></span></h2>
+		<p id="font2-preview"><span class="family"><%= font2_family %></span> <span class="variant"><%= font2_variant %></span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, at voluptates assumenda hic architecto nobis dolorem soluta. Beatae illo explicabo, atque deserunt, illum cupiditate nihil magni necessitatibus, a eveniet hic.</p>
+		<a id="font3-preview" class="btn" href="#" style="margin-top:20px;"><span class="family"><%= font3_family %></span> <span class="variant"><%= font3_variant %></span></a>
+	</div>
+</div>
+
+
+<% content_for :css do %>
+	<style>
+		#font-form {
+			margin-top: 20px;
+		}
+		.final-box {
+			border: 1px dashed gray;
+			padding: 30px 2%;
+		}
+		.final-box h2, .font-preview-box h2 {
+			margin: 0 auto 15px auto;
+		}
+		.font-window ul {
+			border: 1px dashed gray;
+			clear: both;
+		}
+		.set-buttons {
+			text-align: center;
+			padding: 20px 2% 50px 2%;
+		}
+		.page-links {
+			margin-bottom: 10px;
+		}
+		.unit1of3 {
+			text-align: center !important;
+		}
+		#previous {
+			float: left;
+		}
+		#next {
+			float: right;
+		}
+		.font-li {
+			cursor: pointer;
+			padding: 8px;
+			height: 35px;
+		}
+		.font-li:hover {
+			background: rgb(232, 232, 232);
+		}
+		.font-li.selected {
+			background: rgb(255, 255, 211);
+		}
+		.font-preview-box {
+			padding: 30px 2%;
+			margin-top: 20px;
+			border: 1px dashed gray;
+		}
+		.font-li h2 {
+			display: inline-block;
+			margin-bottom: 0;
+			font-size: 1.2em;
+		}
+		.font-li .font-name {
+			width: 20%;
+			float: left;
+		}
+		.font-li .font-test {
+			width: 75%;
+			float: right;
+		}
+		@font-face {
+			font-family: "site-font-1";
+			src: url('<%= font1_url %>') format('truetype');
+			font-style: normal;
+			font-weight: normal;
+		}
+		@font-face {
+			font-family: "site-font-2";
+			src: url('<%= font2_url %>') format('truetype');
+			font-style: normal;
+			font-weight: normal;
+		}
+		@font-face {
+			font-family: "site-font-3";
+			src: url('<%= font3_url %>') format('truetype');
+			font-style: normal;
+			font-weight: normal;
+		}
+		#font1-preview {
+			font-family: "site-font-1";
+			font-style: normal;
+			font-weight: normal;
+		}
+		#font2-preview {
+			font-family: "site-font-2";
+			font-style: normal;
+			font-weight: normal;
+		}
+		#font3-preview {
+			font-family: "site-font-3";
+			font-style: normal;
+			font-weight: normal;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script>
+		window.google_fonts = [];
+
+		// function populate_fonts() {
+		// 	$.each(window.google_fonts, function(key, item) {
+		// 		$("#font-selector").append("<option value='" + key + "'>" + item.family + "</option>");
+		// 	});
+		// 	update_fonts(0,10);
+		// }
+
+		$(".page-link#next").click(function(event) {
+			event.preventDefault();
+			var min = $(".font-list").data("min");
+			var max = $(".font-list").data("max");
+			update_fonts(min + 10, max + 10);
+			$(".font-list").data("min", min + 10);
+			$(".font-list").data("max", max + 10);
+		});
+
+		$(".page-link#previous").click(function(event) {
+			event.preventDefault();
+			var min = $(".font-list").data("min");
+			var max = $(".font-list").data("max");
+			update_fonts(min - 10, max - 10);
+			$(".font-list").data("min", min - 10);
+			$(".font-list").data("max", max - 10);
+		});
+
+		$(".font-li").click(function() {
+			$(".font-li").removeClass("selected");
+			console.log("clicked " + $(this).data("index"));
+		//	$("#font-selector").val( $(this).data("index") );
+		//	$("#font-selector").trigger("change");
+			$(this).addClass("selected");
+			refresh_variants($(this).data("index"));
+			load_css($(this).data("index"), $("#variant-selector").val());
+			$(".font-preview-box h2 .family").html($(this).data("family"));
+			change_preview($(this).data("index"), $("#variant-selector").val());
+		});
+
+		function update_fonts(min, max) {
+			var font;
+			var variant;
+			for (i = min; i < max; i++) {
+				font = window.google_fonts[i];
+				variant = font.variants[0];
+				load_css(i, variant);
+				var index = (i % 10) + 1;
+				console.log("family: " + font.family, ", index: " + index);
+				$(".font-li:nth-of-type(" + index + ")").find("h2").css("font-family",font.family);
+				$(".font-li:nth-of-type(" + index + ")").find(".font-name").html(font.family);
+				$(".font-li:nth-of-type(" + index + ")").data("family",font.family);
+				$(".font-li:nth-of-type(" + index + ")").data("index",i);
+			}
+		}
+
+		function refresh_variants(font_id) {
+			var font = window.google_fonts[font_id];
+			$("#variant-selector").html("");
+			$(".body-variant-selector").html("");
+			if ( font && font.variants ) {
+				$.each(font.variants, function(key, variant) {
+					$("#variant-selector").append("<option value='" + variant + "'>" + variant + "</option>");
+					$(".body-variant-selector").append("<option value='" + variant + "'>" + variant + "</option>");
+				});
+			}
+		}
+
+		function load_css(font_id, variant) {
+			var font = window.google_fonts[font_id];
+			// console.dir(font);
+			// console.log("family: " + font.family);
+			// console.log("variant: " + variant);
+			var apiUrl = [];
+			apiUrl.push('//fonts.googleapis.com/css?family=');
+			apiUrl.push(font.family.replace(/ /g, '+'));
+			if ( variant && variant != "" ) {
+			  apiUrl.push(':');
+			  apiUrl.push(variant);
+			}
+			var url = apiUrl.join('');
+			var cssId = font_id + "_" + variant;
+			if (!document.getElementById(cssId)) {
+		    var head  = document.getElementsByTagName('head')[0];
+		    var link  = document.createElement('link');
+		    link.id   = cssId;
+		    link.rel  = 'stylesheet';
+		    link.type = 'text/css';
+		    link.href = url;
+		    link.media = 'all';
+		    head.appendChild(link);
+			}
+		}
+
+		function change_preview(font_id, variant) {
+			var font = window.google_fonts[font_id];
+			$(".font-preview").css("font-family",font.family);
+			if ( variant.indexOf("italic") >= 0 ) {
+				$(".font-preview").css("font-style","italic");
+			}
+			else {
+				$(".font-preview").css("font-style","normal");
+			}
+			var weight = variant.match(/\d+/);
+			if ( weight && weight != "" ) {
+				$(".font-preview").css("font-weight",weight);
+			}
+			else {
+				$(".font-preview").css("font-weight","normal");
+			}
+		}
+
+		$(document).ready(function() {
+
+			$.ajax({
+			  url: 'https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key=AIzaSyAjSs-Jq6hpuT35RG9wD6LuqaDFzYDCOPk',
+			  type: 'get',
+			  success: function(resp) {
+			  	if ( resp.items ) {
+			  		window.google_fonts = resp.items;
+						update_fonts(0, 10);
+			  		var first_font = $(".font-li.selected").data("index");
+			  		refresh_variants(first_font);
+			  		var first_variant = $("#variant-selector").val();
+			  		load_css(first_font, first_variant);
+						change_preview(first_font, first_variant);
+			  	}
+			  	else {
+			  		console.log("Error connecting to Google Fonts API");
+			  	}
+			  }
+			});
+
+			// $("#font-selector").change(function() {
+			// 	refresh_variants($(this).val());
+			// 	load_css($(this).val(), $("#variant-selector").val());
+			// 	change_preview($(this).val(), $("#variant-selector").val());
+			// });
+
+			$("#variant-selector").change(function() {
+				load_css( $(".font-li.selected").data("index"), $(this).val() );
+				change_preview( $(".font-li.selected").data("index"), $(this).val() );
+			});
+
+			$(".set-font").click(function(event) {
+				event.preventDefault(); 
+				var font_id = $(".font-li.selected").data("index");
+				var variant = $("#variant-selector").val();
+				var font = window.google_fonts[font_id];
+				var preview = $("#font" + $(this).attr("id") + "-preview");
+				preview.css("font-family",font.family);
+				if ( variant.indexOf("italic") >= 0 ) {
+					preview.css("font-style","italic");
+				}
+				else {
+					preview.css("font-style","normal");
+				}
+				var weight = variant.match(/\d+/);
+				if ( weight && weight != "" ) {
+					preview.css("font-weight",weight);
+				}
+				else {
+					preview.css("font-weight","normal");
+				}
+				preview.find(".family").html(font.family);
+				preview.find(".variant").html(variant);
+			});
+
+		});
+	</script>
+<% end %>

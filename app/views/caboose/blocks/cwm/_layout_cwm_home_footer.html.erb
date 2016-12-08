@@ -1,0 +1,51 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of3">
+        <a href="/" class="logo-link">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/cwm/images/white_logo.png" alt="China for World Missions" class="logo" />
+        </a>
+      </div>
+      <div class="unit1of3">
+        <div class="contact-form-block clearfix">
+          <h3>Contact</h3>
+          <form id="contact_form2">
+            <input type="hidden" name="block_id" value="54744" />
+            <input type="hidden" name="form_name" value="Contact Form" />
+            <input type="text" name="name" placeholder="Your Name">
+            <input type="email" name="email_required" placeholder="Email Address">
+            <textarea name="message_required" placeholder="Message" rows="4"></textarea>
+            <div class="bottom clearfix">
+              <a href="#" class="btn" id="submit-contact-form2">Send</a>
+            </div>
+          </form>
+          <div id="message"></div>
+        </div>
+      </div>
+      <div class="unit1of3">
+        <div class="address richtext">
+          <%== block.child_value('main_text') %>
+        </div>
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+      </div>
+    </div>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      $("#submit-contact-form2").click(function(event) {
+        event.preventDefault();
+        submit_form("contact_form2"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

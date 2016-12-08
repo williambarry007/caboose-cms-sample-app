@@ -1,0 +1,67 @@
+<form id="invest-form" accept-charset="utf-8" action="/contact" method="POST" id="block_<%= block.id %>">
+  <div style="display: none;">
+    <input name="params_id" type="hidden" value="8567" /> 
+    <input name="XID" type="hidden" value="a61b348dbf2c8f9dbc849514aa2a33a5ea5fd788" />
+  </div>
+  <label>First Name</label> 
+  <input id="first_name" maxlength="150" name="first_name" type="text" value="" />
+  <label>Last Name</label>
+  <input id="last_name" maxlength="150" name="last_name" type="text" value="" />
+  <label>Email</label> 
+  <input id="email_required" maxlength="150" name="email_required" type="text" value="" />
+  <h2>Select Your Investment:</h2>
+  <ul style="list-style: none; padding: 0;">
+    <li>
+      <input id="freeform_select_your_contribution_1" name="golden" type="radio" value="5000" />&nbsp;&nbsp; 
+      <label for="freeform_select_your_contribution_1">Golden "R" $5,000</label>
+    </li>
+    <li>
+      <input id="freeform_select_your_contribution_2" name="crystal" type="radio" value="2500" />&nbsp;&nbsp; 
+      <label for="freeform_select_your_contribution_2">Crystal "R" $2,500</label>
+    </li>
+    <li>
+      <input id="freeform_select_your_contribution_3" name="sterling" type="radio" value="1000" />&nbsp;&nbsp; 
+      <label for="freeform_select_your_contribution_3">Sterling "R" $1,000</label>
+    </li>
+    <li>
+      <input id="freeform_select_your_contribution_4" name="alabama" type="radio" value="500" />&nbsp;&nbsp; 
+      <label for="freeform_select_your_contribution_4">Alabama Circle $500</label>
+    </li>
+    <li>
+      <input id="freeform_select_your_contribution_5" name="agent_broker" type="radio" value="125" />&nbsp;&nbsp; 
+      <label for="freeform_select_your_contribution_5">Agent/Broker $125</label>
+    </li>
+    <li>
+      <input id="freeform_select_your_contribution_6" name="fair_share" type="radio" value="35" />&nbsp;&nbsp; 
+      <label for="freeform_select_your_contribution_6">Fair Share $35</label>
+    </li>
+  </ul>
+  <div class="recaptcha clearfix">
+    <div style="margin:10px 0;" class="g-recaptcha clearfix" data-sitekey="6LcOOQATAAAAAK0PVSzlqmm0X_RggYhM7GMuot4X"></div>
+  </div>
+  <input name="submit" type="submit" id="submit_button" value="Submit" />
+</form>
+<div id="message"></div>
+
+<% content_for :css do %>
+  <style>
+    .g-recaptcha > div > div {
+      float: right;
+    }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <%= javascript_include_tag "form_submit" %>
+  <script>
+    $(document).ready(function() {
+      $("#submit_button").click(function(event) {
+   //     $("#name").val($("#first_name").val() + " " + $("#last_name").val());
+        event.preventDefault();
+        submit_form("invest-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

@@ -1,0 +1,25 @@
+<%
+sc = Caboose::SocialConfig.where(:site_id => site.id).first 
+fb = sc ? sc.facebook_page_id : false
+%>
+
+<div id="block_<%= block.id %>">  
+  <div id="footer" class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <p>&copy; <%= DateTime.now.strftime("%Y") %>, Made by <a href="http://nine.is">The Nine</a></p>   
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <p class="social-media">
+            <!-- <a href="#" data-toggle="tooltip" title="twitter"><i class="fa fa-twitter"></i></a> -->
+       <% if fb %>     <a href="http://www.facebook.com/<%= fb %>" data-toggle="tooltip" title="facebook" target="_blank"><i class="fa fa-facebook"></i></a> <% end %>
+          <!--   <a href="#" data-toggle="tooltip" title="linkedin"><i class="fa fa-linkedin"></i></a>
+            <a href="#" data-toggle="tooltip" title="github"><i class="fa fa-github"></i></a>
+            <a href="#" data-toggle="tooltip" title="pinterest"><i class="fa fa-pinterest"></i></a> -->
+          </p>
+        </div>
+      </div>  
+    </div>
+  </div>
+</div>

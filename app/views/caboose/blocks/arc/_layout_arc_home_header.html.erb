@@ -1,0 +1,33 @@
+<header class="home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <a class="logo-link" href="/">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/arc/images/main_logo.png" alt="The Arc of Tuscaloosa County">
+    </a>
+    <div class="menu-button" id="open-nav">
+      <span class="text">menu</span>
+      <span class="icon-menu-3" id="icon"></span>
+    </div>
+  </div>
+</header>
+
+<div id="overlay-nav" style="display:none;">
+  <div class="constrain">
+    <div class="row clearfix">
+      <div class="logo">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/arc/images/nav_logo.png" alt="The Arc of Tuscaloosa County" />
+      </div>
+      <nav>
+        <a id="close-nav" class="icon-close"></a>
+        <ul>
+          <li><a href="/">home</a></li>
+          <% Caboose::Page.where(:parent_id => 472, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, true) %></li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+    <div class="bottom-text">
+      <p>for people with intellectual and developmental disabilities</p>
+    </div>
+  </div>
+</div>

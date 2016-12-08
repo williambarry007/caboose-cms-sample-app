@@ -1,0 +1,9 @@
+<%
+pdf = block.child_value('pdf')
+title = block.child_value('title')
+%>
+<% if pdf && title %>
+  <p id="block_<%= block.id %>"><a href='<%= pdf.url %>' target='_blank'><%= title %></a></p>
+<% elsif editing %>
+  <p id="block_<%= block.id %>">Please enter the minutes details.</p>
+<% end %>

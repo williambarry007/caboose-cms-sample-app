@@ -1,0 +1,150 @@
+<% offenders = Demopolis::Offender.where(:category => 'Most Wanted', :status => 'Active').order(:last_name).all %>
+
+<div class="offender-list sex" id="block_<%= block.id %>">
+	<h4>Most Wanted List</h4>
+
+	<div class="table-wrapper">
+		<table class="display" width="100%" id="offenders">
+			<thead>
+				<th>Photo</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Residence</th>
+				<th>DOB</th>
+				<th>Height</th>
+				<th>Weight</th>
+				<th>Sex</th>
+				<th>Eyes</th>
+				<th>Hair</th>
+				<th>Offense</th>
+			</thead>
+			<tbody>
+				<% offenders.each do |o| %>
+					<tr>
+						<td class="image-td">
+							<% if o.image && !o.image.url.include?('placehold') %>
+								<img src="<%= o.image.url(:small) %>" alt="<%= o.first_name %> <%= o.last_name %>">
+							<% else %>
+								<img src="/assets/shared/default_profile.png" alt="<%= o.first_name %> <%= o.last_name %>">
+							<% end %>
+						</td>
+						<td><%= o.first_name %></td>
+						<td><%= o.last_name %></td>
+						<td><%= o.residence %></td>
+						<td><%= !o.dob.blank? ? o.dob.strftime("%-m/%-d/%y") : "" %></td>
+						<td><%= o.height %></td>
+						<td><%= o.weight %></td>
+						<td><%= o.sex == 'Male' ? 'M' : (o.sex == 'Female' ? 'F' : '') %></td>
+						<td><%= o.eyes %></td>
+						<td><%= o.hair %></td>
+						<td>
+							<span class="bold">Offense: </span>
+							<p><%= o.offense %></p>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+			<tfoot>
+				<th>Photo</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Residence</th>
+				<th>DOB</th>
+				<th>Height</th>
+				<th>Weight</th>
+				<th>Sex</th>
+				<th>Eyes</th>
+				<th>Hair</th>
+				<th>Offense</th>
+			</tfoot>
+		</table>
+	</div>
+
+
+<!-- 	<div class="table-wrapper">
+		<table class="offender-table">
+			<tr>
+				<th></th>
+				<th>Last Name</th>
+				<th>First Name</th>
+				<th>Residence</th>
+			</tr>
+			<% offenders.each do |o| %>
+				<tr class='or'>
+					<td><a href="#" class="btn view">View</a></td>
+					<td><%= o.last_name %></td>
+					<td><%= o.first_name %></td>
+					<td><%= o.residence %></td>
+				</tr>
+				<tr class="dropdown" style="display:none;">
+					<td colspan="3" class="table-td">
+						<table class="inner">
+							<tr>
+								<th>DOB</th>
+								<th>Height</th>
+								<th>Weight</th>
+								<th>Sex</th>
+								<th>Eyes</th>
+								<th>Hair</th>
+							</tr>
+							<tr>
+								<td><%= !o.dob.blank? ? o.dob.strftime("%B %-d, %Y") : "" %></td>
+								<td><%= o.height %></td>
+								<td><%= o.weight %></td>
+								<td><%= o.sex %></td>
+								<td><%= o.eyes %></td>
+								<td><%= o.hair %></td>
+							</tr>
+							<tr>
+								<td colspan="6">
+									<span class="bold">Offense: </span>
+									<p><%= o.offense %></p>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td class="image-td">
+						<% if o.image && !o.image.url.include?('placehold') %>
+							<img src="<%= o.image.url(:small) %>" alt="<%= o.first_name %> <%= o.last_name %>">
+						<% else %>
+							<img src="/assets/shared/default_profile.png" alt="<%= o.first_name %> <%= o.last_name %>">
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</table>
+	</div> -->
+</div>
+
+<% content_for :css do %>
+	<%= stylesheet_link_tag("//cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css") %>
+<% end %>
+
+<% content_for :js do %>
+	<script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+	<script>
+
+	$(document).ready(function() {
+    $('#offenders').DataTable({
+    	"order": [[ 2, "asc" ]]
+    });
+} );
+		// $(".view.btn").click(function(event) {
+		// 	event.preventDefault();
+		// 	$(this).parent().parent().next(".dropdown").toggle();
+		// 	$(this).parent().parent().toggleClass("active");
+		// 	$(this).text() == "View" ? $(this).text("Hide") : $(this).text("View");
+		// });
+		// $("input[name='filter']").keyup(function() {
+		// 	var q = $(this).val();
+		// 	$(".or").hide();
+		// 	$(".dropdown").hide();
+		// 	$(".or").each(function( index ) {
+		// 		if ( $(this).html().indexOf(q) ) {
+		// 			$(this).show();
+		// 			$(this).next("tr").show();
+		// 		}
+		// 	});
+		// });
+	</script>
+<% end %>

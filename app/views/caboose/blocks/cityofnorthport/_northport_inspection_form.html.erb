@@ -1,0 +1,96 @@
+<div class="inspection-form clearfix" id="block_<%= block.id %>">
+
+		<form id="inspection-form" action="/form" method="post">
+			<input type="hidden" name="block_id" value="<%= block.id %>" />
+			<input type="hidden" name="form_name" value="Contact Form" />
+			<div class="field">
+				<label for="type_of_inspection_required" class="required">Type of Inspection</label>
+				<input type="text" id="type_of_inspection_required" name="type_of_inspection_required" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="company_requesting_required" class="required">Company Requesting the Inspection</label>
+				<input type="text" id="company_requesting_required" name="company_requesting_required" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="contact_person_required" class="required">Contact Person</label>
+				<input type="text" id="contact_person_required" name="contact_person_required" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="contact_number_required" class="required">Contact Number</label>
+				<input type="text" id="contact_number_required" name="contact_number_required" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="return_email_address_required" class="required">Return E-Mail Address</label>
+				<input type="email" id="return_email_address_required" name="return_email_address_required" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="permit_number">Permit Number</label>
+				<input type="text" id="permit_number" name="permit_number" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="address">Address</label>
+				<input type="text" id="address" name="address" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="contractor_or_owner_name">General Contractor/Owner Name</label>
+				<input type="text" id="contractor_or_owner_name" name="contractor_or_owner_name" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="contractor_who_performed_work">Contractor Who Performed Work</label>
+				<input type="text" id="contractor_who_performed_work" name="contractor_who_performed_work" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="requested_day_of_inspection">Requested Day of Inspection</label>
+				<input type="text" id="requested_day_of_inspection" name="requested_day_of_inspection" maxlength="100" />
+			</div>
+			<div class="field">
+				<label for="call_before_visiting">Do you want the Inspector to call before visiting the site?</label>
+				<select id="call_before_visiting" name="call_before_visiting">
+					<option value="Yes">Yes</option>
+					<option value="No">No</option>
+				</select>
+			</div>
+			<div class="field">
+				<label for="special_instructions">Any special instructions?</label>
+				<textarea name="special_instructions" rows="8" maxlength="1000"></textarea>
+				<p class="count"><span>0</span> characters (1,000 max)</p>
+			</div>
+
+			<% if block.child_value('show_captcha') && block.child_value('show_captcha') == "Yes" %>
+				<div class="recaptcha clearfix">
+					<div style="margin:10px 0;" class="g-recaptcha clearfix" data-sitekey="6LcOOQATAAAAAK0PVSzlqmm0X_RggYhM7GMuot4X"></div>
+				</div>
+			<% end %>
+			<div class="bottom clearfix">
+				<input type="submit" value="Send" class="btn" id="submit-inspection-form" />
+			</div>
+		</form>
+		<div id="message"></div>
+
+</div>
+
+<% content_for :css do %>
+	<style>
+		.g-recaptcha > div > div {
+			float: right;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<%= javascript_include_tag "form_submit" %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-inspection-form").click(function(event) {
+				event.preventDefault();
+				submit_form("inspection-form"); 
+				return false;
+			});
+			$("textarea").bind('input propertychange', function() {
+				var count = $(this).val().length;
+				$(this).next(".count").find("span").html(count);
+			});
+		});
+	</script>
+<% end %>

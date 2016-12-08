@@ -1,0 +1,116 @@
+<% post_limit = 10 %>
+<% page_number = 1 %>
+<% 
+	off_set = 0 
+	begin
+		if params[:page]
+ 			off_set = (params[:page].to_i - 1) * post_limit
+ 			page_number = params[:page].to_i
+		end
+	rescue
+		off_set = 0
+	end
+	if off_set < 0 
+		off_set = 0
+	end
+
+	cat_id = ''
+	begin
+		if params[:category_id]
+			cat_id = params[:category_id]
+		end
+	rescue 
+		cat_id = ''
+	end
+
+%>
+
+
+	<% if cat_id.blank? %>
+			<% post_count = Caboose::Post.where(:site_id => site.id, :published => true).count %>
+			<% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").offset(off_set).limit(post_limit) %>
+	<% else %>
+			<% category = Caboose::PostCategory.find(cat_id) %>
+			<% if category %>
+				<% post_count = category.posts.where(:site_id => site.id, :published => true).count %>
+				<% posts = category.posts.where(:site_id => site.id, :published => true).order("created_at DESC").offset(off_set).limit(post_limit) %>
+			<% end %>
+	<% end %>
+
+
+
+				<div class="post-index" id="block_<%= block.id %>">
+					
+	
+					
+						<h1>Latest News &amp; Updates</h1>
+						
+					<% if posts.count > 0 %>
+
+						<% posts.each do |p| %>
+							
+							<div class="clearfix list-entry">
+								
+
+
+								<% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+									<div class="thumb"><img src="<%= p.image.url(:large) %>" width="150" alt="<%= p.title %>" /></div>
+								<% end %>
+
+
+								
+								<% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+								<div class="summary">
+								<% end %>
+							
+									<h2><a href="<%= p.uri %>"><%= p.title %></a></h2>
+							
+								<% src_text = p.preview %>
+					  <% if p.preview.blank? && !p.body.blank? %>
+							<% src_text = p.body %>
+					  <% end %>
+					  <% if !src_text.blank? %>
+
+									<div class="post-excerpt">
+			              <% 
+			                html = Nokogiri::HTML( src_text ) 
+			                text = html.at('body').inner_text
+			                words = text.blank? ? "" : text.split[0..30] 
+			              %>
+			              <% if !words.blank? && words.count > 29 %>
+			              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+			              <% else %>
+											<%= words.blank? ? "" : words.join(' ') %>
+			              <% end %>
+			            </div>
+
+			            <% end %>
+							
+									<a href="<%= p.uri %>">Read&nbsp;More&nbsp;&raquo;</a>
+								
+								<% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+								</div>
+								<% end %>
+							
+							</div>
+
+					<% end %>
+
+					<% else %>
+			<p>Sorry, no news to display now. Check back later!</p>
+		<% end %>
+				
+				<% if post_count > 10 %>
+					<div class="page-buttons">
+					<% if page_number > 1 %>
+						<a href="/resources/iris-news?page=<%= page_number - 1 %>" class="prev btn" style="margin-right: 30px;">Previous Page</a>
+					<% end %>
+					<% if page_number < (post_count.to_f / post_limit.to_f) %>
+						<a href="/resources/iris-news?page=<%= page_number + 1 %>" class="next btn">Next Page</a>
+					<% end %>
+				</div>
+
+				<% end %>
+				
+	</div>
+

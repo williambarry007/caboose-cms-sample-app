@@ -1,0 +1,31 @@
+<%
+  classes = []
+  classes << block.child_value("background_color")
+  classes = classes.join(" ") 
+%>
+
+<div id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="content-wrapper <%= classes %>">
+    <% if modal %>
+      <% child_blocks = block.children.all %>
+    <% else %>
+      <% child_blocks = block.children.where("name is null or (name != ?)", "background_color").all %>
+    <% end %>
+    <% if child_blocks.count > 0 %>
+      <% child_blocks.each do |b| %><%= raw block.render(b, local_assigns) %><% end %>
+    <% else %>
+      <p>Empty content wrapper block. Click to edit.</p>
+    <% end %>
+    </div>
+  </div>
+</div>
+
+<% if editing %>
+  <style>
+    .content-wrapper {
+      padding: 20px 2%;
+      border: 1px solid gray;
+    }
+  </style>
+<% end %>

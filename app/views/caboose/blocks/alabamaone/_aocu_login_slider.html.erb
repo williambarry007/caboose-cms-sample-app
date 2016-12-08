@@ -1,0 +1,186 @@
+<%
+  slides = block.children.where(:block_type_id => block.block_type.default_child_block_type_id).all
+  interval = block.child_value('duration').blank? ? 8 : block.child_value('duration')
+  height = block.child_value('height').blank? ? '800px' : block.child_value('height')
+  begin
+    ms = interval.to_i * 1000
+  rescue
+    ms = 6000
+  end
+  arrow_position = "350px"
+  video_path = block.child_value('video_path')
+  rates_link = block.child_value('rates_link').blank? ? '#' : block.child_value('rates_link')
+  home_link = block.child_value('home_link').blank? ? '#' : block.child_value('home_link')
+  car_link = block.child_value('car_link').blank? ? '#' : block.child_value('car_link')
+  credit_link = block.child_value('credit_link').blank? ? '#' : block.child_value('credit_link')
+%>
+
+
+  <div class="slider-block-container clearfix login" id="block_<%= block.id %>">
+
+    <% if slides.size > 0 %>
+
+      <div class="slider-container" id="slider-container-<%= block.id %>">
+        <div class="login-form-wrapper">
+          <form id='home-login-form' method="post" action="https://www.cue-branch.com/alabamaone/Login.aspx?REMOTE_AUTH=2AC6175C1696FBBD6839AB3C2FCFEFE2">
+            <h5>Home Branch <span class="icon-lock"></span></h5>
+            <div class="field">
+              <input type="text" id='login-username' name="REMOTEACCT" value="" maxlength="30" placeholder="Username" />
+            </div>
+            <div class="field">
+              <input type="password" id='login-password' name="REMOTEPIN" value="" maxlength="30" placeholder="Password" />
+            </div>
+            <div class="buttons clearfix">
+              
+              <a href="https://www.cue-branch.com/alabamaone/SelfSignUp.aspx" class="alternate btn">Sign Up</a>
+              <input type="submit" class="btn" value="Log In" id='login-submit-btn' />
+            </div>
+        <!--     <a href="#" class="link">Forgot User ID or Password</a> -->
+          </form>
+          <div id="l-message"></div>
+        </div>
+        <div class="search-form-wrapper">
+          <form action="/search" method="GET" id="home-search-form">
+            <input type="text" name="q" placeholder="Search Our Site" />
+            <a href="#" class="icon-search" id="submit-home-search-form"></a>
+          </form>
+        </div>
+        <div class="left-nav" id="nav-left-<%= block.id %>">
+          <div class="arrow icon-left-big"></div>
+        </div>
+        <div class="liquid-slider" id="slider-<%= block.id %>" data-size="<%= slides.count %>">
+          <% if false # video slide %>
+          <div class="slide clearfix" id="video-slide">
+            <div class="slider-slide clearfix">
+              <div class="slider-overlay"></div>
+              <div class="slide-content">
+                <div class="content-holder">
+                  <span class="title"></span>
+                  <div class="richtext slide-title"><h2>Welcome to the new Alabama One Credit Union website</h2></div>
+                  <div class="richtext body"><p style="margin-bottom:0;">We look forward to serving you at one of our 11 branch locations!</p></div>
+                  <a href="/locations" class="green btn">Locations</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% end %>
+
+          <% slides.each_with_index do |slide, index| %>
+            <%== block.render(slide, local_assigns) %>
+          <% end %>
+        </div>
+        <div class="right-nav" id="nav-right-<%= block.id %>">
+          <div class="arrow icon-right-big"></div>
+        </div>
+      </div>
+
+    <% else %>
+      <% if editing %>
+        <p style="padding:10px;border:1px solid #000;">Empty slider container. Click to add slides.</p>
+      <% end %>
+    <% end %>
+
+    <div class="quick-links">
+      <div class="contain">
+        <img src="<%= asset_path 'alabamaone/images/news.png' %>" alt="What's New" width="60" height="60" />
+        <h2>What's New at AOCU</h2>
+        <div class="content">
+          <%== block.child_value('whats_new_text') %>
+        </div>
+      </div>
+    </div>
+
+    <div class="widgets">
+      <div class="contstrain">
+        <ul>
+          <li>
+            <a href="<%= rates_link %>" title="Rates">
+              <img src="<%= asset_path 'alabamaone/images/rates.png' %>" alt="Rates" width="45" />
+              <span>Rates</span>
+            </a>
+          </li>
+          <li>
+            <a href="<%= home_link %>" title="Buying a Home">
+              <img src="<%= asset_path 'alabamaone/images/home.png' %>" alt="Home" width="45" />
+              <span>Buying a Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="<%= car_link %>" title="Buying a Car">
+              <img src="<%= asset_path 'alabamaone/images/car.png' %>" alt="Car" width="45" />
+              <span>Buying a Car</span>
+            </a>
+          </li>
+          <li>
+            <a href="<%= credit_link %>" title="Credit Cards">
+              <img src="<%= asset_path 'alabamaone/images/credit_card.png' %>" alt="Credit Card" width="45" />
+              <span>Credit Cards</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  
+  <% if false %>
+      <% content_for :css do %>
+        <style>
+          <% if !video_path.blank? && false %>
+            #slider-<%= block.id %>-wrapper .slider-slide {
+              background-image: none !important;
+            }
+          <% end %>
+          #slider-<%= block.id %>-wrapper .slider-slide {
+            cursor: pointer;
+          }
+        </style>
+      <% end %>
+  <% end %>
+
+      <% content_for :js do %>
+      <script>
+        $('#login-submit-btn').click(function(event) {
+          event.preventDefault();
+          var form = $('#home-login-form');
+          if ( $('#login-username').val() == 'Username' || $('#login-username').val() == '' ) {
+            form.next('#l-message').html('<p class="note error">Username is required.</p>');
+          }
+          else if ( $('#login-password').val() == 'Password' || $('#login-password').val() == '' ) {
+            form.next('#l-message').html('<p class="note error">Password is required.</p>');
+          }
+          else {
+            form.next('#l-message').html('<p class="note loading">Logging in...</p>');
+            form.trigger('submit');
+          }
+        });
+        $(document).ready(function() {
+
+        <% if false && !video_path.blank? %>
+          $("#video-slide").vide("http://cabooseit.s3.amazonaws.com/assets/alabamaone/images/<%= video_path %>");
+          $("#video-slide").click(function(e) {
+            e.preventDefault();
+            window.location = '/locations';
+          });
+        <% end %>
+
+          $("#slider-<%= block.id %>").liquidSlider({
+            autoSlide: true,
+            autoSlideInterval: <%= ms %>,
+            autoHeight: false,
+            slideEaseFunction: "fade",
+            dynamicArrows: false,
+            dynamicTabs: true
+          });
+          var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+          $("#nav-left-<%= block.id %>").click(function() {
+            api.setNextPanel('left');
+            api.updateClass($(this)); 
+          });
+          $("#nav-right-<%= block.id %>").click(function() {
+            api.setNextPanel('right');
+            api.updateClass($(this)); 
+          });
+        });
+      </script>
+    <% end %>

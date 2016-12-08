@@ -1,0 +1,37 @@
+<div id="block_<%= block.id %>">
+  <header class="main subpage">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/radiology/images/main_logo.png" alt="The Radiology Clinic" width="220" height="53" />
+      </a>
+      <div class="l-right">
+        <a href="#" class="icon-search link" title="Search" id="show-search-form"></a>
+        <a id="show-menu" href="#" title="Menu">
+          <span class="text">Menu</span>
+          <span class='icon-menu-4'></span>
+        </a>
+      </div>
+    </div>
+  </header>
+  <div class="subpage-banner">
+    <div class="overlay"></div>
+    <h1 class="page-title"><%= page.title %></h1>
+  </div>
+</div>
+
+<% if !editing %>
+  <div class="fullscreen-overlay" id="search-modal">
+    <div class="table modal-wrapper">
+      <div class="table-cell">
+        <div class="modal">
+          <a id="close-modal" class="icon-close"></a>
+          <h4 class="modal-title">Search</h4>
+          <form action="/search" method="get">
+            <input type="text" name="q" placeholder="Keywords" /><br />
+            <input type="submit" class="btn" value="Search" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

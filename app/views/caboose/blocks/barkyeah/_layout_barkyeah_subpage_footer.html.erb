@@ -1,0 +1,18 @@
+
+<footer class="basic" id="block_<%= block.id %>">
+  <div class="constrain">
+    <nav>
+      <ul>       
+        <li><a href="/">Home</a></li>        
+        <% Caboose::Page.joins(:page_tags).where(:site_id => @site.id, :hide => false, :page_tags => { :tag => 'footer' }).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>        
+      </ul>
+    </nav>
+    <div class="copyright">
+      <p style="margin-bottom:10px;">BARK YEAH!<br />
+      copyright &copy; <%= DateTime.now.strftime("%Y") %>
+      </p>      
+    </div>    
+  </div>
+</footer>

@@ -1,0 +1,11 @@
+<div class="content_wrapper" id='block_<%= block.id %>'>          
+  <div class="content_body">    
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>    
+      <%= raw controller_view_content %>
+    <% elsif post && post.body %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <% block.children.each do |b| %><%= raw block.render(b, local_assigns) %><% end %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<section id="block_<%= block.id %>">
+  <ul class="blurbs grid-row constrain">
+    <% block.children('blurb').each do |blurb| %>
+      <li class="unit1of<%= block.children('blurb').count %>">
+        <%= block.render(blurb, local_assigns) %>
+      </li>
+    <% end %>
+  </ul>
+</section>

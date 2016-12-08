@@ -1,0 +1,99 @@
+<%
+t1i = block.child_value('testimonial_1_photo').url(:large)
+t1t = block.child_value('testimonial_1_text')
+t1n = block.child_value('testimonial_1_name')
+t2i = block.child_value('testimonial_2_photo').url(:large)
+t2t = block.child_value('testimonial_2_text')
+t2n = block.child_value('testimonial_2_name')
+sh = Caboose::Block.where(:block_type_id => 1862).first
+%>
+
+<div class="content_wrapper" id='block_<%= block.id %>'>
+  <div class="content_body home-content">
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+    <div class="constrain">
+      <div class="main-content">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/main_logo.png" alt="Memorize Muslces" class="logo" width="200" height="102" />
+<!--         <div class="unit1of2 left">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/main_logo.png" alt="Memorize Muslces" class="logo" width="240" height="122" />
+          <div class="email-form-wrapper reveal">
+            <p class="info">If you would like a free sample from the actual book, please sign up for our email updates.</p>
+            <form action="/mailchimp/subscribe" class='mailchimp_subscribe_form'>
+              <input type="email" name="email" placeholder="EMAIL ADDRESS" />              
+              <input type="submit" value="Learn More" class="btn">              
+            </form>
+          </div>
+          <div class="buy-button-wrapper reveal">
+            <h3 class='b-title'>Purchase</h3>
+            <div class="b-left"><span><%= sh.child_value("price") %></div>
+            <div class="b-right"><a href="#" title="Buy Now" class="btn show-buy-modal">Buy Now</a></div>
+            <div class="buy-modal clearfix">
+              <a class="icon-close close-buy-modal"></a>
+              <div class="option">
+                <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/amazon.png" alt="Amazon" />
+                <a href="<%= sh.child_value('amazon_url') %>" title="Buy on Amazon" class="buy btn" target="_blank">Buy Now</a>
+              </div>
+              <div class="option">
+                <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/ibooks.png" alt="iBooks" />
+                <a href="<%= sh.child_value('ibooks_url') %>" title="Buy on iBooks" class="buy btn" target="_blank">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div>
+          <% block.children.each do |b| %>
+            <% skip = [1867,1868,1869,1870,1871,1872] %>
+            <% next if skip.include?(b.block_type_id) %>
+            <%= raw block.render(b, local_assigns) %>
+          <% end %>          
+<!--           <div class="buy-button-wrapper hidden">
+            <h3 class='b-title'>Purchase</h3>
+            <div class="b-left"><span><%= sh.child_value("price") %></div>
+            <div class="b-right"><a href="#" title="Buy Now" class="btn show-buy-modal">Buy Now</a></div>
+            <div class="buy-modal clearfix">
+              <a class="icon-close close-buy-modal"></a>
+              <div class="option">
+                <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/amazon.png" alt="Amazon" />
+                <a href="<%= sh.child_value('amazon_url') %>" title="Buy on Amazon" class="buy btn" target="_blank">Buy Now</a>
+              </div>
+              <div class="option">
+                <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/ibooks.png" alt="iBooks" />
+                <a href="<%= sh.child_value('ibooks_url') %>" title="Buy on iBooks" class="buy btn" target="_blank">Buy Now</a>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div class="testimonials">
+      <div class="constrain">
+        <div class="grid-row">
+          <div class="unit1of2">
+            <div class="testimonial clearfix">
+              <div class="image-holder">
+                <div class="image-wrapper" style="background-image:url(<%= t1i %>);"></div>
+              </div>
+              <div class="text-wrapper">
+                <div class="richtext body"><%== t1t %></div>
+                <h4 class="name"><%= t1n %></h4>
+              </div>
+            </div>
+          </div>
+          <div class="unit1of2">
+            <div class="testimonial clearfix">
+              <div class="image-holder">
+                <div class="image-wrapper" style="background-image:url(<%= t2i %>);"></div>
+              </div>
+              <div class="text-wrapper">
+                <div class="richtext body"><%== t2t %></div>
+                <h4 class="name"><%= t2n %></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

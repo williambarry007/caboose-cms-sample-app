@@ -1,0 +1,49 @@
+<%
+tweet = TwitterCache.where(:site_id => site.id).order('created_at DESC').first
+%>
+
+<div class="sidebar-bg">
+  <!-- <img class="logo" src="<%= asset_path 'aliceville/images/dark_logo.png' %>" alt="<%= site.description %>" width="150" height="134" /> -->
+</div>
+<aside class="subpage-sidebar">
+<!-- 	<section>
+		<h4 class="title">Be Social</h4>
+    <%== ApplicationHelper.social_links(site.id, "icon", "colored") %>
+	</section> -->
+  <section>
+    <h4 class="title">Quick Links</h4>
+    <ul class="links">
+      <li><a href="/about/mayor-city-council" title="Mayor and City Council">Mayor &amp; City Council</a></li>
+      <li><a href="/about/mayor-city-council/council-meetings" title="Agendas and Minutes">Agendas &amp; Minutes</a></li>
+      <li><a href="/chamber/business-directory" title="Business Directory">Business Directory</a></li>
+      <li><a href="/living/calendar" title="Calendar">Calendar</a></li>
+      <li><a href="/contact" title="Contact">Contact</a></li>
+    </ul>
+  </section>
+  <section>
+    <h4 class="title">Upcoming Events</h4>
+    <% cals = Caboose::Calendar.where(:site_id => site.id).pluck(:id) %>
+    <% events = Caboose::CalendarEvent.where(:calendar_id => cals).where('begin_date >= ?',DateTime.now).order(:begin_date).take(4) %>
+    <ul class="events">
+      <% events.each do |e| %>
+        <li class="clearfix">
+          <div class="cal-icon">
+            <span class="month"><%= e.begin_date.strftime('%B') %></span>
+            <p class="day">
+              <span><%= e.begin_date.strftime('%-d') %></span>
+            </p>
+          </div>
+          <h5><%= e.name %></h5>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+  <% if tweet %>
+    <section>
+     <!--  <h4 class="title">Twitter</h4> -->
+      <a href="http://www.twitter.com/alicevilleal" target="_blank" class="icon-twitter"></a>
+      <p class="tweet"><%== tweet.body %></p>
+      <p class="time">3 days ago</p>
+    </section>
+  <% end %>
+</aside>

@@ -1,0 +1,37 @@
+<%
+	background_color = block.child_value('background_color').blank? ? "main" : block.child_value('background_color')
+	font_color = block.child_value('font_color').blank? ? "white" : block.child_value('font_color')
+	font_size = block.child_value('font_size').blank? ? "18px" : block.child_value('font_size')
+	max_width = block.child_value('max_width').blank? ? "800px" : block.child_value('max_width')
+	text_align = block.child_value('text_align').blank? ? "center" : block.child_value('text_align')
+%>
+
+<div class="text-area-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="content">   
+	    <% if block.children.count > 0 %>
+	      <% block.children.each do |b| %>
+	      	<% next if b.name == "background_color" || b.name == "font_color" || b.name == "max_width" || b.name == "text_align" || b.name == "font_size" %>
+	      	<%= raw block.render(b, local_assigns) %>
+	      <% end %>
+	    <% end %>
+		</div>
+	</div>
+	<% content_for :css do %>
+		<style>
+			#block_<%= block.id %> {
+				<% if background_color != "main" %>
+					background-color: <%= background_color %>;
+				<% end %>
+				text-align: <%= text_align %>;
+			}
+			#block_<%= block.id %> .content {
+				max-width: <%= max_width %>;
+				text-align: <%= text_align %>;
+				font-size: <%= font_size %>;
+				color: <%= font_color %>;
+			}
+		</style>
+	<% end %>
+</div>
+

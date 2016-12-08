@@ -1,0 +1,6 @@
+<%
+text = block.value
+text = "<p>#{empty_text}</p>" if editing && (text.nil? || text.strip.length == 0)
+%>
+
+<div id='block_<%= block.id %>' class="richtext-block"><%= raw text %></div>

@@ -1,0 +1,81 @@
+<% title = block.child_value('title').blank? ? "" : block.child_value('title') %>
+<% media_category = block.child_value('media_category') %>
+<% cat = Caboose::MediaCategory.where(:id => media_category).last %>
+<% images = [] %>
+<% media = [] %>
+<% columns = block.child_value('columns').blank? ? 4 : block.child_value('columns') %>
+<% if cat %>
+	<% media = cat.media.order(:sort_order).all %>
+<% else %>
+	<% images = block.children.where(:block_type_id => 1046).order(:sort_order).all %>
+<% end %>
+<div class="photo-gallery-block clearfix col-<%= columns %>" id="block_<%= block.id %>">
+	<% if !title.blank? %><h3 class="gallery-title"><%= title %></h3><% end %>
+	<% if images.count > 0 %>
+		<div class="gallery-container">
+			<% images.each_with_index do |i, index| %>
+				<% photo = i.child_value('photo') %>
+				<% src_small = (!photo.blank? && photo.url) ? photo.url(:large) : "" %>
+				<% src_large = (!photo.blank? && photo.url) ? photo.url(:huge) : "" %>
+				<% next if src_small.blank? || src_small.include?('placehold') %>
+				<% if editing %>
+					<div class="gallery-image">
+				<% else %>
+					<a class="gallery-image gallery-image-<%= block.id %>" rel="gallery-<%= block.id %>" href="<%= src_large %>" id="gallery-image-<%= index %>" title="<%= i.child_value('caption') %>">
+				<% end %>
+					<div class="image-holder" style="background-image:url(<%= src_small %>);"></div>
+				<% if editing %>
+					</div>
+				<% else %>
+					</a>
+				<% end %>
+			<% end %>
+		</div>
+	<% elsif media.count > 0 %>
+		<div class="gallery-container">
+			<% media.each_with_index do |m, index| %>
+				<% src_small = m.image.url ? m.image.url(:large) : "" %>
+				<% src_large = m.image.url ? m.image.url(:huge) : "" %>
+				<% next if src_small.blank? || src_small.include?('placehold') %>
+				<% if editing %>
+					<div class="gallery-image">
+				<% else %>
+					<a class="gallery-image gallery-image-<%= block.id %>" rel="gallery-<%= block.id %>" href="<%= src_large %>" id="gallery-image-<%= index %>" title="<%= m.name %>">
+				<% end %>
+					<div class="image-holder" style="background-image:url(<%= src_small %>);"></div>
+				<% if editing %>
+					</div>
+				<% else %>
+					</a>
+				<% end %>
+			<% end %>
+		</div>
+	<% else %>
+		<% if editing %>
+			<p style="border:1px dashed gray;padding:10px;">Empty photo gallery block. Click to edit.</p>
+		<% end %>
+	<% end %>
+</div>
+
+<% content_for :css do %>
+	<style>
+		@import url("https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css");
+	</style>
+<% end %>
+<% content_for :js do %>
+	<% if !editing %>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js" type="text/javascript"></script>
+		<script>
+			$(document).ready(function() {
+				$("a.gallery-image-<%= block.id %>").fancybox({
+					'transitionIn'	:	'fade',
+					'transitionOut'	:	'fade',
+					'speedIn'		:	600, 
+					'speedOut'		:	200, 
+					'overlayShow'	:	false,
+					'titleShow' : false
+				});
+			});
+		</script>
+	<% end %>
+<% end %>

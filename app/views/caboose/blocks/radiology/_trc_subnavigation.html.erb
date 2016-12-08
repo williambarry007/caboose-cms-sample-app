@@ -1,0 +1,23 @@
+<% s = block.child_value("parent_page") %>
+<div class="subnavigation-block" id="block_<%= block.id %>">
+	<% d = s == "Current" ? page : Caboose::Page.where(:id => s.to_i).first %>
+	<% if d %>
+		<ul>
+      <% d.children.order(:sort_order).all.each do |p| %>
+        <li class="clearfix">
+        	<span class="name"><%= p.menu_title.blank? ? p.title : p.menu_title %></span>
+        	<a href="<%= p.redirect_url.blank? ? ('/' + p.uri) : p.redirect_url %>" title="<%= p.title %>" class="btn">Go</a>
+        </li>
+        <% subpages = p.children.order(:sort_order).all %>
+        <% if subpages.count > 0 %>
+          <% subpages.each do |s| %>
+            <li class="clearfix submenu">
+							<span class="name"><%= s.menu_title.blank? ? s.title : s.menu_title %></span>
+    					<a href="<%= s.redirect_url.blank? ? ('/' + s.uri) : s.redirect_url %>" title="<%= s.title %>" class="btn">Go</a>
+            </li>
+          <% end %>
+        <% end %>
+      <% end %>
+    </ul>
+	<% end %>
+</div>

@@ -1,0 +1,84 @@
+<% projects = block.children.where(:block_type_id => 603).order(:sort_order).all %>
+
+<% if modal %>
+  <% if block.child("section_title") %>
+    <div id="block_<%= block.child('section_title').id %>" style="text-decoration:underline;cursor:pointer;">
+    	Section Title: <%= block.child_value('section_title') %>
+    </div>
+  <% end %>
+   <% if block.child("section_subtitle") %>
+    <div id="block_<%= block.child('section_subtitle').id %>" style="text-decoration:underline;cursor:pointer;">
+    	Section Subtitle: <%= block.child_value('section_subtitle') %>
+    </div>
+  <% end %>
+  <p>Slides:</p>
+  <ul>
+    <% projects.each_with_index do |s,i| %>
+      <% name = s.child_value('title') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Slide #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new slide!</a>
+
+<% else %>
+
+<section class="home-project-section clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="text-wrapper">
+			<h3 class="section-title"><%= block.child_value('section_title') %></h3>
+			<h6 class="section-subtitle"><%= block.child_value('section_subtitle') %></h6>
+		</div>
+		<% if projects.count > 0 %>
+			<div class="slider-container" id="slider-<%= block.id %>">
+				<div class="left-nav" id="nav-left-<%= block.id %>">
+          <div class="arrow icon-left-big"></div>
+        </div>
+				<div class="liquid-slider" id="project-slider">
+					<% projects.each do |p| %>
+						<div class="project slide">
+							<div class="grid-row">
+								<div class="unit1of2">
+									<img src="<%= p.child_value('image').url(:large) %>" alt="<%= p.child_value('title') %>" />
+									<h4 class="title"><%= p.child_value('title') %></h4>
+								</div>
+								<div class="unit1of2 richtext">
+									<%== p.child_value('main_text') %>
+								</div>
+							</div>
+						</div>
+					<% end %>
+				</div>
+				<div class="right-nav" id="nav-right-<%= block.id %>">
+          <div class="arrow icon-right-big"></div>
+        </div>
+			</div>
+		<% end %>
+	</div>
+	<% content_for :js do %>
+		<script>
+			$(document).ready(function() {
+				$("#slider-<%= block.id %>").find("#project-slider").liquidSlider({
+		      autoSlide: false,
+		      autoSlideInterval: 6000,
+		      autoHeight: true,
+		      slideEaseFunction: "easeInOutSine",
+		      dynamicArrows: false,
+		      dynamicTabs: false
+		    });
+		    var api = $.data( $('#slider-<%= block.id %>').find("#project-slider")[0], 'liquidSlider');
+        $("#nav-left-<%= block.id %>").click(function() {
+          api.setNextPanel('left');
+          api.updateClass($(this)); 
+        });
+        $("#nav-right-<%= block.id %>").click(function() {
+          api.setNextPanel('right');
+          api.updateClass($(this)); 
+        });
+			});
+		</script>
+	<% end %>
+</section>
+
+<% end %>

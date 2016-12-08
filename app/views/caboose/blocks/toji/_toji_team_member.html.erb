@@ -1,0 +1,6 @@
+<li id="block_<%= block.id %>">
+  <figure style="background-image: url(<%= block.child('photo').image.url(:large) %>)"></figure>
+  <h3><%= block.child_value('name') %></h3>
+  <p><%= block.child_value('info') %></p>
+</li>
+

@@ -1,0 +1,11 @@
+<div id="block_<%= block.id %>" class="item <%= block.child_value('type').downcase if !block.child_value('type').nil? %>">
+  <section>
+    <header><%= block.child_value('title') %></header>
+    <p><%== block.child_value('description') %></p>
+    
+    <% if !block.child_value('price').nil? && !block.child_value('price').empty? %>
+      <footer>$<%= block.child_value('price') %></footer>
+    <% end %>
+  </section>
+</div>
+

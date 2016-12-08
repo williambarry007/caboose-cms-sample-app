@@ -1,0 +1,27 @@
+    <div class="dropdown-menu" id="main-dropdown">
+      <div class="constrain">
+        <nav>
+          <ul>
+            <li><a href="/brands" title="BRANDS">BRANDS</a></li>
+            <% categories = Caboose::Category.where(:status => "Active", :parent_id => 10, :site_id => @site.id).order(:sort_order).all %>
+            <% categories.each do |c| %>
+              <li class="submenu-link"><a href="<%= c.url %>" title="<%= c.name %>"><%= c.name.upcase %></a>
+                <% subcategories = c.children.where(:status => "Active").order(:sort_order).all %>
+                <% if subcategories.count > 0 %>
+                  <div class="submenu clearfix">
+                    <% subcategories.each do |s| %>
+                      <% if s.active_products.count > 0 || s.children.count > 0 %>
+                        <a href="<%= s.url %>" class="image-unit">
+                          <div class="image-holder" style="background-image:url(<%= ApplicationHelper.image_for_category(s.id) %>);"></div>
+                          <p class="product-name"><%= s.name %></p>
+                        </a>
+                      <% end %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+    </div>

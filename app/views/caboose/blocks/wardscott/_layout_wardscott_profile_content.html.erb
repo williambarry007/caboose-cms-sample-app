@@ -1,0 +1,147 @@
+<% if editing %>
+<% profile_images = block.children.where(:block_type_id => 582).order(:sort_order).all %>
+					<% profile_images.each do |p| %>
+						<h5 id="block_<%= p.id %>" style="text-align:center;padding:10px 0;"><%= p.child_value('title') %></h5>
+					<% end %>
+			 <% else %>
+
+<% if params[:project_id] && !params[:project_id].blank? %>
+
+	<% p = Caboose::Block.where(:id => params[:project_id]).first %>
+
+	<% if p %>
+
+		<div class="single-project-wrapper">
+			<nav>
+				<a href="/portfolio?category=<%= p.child_value('category').downcase %>" class="btn"><span class="arrows">&#10094;&#10094;</span>Back to <%= p.child_value('category') %></a>
+			</nav>
+			<div class="wrapper constrain">
+				<h2 class="title"><%= p.child_value('title') %></h2>
+		    <% if !p.child_value('date_completed').blank? %><p class="date">Date Completed: <%= p.child_value('date_completed') %></p><% end %>
+		    <% if !p.child_value('square_footage').blank? %><p class="sq-ft">Sq. Footage: <%= p.child_value('square_footage') %></p><% end %>
+
+		    <% images = p.children.where(:block_type_id => 716).order(:sort_order).all %>
+		  	<% img = p.child_value('photo') %>
+		  	<% if img && !img.url.include?('placehold') %>
+		  		<div class="big-image" id="big-image-<%= p.id %>" style="background-image:url(<%= img.url(:huge) %>);"></div>
+		  	<% end %>
+		    <ul class="thumbnails">
+		    	<% if images.count > 0 %>
+		    		<li style="display:inline-block;background-image:url(<%= img.url(:tiny) %>);" class="thumb"></li>
+			    	<% images.each do |i| %>
+			    		<% next if !i.image || i.image.url.include?('placehold') %>
+							<li style="display:inline-block;background-image:url(<%= i.image.url(:tiny) %>);" id="thumb-<%= i.id %>" class="thumb"></li>
+						<% end %>
+					<% end %>
+		    </ul>
+
+
+		    <div class="description">
+					<%== p.child_value('description') %>
+		    </div>
+			</div>
+		</div>
+
+		<% content_for :js do %>
+			<script>
+				 $(".thumbnails .thumb").each(function() {
+			    	$(this).click(function() {
+	    				var href = $(this).first().css("background-image").replace("tiny","huge");
+			    		$(this).parent().parent().find(".big-image").css("background-image",href);
+			    	});
+			    });
+			</script>
+		<% end %>
+	<% else %>
+		<p style="padding:50px;text-align:center;">Sorry, that project could not be found.</p>
+	<% end %>
+
+<% elsif params[:category] && !params[:category].blank? %>
+
+	<div class="content_wrapper" id='block_<%= block.id %>'>     
+	 <nav class="portfolio">
+				<a href="/portfolio" class="btn"><span class="arrows">&#10094;&#10094;</span>Back to Portfolio</a>
+			</nav>
+
+	  <div class="content_body portfolio clearfix">   
+	 
+			<% profile_images = block.children.where(:block_type_id => 582).order(:sort_order).all %>
+			<% count = 0 %>
+			<% profile_images.each do |p| %>
+				<% cat = p.child_value('category').downcase %>
+				<% next if cat != params[:category] %>
+				<% count += 1 %>
+				<a class="portfolio-box" href="/portfolio?project_id=<%= p.id %>" title="<%= p.child_value('title') %>">
+		    	<div class="contain" style="background-image:url(<%= p.child_value('photo').url(:large) %>);"></div>
+		    	<div class="title-box">
+	    			<span><%= p.child_value('title') %></span>
+	    		</div>
+		    </a>
+			<% end %>
+			<% if count % 3 == 2 || count % 3 == 1 %>
+				<div class="portfolio-box">
+		    	<div class="contain" style="background-image:url('http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/white_logo2.jpg');"></div>
+		    </div>
+			<% end %>
+			<% if count % 3 == 1 %>
+				<div class="portfolio-box">
+		    	<div class="contain" style="background-color:#182a51;text-align:center;padding:15px 8%;">
+		    		<div class="table">
+		    			<div class="table-cell">
+		    				<p class="mission-statement" style="color:#fff;font-size:28px;">“Passion to create quality built environments for our community”</p>
+		    			</div>
+		    		</div>
+		    	</div>
+		    </div>
+			<% end %>
+		</div>
+	</div>
+
+<% else %>
+
+	<div class="content_wrapper" id='block_<%= block.id %>'>          
+	  <div class="content_body portfolio home clearfix">
+	   
+	    <a class="portfolio-box" href="/portfolio?category=healthcare" title="Healthcare">
+	    	<div class="contain" style="background-image:url('http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/healthcare2.jpg');"></div>
+	    	<div class="title-box">
+    			<span class="category">Healthcare</span>
+    		</div>
+	    </a>
+		  <a class="portfolio-box" href="/portfolio?category=education" title="Education">
+		  	<div class="contain" style="background-image:url('http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/education.jpg');"></div>
+		  	<div class="title-box">
+	  			<span class="category">Education</span>
+	  		</div>
+		  </a>
+		  <a class="portfolio-box" href="/portfolio?category=municipal" title="Municipal">
+		  	<div class="contain" style="background-image:url('http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/municipal.jpg');"></div>
+		  	<div class="title-box">
+	  			<span class="category">Municipal</span>
+	  		</div>
+		  </a>
+		  <a class="portfolio-box" href="/portfolio?category=financial" title="Financial">
+		  	<div class="contain" style="background-image:url('http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/financial.jpg');"></div>
+		  	<div class="title-box">
+	  			<span class="category">Financial</span>
+	  		</div>
+		  </a>
+		  <a class="portfolio-box" href="/portfolio?category=housing" title="Housing">
+		  	<div class="contain" style="background-image:url('http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/housing.jpg');"></div>
+		  	<div class="title-box">
+	  			<span class="category">Housing</span>
+	  		</div>
+		  </a>
+		  <a class="portfolio-box" href="/portfolio?category=religious" title="Religious">
+		  	<div class="contain" style="background-image:url('http://d9hjv462jiw15.cloudfront.net/assets/wardscott/images/religious.jpg');"></div>
+		  	<div class="title-box">
+	  			<span class="category">Religious</span>
+	  		</div>
+		  </a>
+
+	  </div>
+	</div>
+
+<% end %>
+
+<% end %>

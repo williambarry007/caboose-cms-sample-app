@@ -1,0 +1,28 @@
+.subpage-content .media-category-links-block {
+  ul {
+    li {
+      .name {
+        padding-top: 11px;
+        width: calc(100% - 140px);
+        @include mini {
+          padding-top: 5px;
+        }
+      }
+      .btn {
+        float: right;
+        font-size: 0.9em;
+        @include mini {
+          font-size: 0.85em;
+          line-height: 1.8em;
+          padding: 2px 10px 1px 10px;
+        }
+      }
+    }
+  }
+}
+
+footer.main .contact-link {
+  text-decoration: none;
+  font: $font-light;
+  text-transform: uppercase;
+}

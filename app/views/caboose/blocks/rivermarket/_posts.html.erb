@@ -1,0 +1,124 @@
+<% post_limit = block.child_value("posts_to_show").blank? ? 10 : block.child_value("posts_to_show") %>
+<% page_number = 1 %>
+<% 
+	off_set = 0 
+	begin
+		if params[:page]
+ 			off_set = (params[:page].to_i - 1) * post_limit
+ 			page_number = params[:page].to_i
+		end
+	rescue
+		off_set = 0
+	end
+	if off_set < 0 
+		off_set = 0
+	end
+%>
+<% post_count = Caboose::Post.where(:site_id => @site.id, :published => true).count %>
+<% posts = Caboose::Post.where(:site_id => @site.id, :published => true).order("created_at DESC").offset(off_set).limit(post_limit) %>
+
+
+<%
+
+  un = ApplicationHelper.social_config(@site.id, 'twitter_username')
+ # if !un.blank?
+  tw_feed = TwitterCache.where(:username => un).order("created_at DESC").take(5)
+ # end
+
+  social_posts = []
+
+  tw_posts = []
+
+	if tw_feed
+	  tw_feed.each do |t|
+	    post = SocialPost.new
+	    post.link = t.tweet_url
+	    post.type = "twitter"
+	    post.body = t.body
+	    post.time = t.created_at
+	    tw_posts << post
+	  end
+	end
+
+  #social_posts = fb_posts.zip(tw_posts).flatten.compact.take(8)
+  social_posts = tw_posts
+%>
+
+
+<div class="news-list-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<% if !block.child_value("section_title").blank? %>
+			<div class="news-list-title">
+				<h2 class="text"><%= block.child_value("section_title") %></h2>
+			</div>
+		<% end %>
+
+
+		<div class="social-posts">
+			<a class="icon-twitter colored" href="https://www.twitter.com/<%= un %>" target="_blank"></a>
+			<% if !social_posts.blank? %>
+				<% social_posts.each do |p| %>
+					<p class="tweet">
+						<span class="post-text"><%== p.body %></span> - <span class="post-date"><%= time_ago_in_words(p.time) %> ago</span>
+					</p>
+				<% end %>
+			<% end %>
+		</div>
+
+
+		<% if posts.count > 0 %>
+			<% posts.each_with_index do |p| %>
+				<div class="post-unit clearfix">
+					<% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+						<div class="image-holder" style="background-image:url(<%= p.image.url(:large) %>);"></div>
+					<% else %>
+						<div class="image-holder" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/<%= @site.name %>/images/placeholder.jpg');"></div>
+					<% end %>
+          <div class="post-text">
+					  <h4 class="post-title"><%= p.title %></h4>
+					  <h6 class="post-date"><%= p.created_at.strftime("%B %-d, %Y, %l:%M%P") %></h6>
+					  <% src_text = p.preview %>
+					  <% if p.preview.blank? && !p.body.blank? %>
+							<% src_text = p.body %>
+					  <% end %>
+					  <% if !src_text.blank? %>
+	            <div class="post-excerpt">
+	              <% 
+	                html = Nokogiri::HTML( src_text ) 
+	                text = html.at('body').inner_text
+	                words = text.blank? ? "" : text.split[0..30] 
+	              %>
+	              <% if !words.blank? && words.count > 29 %>
+	              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+	              <% else %>
+									<%= words.blank? ? "" : words.join(' ') %>
+	              <% end %>
+	            </div>
+	          <% end %>
+            <a href="<%= p.uri %>" class="btn">Read More</a>
+          </div>
+				</div>
+			<% end %>
+			<div class="page-buttons">
+				<% if page_number > 1 %>
+					<a href="/in-the-news?page=<%= page_number - 1 %>" class="prev btn">Previous Page</a>
+				<% end %>
+				<% if page_number < (post_count.to_f / post_limit.to_f) %>
+					<a href="/in-the-news?page=<%= page_number + 1 %>" class="orange next btn">Next Page</a>
+				<% end %>
+			</div>
+		<% else %>
+			<p>Sorry, no news to display now. Check back later!</p>
+		<% end %>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+

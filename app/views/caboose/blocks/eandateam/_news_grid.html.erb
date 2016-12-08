@@ -1,0 +1,83 @@
+<% title = !block.child('section_title') ? "Recent News" : block.child_value('section_title') %>
+<% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").limit(4) %>
+<div class="news-grid-block" id="block_<%= block.id %>">
+	<h2 class="section-title"><%= title %></h2>
+	<div class="constrain">
+		<% if posts.count > 0 %>
+			<div class="grid-row">
+				<div class="unit1of2 left">
+					<% posts.each_with_index do |p, index| %>
+						<% next if index == 2 || index == 3 %>
+						<div class="post-unit clearfix horizontal">
+							<div class="contain clearfix">
+								<% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+								<div class="image-holder" style="background-image:url(<%= p.image.url(:large) %>);"></div>
+								<% else %>
+									<div class="image-holder" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/default_post.png');background-size:contain;"></div>
+								<% end %>
+								<div class="text-wrapper">
+									<h4 class="post-title"><%= p.title %></h4>	  
+									<% src_text = p.preview %>
+								  <% if p.preview.blank? && !p.body.blank? %>
+										<% src_text = p.body %>
+								  <% end %>
+								  <% if !src_text.blank? %>
+				            <div class="post-excerpt">
+				              <% 
+				                html = Nokogiri::HTML( src_text ) 
+				                text = html.at('body').inner_text
+				                words = text.blank? ? "" : text.split[0..30] 
+				              %>
+				              <% if !words.blank? && words.count > 29 %>
+				              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+				              <% else %>
+												<%= words.blank? ? "" : words.join(' ') %>
+				              <% end %>
+				            </div>
+				      		<% end %>
+				          <div class="btn-holder"><a href="<%= p.uri %>" title="<%= p.title %>" class="btn">Read More</a></div>
+								</div>
+			        </div>
+						</div>
+					<% end %>
+				</div>
+				<div class="unit1of2 right">
+					<% posts.each_with_index do |p, index| %>
+						<% next if index == 0 || index == 1 %>
+						<div class="post-unit clearfix vertical">
+							<div class="contain clearfix">
+								<% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+								<div class="image-holder" style="background-image:url(<%= p.image.url(:large) %>);"></div>
+								<% else %>
+									<div class="image-holder" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/default_post.png');"></div>
+								<% end %>
+								<div class="text-wrapper">
+									<h4 class="post-title"><%= p.title %></h4>	  
+									<% src_text = p.preview %>
+								  <% if p.preview.blank? && !p.body.blank? %>
+										<% src_text = p.body %>
+								  <% end %>
+								  <% if !src_text.blank? %>
+				            <div class="post-excerpt">
+				              <% 
+				                html = Nokogiri::HTML( src_text ) 
+				                text = html.at('body').inner_text
+				                words = text.blank? ? "" : text.split[0..30] 
+				              %>
+				              <% if !words.blank? && words.count > 29 %>
+				              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+				              <% else %>
+												<%= words.blank? ? "" : words.join(' ') %>
+				              <% end %>
+				            </div>
+				      		<% end %>
+				          <div class="btn-holder"><a href="<%= p.uri %>" title="<%= p.title %>" class="btn">Read More</a></div>
+								</div>
+			        </div>
+						</div>
+					<% end %>
+				</div>
+			</div>
+		<% end %>
+	</div>
+</div>

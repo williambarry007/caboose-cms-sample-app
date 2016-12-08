@@ -1,0 +1,31 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="top">
+    <div class="constrain">
+      <a class="logo-link" href="/">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/crosspoint/images/main_logo.png" alt="Crosspoint Church" />
+      </a>
+      <div class="header-text">
+        <div class="richtext reveal">
+          <%== block.child_value('header_text') %>
+        </div>
+        <a href="https://crosspointofmobile.cloverdonations.com/donations/" target="_blank" title="Give" class="Alternate btn">Give</a>
+        <div class="reveal">
+          <%== ApplicationHelper.social_links(site.id, "circle") %>
+        </div>
+      </div>
+      <a class="icon-menu-4 conceal" href="#" id="show-menu"></a>
+    </div>
+  </div>
+  <div class="bottom reveal">
+    <div class="constrain">
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <% Caboose::Page.where(:parent_id => 625, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>

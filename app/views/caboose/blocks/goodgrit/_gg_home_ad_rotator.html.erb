@@ -1,0 +1,29 @@
+<% ads = block.children.where(:block_type_id => 1342).all %>
+
+<% if modal %>
+	<p>Ads:</p>
+  <ul>
+    <% ads.each_with_index do |s,i| %>
+      <% name = s.child_value('sponsor_name') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Ad #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <% if block.page %>
+    <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new ad!</a>
+  <% elsif block.post %>
+    <a href='/admin/pages/<%= block.post_id %>/blocks/<%= block.id %>/new'>Add a new ad!</a>
+  <% end %>
+<% else %>
+	<div class="home-ad-rotator" id="block_<%= block.id %>">
+		<% if ads.count > 0 %>
+			<% offset = rand(ads.count) %>
+			<% ad = ads[offset] %>
+			<% if ad %>
+				<%== block.render(ad, local_assigns) %>
+			<% end %>
+		<% end %>
+	</div>
+<% end %>
+

@@ -1,0 +1,11 @@
+<%
+name = block.child_value('name')
+quote = block.child_value('quote')
+date = block.child_value('date')
+%>
+
+<div class="testimonial-block" id="block_<%= block.id %>">
+	<h4 class="name"><%= name %></h4>
+	<h5 class="date"><%= date %></h5>
+	<div class="richtext"><%== quote %></div>
+</div>

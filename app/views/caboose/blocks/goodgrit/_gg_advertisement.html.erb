@@ -1,0 +1,20 @@
+<% ad_img_url = block.child_value('photo').url(:large) %>
+
+<% if !ad_img_url.include?('placehold') || editing %>
+  <div class="post-unit set ad-unit" id="block_<%= block.id %>">
+    <div class="contain">
+      <% if editing %>
+        <a href="#">
+      <% else %>
+        <a href="<%= block.child_value('url') %>" class="news-click-link" title="<%= block.child_value('name') %>" target="_blank">
+      <% end %>
+        <span class="image-holder">
+          <img src="<%= ad_img_url %>" alt="<%= block.child_value('name') %>">
+        </span>
+        <span class="title">
+          <%= block.child_value('name') %>
+        </span>
+      </a>
+    </div>
+  </div>
+<% end %>

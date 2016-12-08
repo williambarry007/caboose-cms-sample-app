@@ -1,0 +1,24 @@
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main subpage" id="block_<%= block.id %>">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/hearingconstruction/images/main_logo.png" alt="Hearing Construction" />
+      </a>
+      <nav class="reveal">
+        <ul>
+          <li><a href="/" title="Home">Home</a></li>
+          <% Caboose::Page.where(:parent_id => 1302, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+          <% end %>
+        </ul>
+      </nav>
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/hearingconstruction/images/icon.png" alt="Hearing Construction" class="icon reveal" />
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </header>
+  <div class="subpage-banner">
+    <h2 class="page-title"><%= page.title %></h2>
+  </div>
+</div>

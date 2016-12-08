@@ -1,0 +1,25 @@
+<%
+name = block.child_value('name')
+title = block.child_value('title')
+bio = block.child_value('bio')
+email = block.child_value('email')
+photo = block.child_value('photo')
+img = photo.url.include?('placehold') ? "//d9hjv462jiw15.cloudfront.net/assets/bhk/images/default.png" : photo.url(:large)
+%>
+<div class="team-member-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="grid-row">
+			<div class="unit1of4">
+				<div class="image-holder">
+					<img src="<%= img %>" alt="<%= name %>" />
+				</div>
+			</div>
+			<div class="unit3of4">
+				<h3 class="name"><%= name %></h3>
+				<h4 class="title"><%= title %></h4>
+				<a href="mailto:<%= email %>" title="Email <%= name %>" class="email"><%= email %></a>
+				<div class="bio richtext"><%== bio %></div>
+			</div>
+		</div>
+	</div>
+</div>

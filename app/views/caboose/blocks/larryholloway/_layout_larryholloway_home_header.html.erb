@@ -1,0 +1,26 @@
+<% bi = block.child_value('banner_image') %>
+<% img = (bi && bi.url && !bi.url.include?('placehold')) ? bi.url(:huge) : "http://d9hjv462jiw15.cloudfront.net/media/6577_img_8349ds_huge.jpg" %>
+<header class="main home" id="block_<%= block.id %>" style="background-image:url(<%= img %>);">
+  <nav class="reveal">
+    <div class="constrain">
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 1464, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+  <div class="constrain">
+    <a class="logo-link" href="/" title="<%= site.description %>">
+      <img src="<%= site.logo.url(:large) %>" alt="<%= site.description %>" />
+    </a>
+    <div class="menu-link">
+     <!--  <span class="text">Menu</span> -->
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </div>
+  <div class="arrow-up"></div>
+</header>

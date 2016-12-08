@@ -1,0 +1,60 @@
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main subpage">
+    <div class="constrain">
+      <nav class="reveal">
+        <ul class="level-1">
+          <li class="top-li">
+            <a href="/" title="Home">Home</a>
+          </li>
+          <% pages = Caboose::Page.where(:parent_id => 867, :hide => false).order(:sort_order).all %>
+          <% pages.each_with_index do |p, i| %>
+            <li class="top-li">
+              <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+              <% if subpages.count > 0 %>
+                <span><%= p.menu_title.blank? ? p.title : p.menu_title %></span>
+                <div class="dropdown clearfix <%= i > 1 ? 'right' : '' %>">
+                  <div class="contain">
+                    <ul class="level-2">
+                      <% subpages.each do |s| %>
+                        <li class="li-2">
+                          <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                          <% if grandchildren.count > 0 %>
+                            <%== ApplicationHelper.nav_link(s, false, false) %>
+                            <ul class="level-3">
+                              <% grandchildren.each do |g| %>
+                                <li><%== ApplicationHelper.nav_link(g, false, false) %></li>
+                              <% end %>
+                            </ul>
+                          <% else %>
+                            <%== ApplicationHelper.nav_link(s, false, false) %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% else %>
+                <%== ApplicationHelper.nav_link(p, false, false) %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/cwm/images/icon.png" alt="China for World Missions" class="icon" />
+      <div class="reveal"><%== ApplicationHelper.social_links(site.id, "outline", "colored") %></div>
+      <div id="google_translate_element"></div>
+    </div>
+  </header>
+</div>
+
+<% content_for :js do %>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'zh-CN', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<% end %>

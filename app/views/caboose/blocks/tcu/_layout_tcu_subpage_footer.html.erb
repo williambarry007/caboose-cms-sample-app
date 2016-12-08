@@ -1,0 +1,9 @@
+<%
+address = block.child_value('address').blank? ? "TCU" : block.child_value('address')
+%>
+<footer class="main" id="block_<%= block.id %>">
+  <div class="constrain">
+    <img src="/assets/tcu/images/logo.png" alt="<%= site.description %>" width="180" height="60" />
+    <div class="richtext"><%== address %></div>
+  </div>
+</footer>

@@ -1,0 +1,82 @@
+<% seen_first = false %>
+<% pod = Caboose::PostCategory.where(:name => "Podcast", :site_id => 73).first %>
+<% podcast = post.post_categories.include?(pod) ? true : false %>
+<div class="post-details-wrapper <% if podcast %>podcast<% end %>" id="block_<%= block.id %>">
+	<div class="constrain">
+		<% user = logged_in_user %>
+		<div class="main-post-content">
+			<% if post.image && !post.image.url.blank? && !post.image.url.include?('placehold') %>
+				<img class="post-image" src="<%= post.image.url(:huge) %>" alt="<%= post.title %>" />
+			<% end %>
+			<div class="post-text">
+				<% if !post.subtitle.blank? %><h3 class="post-subtitle"><%= post.subtitle %></h3><% end %>
+				<h2 class="post-title"><%= post.title %></h2>
+				<div class="post-meta">
+					<% cat = post.post_categories.first %>
+					<% if cat && !cat.name.blank? %><span class="post-category"><%= cat.name %></span><% end %>
+					<% if !post.author.blank? %>
+						<span class="post-author">By <%= post.author %></span>
+					<% end %>
+					<span class="post-date">on <%= post.created_at.in_time_zone(logged_in_user.timezone).strftime("%-m.%-d.%y") %></span>
+				</div>
+				<div class='share-icons clearfix'>
+					<div class="share-buttons">
+						<% url = "http://" + site.primary_domain.domain + post.uri %>
+						<a href="https://www.facebook.com/sharer/sharer.php?u=<%= url %>" target="_blank" title="Share on Facebook" class="holder" id="facebook" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-facebook white"></span></a>
+						<a href="https://twitter.com/home?status=<%= post.title + ' @ ' + url %>" title="Share on Twitter" target="_blank" class="holder" id="twitter" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-twitter white"></span></a>
+						<a href="https://plus.google.com/share?url=<%= url %>" title="Share on Google +" target="_blank" class="holder" id="google-plus" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><span class="icon-google-plus white"></span></a>
+						<a href="mailto:?subject=<%= post.title %>&amp;body=<%= url %>" title="Share by Email" class="holder" id="email"><span class="icon-mail white"></span></a>
+					</div>
+        </div>
+        <div style="position:relative;">
+					<div class="post-block-container">
+						<% block.children.each do |b| %>
+							<% if b.block_type_id == 309 && !seen_first %>
+								<div class="first-richtext">
+							<% end %>
+			        <%= raw block.render(b, local_assigns) %>
+			        <% if b.block_type_id == 309 && !seen_first %>
+								</div>
+								<% seen_first = true %>
+							<% end %>
+			      <% end %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+	<style>
+	.icon-mail:before {
+		content: "e" !important;
+	}
+		footer.main {
+			margin-top: 0 !important;
+		}
+		header.main {
+			background-color: #191919;
+		}
+		header.main .logo-link .black {
+			display: none !important;
+		}
+		header.main .logo-link .white {
+			display: inline-block !important;
+		}
+		header.main nav ul li a {
+			color: #fff !important;
+		}
+		header.main nav ul li a:hover {
+			color: #D8EE6F !important;
+		}
+		header.main.subpage #show-menu {
+		  color: #D8EE6F;
+		}
+		body .subpage-content {
+			background: #444;
+		}
+	</style>

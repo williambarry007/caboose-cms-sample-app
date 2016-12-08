@@ -1,0 +1,52 @@
+<% hf = Caboose::Block.where(:block_type_id => 1570).last %>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of3 left">
+        <h5 class="unit-title"><span class="icon-location"></span>Contact Info</h5>
+        <div class="richtext">
+          <%== hf.child_value('contact_text') %>
+        </div>
+        <%== ApplicationHelper.social_links(site.id, "outline", "colored") %>
+      </div>
+      <div class="unit1of3 middle">
+        &nbsp;
+      </div>
+      <div class="unit1of3 right">
+        <h5 class="unit-title"><span class="icon-mail"></span>Contact Form</h5>
+        <form class="clearfix" id="contact-form">
+          <div class="input">
+            <input type="text" name="name_required" placeholder="Name" />
+            <span class="icon-user"></span>
+          </div>
+          <div class="input">
+            <input type="email" name="email_required" placeholder="E-mail" />
+            <span class="icon-mail"></span>
+          </div>
+          <div class="input">
+            <textarea name="message_required" placeholder="Message" rows="4"></textarea>
+            <span class="icon-blog"></span>
+          </div>
+          <a href="#" id="submit-contact-form" class="btn"><span class="icon-mail"></span>SUBMIT</a>
+        </form>
+        <div id="message"></div>
+      </div>
+    </div>
+  </div>
+  <div class="dark-bar"></div>
+</footer>
+
+<% content_for :js do %>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <%= javascript_include_tag "form_submit" %>
+  <script>
+    $(document).ready(function() {
+      $("#submit-contact-form").click(function(event) {
+        event.preventDefault();
+        submit_form("contact-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>

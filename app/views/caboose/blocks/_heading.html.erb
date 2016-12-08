@@ -1,0 +1,37 @@
+<%
+	size = block.child_value('size').blank? ? "1" : block.child_value('size')
+	heading_text = block.child_value('heading_text').blank? ? "Heading" : block.child_value('heading_text')
+	color = block.child_value('color').blank? ? "main" : block.child_value('color')
+	underline = block.child_value('underline').blank? ? "No" : block.child_value('underline')
+	margin_bottom = block.child_value('margin_bottom').blank? ? "default" : block.child_value('margin_bottom')
+	margin_top = block.child_value('margin_top').blank? ? "0" : block.child_value('margin_top')
+	align = block.child_value('align').blank? ? "" : block.child_value('align')
+%>
+
+<h<%= size %> id='block_<%= block.id %>' class='heading-block'>
+	<% if heading_text == "Heading" %>
+		<%== block.child_value('text').blank? ? "" : block.child_value('text') %>
+	<% else %>
+		<%== heading_text %>
+	<% end %>
+</h<%= size %>>
+
+<% content_for :css do %>
+	<style>
+		#block_<%= block.id %> {
+			margin-top: <%= margin_top %>;
+			<% if margin_bottom != 'default' %>
+				margin-bottom: <%= margin_bottom %>;
+			<% end %>
+			<% if color != 'main' %>
+				color: <%= color %>;
+			<% end %>
+			<% if underline == "Yes" %>
+				text-decoration: underline;
+			<% end %>
+			<% if !align.blank? %>
+				text-align: <%= align %>;
+			<% end %>
+		}
+	</style>
+<% end %>

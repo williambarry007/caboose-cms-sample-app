@@ -1,0 +1,33 @@
+<div id="block_<%= block.id %>">  
+  <div id="contact" class="section footer-padding" style="padding-top:100px;">
+    <div class="container no-pad">
+      <div class="content">
+        <div class="row">
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <p class="icon-description">
+              <span class="icon-wrapper">
+                <span class="circle"><i class="fa fa-map-marker"></i></span>
+              </span>
+              <%= block.child_value('address') %>
+            </p>
+            <p class="icon-description">
+              <span class="icon-wrapper">
+                <span class="circle"><i class="fa fa-phone"></i></span>
+              </span>
+              <%= block.child_value('phone') %>
+            </p>
+            <p class="icon-description">
+              <span class="icon-wrapper">
+                <span class="circle"><i class="fa fa-envelope"></i></span>
+              </span>
+              <%= block.child_value('email') %>
+            </p>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <%== block.child_value('body') %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.container -->
+</div>

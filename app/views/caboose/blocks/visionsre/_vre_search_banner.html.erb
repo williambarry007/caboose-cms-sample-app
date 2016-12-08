@@ -1,0 +1,52 @@
+<%
+img_url = block.child_value('background_image').url(:huge)
+title = block.child_value('title')
+subtitle = block.child_value('subtitle')
+%>
+
+<div class="search-banner" id="block_<%= block.id %>" style="background-image:url(<%= img_url %>);">
+	<div class="overlay"></div>
+	<div class="table">
+		<div class="table-cell">
+			<div class="form-wrapper">
+				<div class="text-wrapper">
+					<h1><%= title %></h1>
+					<h6><%= subtitle %></h6>
+				</div>
+				<form id="search-banner-form" method="get" action="/residential/search">
+					<div class="grid-row">
+						<div class="unit4of5" id="col1">
+							<div class="field text">
+				    		<input type="text" id="query" name="query" autocomplete="off" placeholder="Type any Area, Address, ZIP, School, etc" />
+				    		<div class="results-dropdown"></div>
+				    	</div>
+						</div>
+						<div class="unit1of5" id="col2">
+							<div class="field">
+								<input type="submit" value="Find a Home" class="btn" />
+								<span class="icon-right-big"></span>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="bottom-text left">
+		<div class="richtext"><%== block.child_value('bottom_left_text') %></div>
+	</div>
+	<div class="bottom-text right">
+		<div class="richtext"><%== block.child_value('bottom_right_text') %></div>
+	</div>
+</div>
+
+<% content_for :js do %>
+<script>
+var sc = false;
+$(document).ready(function() {
+	sc = new SearchController({
+ 		authenticity_token: '<%= form_authenticity_token %>'
+ 	});
+});
+</script>
+<% end %>

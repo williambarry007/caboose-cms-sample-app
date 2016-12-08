@@ -1,0 +1,15 @@
+<%
+quote = block.child_value('quote')
+name = block.child_value('name')
+title = block.child_value('title')
+company = block.child_value('company')
+%>
+
+<div class="testimonial-block constrain" id="block_<%= block.id %>">
+	<div class="quote richtext"><%== quote %></div>
+	<h5 class="meta">
+		<%= name %><!--
+		--><% if !title.blank? %>, <%= title %><% end %><!--
+		--><% if !company.blank? %>, <%= company %><% end %>
+	</h5>
+</div>

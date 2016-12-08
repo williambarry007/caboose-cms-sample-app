@@ -1,0 +1,61 @@
+<%
+c1_title = block.child_value('creed_1_title')
+c2_title = block.child_value('creed_2_title')
+c3_title = block.child_value('creed_3_title')
+c1_text = block.child_value('creed_1_text')
+c2_text = block.child_value('creed_2_text')
+c3_text = block.child_value('creed_3_text')
+c1_img = block.child_value('creed_1_image').url(:huge)
+c2_img = block.child_value('creed_2_image').url(:huge)
+c3_img = block.child_value('creed_3_image').url(:huge)
+%>
+
+<div class="creeds-block" id="block_<%= block.id %>">
+	<div class="selector-bar">
+		<ul>
+			<li><a href="#" id="1" class="creed-link current" data-img="<%= c1_img %>"><%= c1_title %></a></li>
+			<li><a href="#" id="2" class="creed-link" data-img="<%= c2_img %>"><%= c2_title %></a></li>
+			<li><a href="#" id="3" class="creed-link" data-img="<%= c3_img %>"><%= c3_title %></a></li>
+		</ul>
+	</div>
+	<div class="single-creed" style="background-image:url(<%= c1_img %>);">
+		<div class="constrain">
+		<!-- 	<div class="left">
+				<div class="table">
+					<div class="table-cell"> -->
+					<!-- 	<h3 class="creed-title" id="title-1"><%= c1_title %></h3>
+						<h3 class="creed-title" id="title-2" style="display:none;"><%= c2_title %></h3>
+						<h3 class="creed-title" id="title-3" style="display:none;"><%= c3_title %></h3> -->
+<!-- 					</div>
+				</div>
+			</div> -->
+<!-- 			<div class="right"> -->
+				<div class="text-wrapper">
+					<h3 class="creed-title" id="title-1"><%= c1_title %></h3>
+					<h3 class="creed-title" id="title-2" style="display:none;"><%= c2_title %></h3>
+					<h3 class="creed-title" id="title-3" style="display:none;"><%= c3_title %></h3>
+					<div class="richtext">
+						<div class="creed-text" id="text-1"><%== c1_text %></div>
+						<div class="creed-text" id="text-2" style="display:none;"><%== c2_text %></div>
+						<div class="creed-text" id="text-3" style="display:none;"><%== c3_text %></div>
+					</div>
+				</div>
+	<!-- 		</div> -->
+		</div>
+	</div>
+</div>
+
+<% content_for :js do %>
+	<script>
+		$(".creed-link").click(function(event) {
+			event.preventDefault();
+			var id = $(this).attr("id");
+			$(".creed-title, .creed-text").hide();
+			$(".creed-title#title-" + id).show();
+			$(".creed-text#text-" + id).show();
+			$(".creed-link").removeClass("current");
+			$(this).addClass("current");
+			$(".single-creed").css("background-image","url(" + $(this).data("img") + ")");
+		});
+	</script>
+<% end %>

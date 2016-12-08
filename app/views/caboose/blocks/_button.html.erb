@@ -1,0 +1,46 @@
+<% 
+color = block.child_value('color')
+file = block.child_value('file')
+target = block.child_value('target')
+text = block.child_value('text')
+url = block.rendered_child_value('url', local_assigns)
+    
+a_target = target == "Same Window" ? '_self' : '_blank'
+align = block.child_value('align').blank? ? "left" : block.child_value('align').downcase
+margin = block.child_value('margin').blank? ? "small" : block.child_value('margin').downcase
+fw = false
+css_margin = "10px 0"
+if margin == "none"
+	css_margin = "0"
+elsif margin == "medium"
+	css_margin = "20px 0"
+elsif margin == "large"
+	css_margin = "35px 0"
+elsif margin == "huge"
+	css_margin = "50px 0"
+end
+if align == "full width"
+	fw = true
+end
+%>
+
+<div class="button-block-wrapper" id="block_<%= block.id %>" style="text-align:<%= align %>;margin:<%= css_margin %>;">
+	<% if modal %>
+		<span style="cursor:pointer;"><%= text %></span>
+	<% else %>
+	  <% if block.constrain == true %><div class='constrain'><% end %>  
+		  <% if file && file.url && !file.url.include?('missing') %>
+		  	<a href="<%= file.url %>" target="<%= a_target %>" title="<%= text %>" class="btn <%= color %>" <%= fw ? (raw "style='display:block;'") : "" %>><%= text %></a>
+		  <% else %>
+		  	<a href="<%= url %>" target="<%= a_target %>" title="<%= text %>" class="btn <%= color %>" <%= fw ? (raw "style='display:block;'") : "" %>><%= text %></a>
+		  <% end %>
+		<% if block.constrain == true %></div><% end %>
+	<% end %>
+</div>
+<% if editing %>
+	<% content_for :js do %>
+		<script>
+			$("#block_<%= block.id %>").find(".btn").click(function(event) { event.preventDefault(); });
+		</script>
+	<% end %>
+<% end %>

@@ -1,0 +1,20 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/tapp/images/main_logo.png" class="reveal logo" alt="<%= site.description %>" width="120" height="51" />
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 1728, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <%== ApplicationHelper.social_links(site.id, "icon", "colored") %>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

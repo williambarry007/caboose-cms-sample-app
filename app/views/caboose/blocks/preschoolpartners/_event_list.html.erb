@@ -1,0 +1,35 @@
+<div class="event-list-block" id="block_<%= block.id %>">
+	<% cal = Caboose::Calendar.where(:site_id => site.id).first %>
+	<% if cal %>
+		<h2 class="section-title">Upcoming Events</h2>
+		<div class="events-wrapper constrain">
+			<% limit = block.child_value('events_to_show') == "Unlimited" ? 1000 : block.child_value('events_to_show').to_i %>
+			<% events = Caboose::CalendarEvent.where(:calendar_id => cal.id).where("cast(begin_date as date) >= ?",DateTime.now.to_date).order(:begin_date).take(limit) %>
+			<% if events.count > 0 %>
+				<div class="grid-row">
+				<% events.each do |e| %>
+					<div class="event-wrapper clearfix unit1of<%= limit %>">
+						<div class="text-wrapper">
+							<h4 class="event-date"><%= e.begin_date.strftime("%B %-d, %Y") %></h4>
+							<% if e.all_day %>
+
+							<% else %>
+								<% if e.begin_date.strftime("%P") == e.end_date.strftime("%P") %>
+									<h5 class="event-time"><%= e.begin_date.strftime("%l:%M") %> - <%= e.end_date.strftime("%l:%M %P") %></h5>
+								<% else %>
+									<h5 class="event-time"><%= e.begin_date.strftime("%l:%M %P") %> - <%= e.end_date.strftime("%l:%M %P") %></h5>
+								<% end %>
+							<% end %>
+							<h4 class="event-name"><%= e.name %></h4>
+							<% if !e.location.blank? %><h5 class="event-location"><%= e.location %></h5><% end %>
+							<% if !e.description.blank? %>
+								<div class="description richtext"><%== e.description.truncate(400) %></div>
+							<% end %>
+						</div>
+					</div>
+				<% end %>
+				</div>
+			<% end %>
+		</div>
+	<% end %>
+</div>

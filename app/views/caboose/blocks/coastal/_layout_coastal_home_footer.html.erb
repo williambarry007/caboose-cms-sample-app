@@ -1,0 +1,12 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <p class="copyright line-1">Berkshire Hathaway Home Services Cooper &amp; Company Inc., REALTORS® Nancy Nassar, Mobile and Baldwin County AL 900 Hillcrest Rd Suite B-1, Mobile, AL 36695 (251)-344-5925 Send me an Email</p>
+    <p class="copyright line-2">&copy; <%= DateTime.now.strftime("%Y") %> BHH Affiliates, LLC. An independently owned and operated franchisee of BHH Affiliates, LLC. Berkshire Hathaway HomeServices and the Berkshire Hathaway HomeServices symbol are registered service marks of HomeServices of America, Inc. Equal Housing Opportunity.</p>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

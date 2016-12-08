@@ -1,0 +1,16 @@
+<%
+icon = block.child_value('icon')
+body = block.child_value('body')
+align = block.child_value('align')
+%>
+
+<div class="fact-block clearfix <%= align %>" id="block_<%= block.id %>">
+	<% if !icon.url.include?("placehold") %>
+    <div class="image-holder">
+    	<img src="<%= icon.url(:large) %>" />
+    </div>
+  <% end %>
+  <div class="text-wrapper clearfix">
+  	<div class="body richtext"><%== body %></div>
+  </div>
+</div>

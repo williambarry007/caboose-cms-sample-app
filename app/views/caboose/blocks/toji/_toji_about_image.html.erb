@@ -1,0 +1,8 @@
+<li id="block_<%= block.id %>">
+  <% if !block.child_value('title').nil? && !block.child_value('title').empty? %>
+    <header><%= block.child_value('title') %></header>
+  <% end %>
+  
+  <figure style="background-image: url(<%= block.child('image').image.url(:large) %>)"></figure>
+</li>
+

@@ -1,0 +1,69 @@
+<%
+has_categories = @category.children.where(:status => 'Active').count > 0
+has_products   = @category.active_products.count > 0
+%>
+<div class="product-index">
+	<div class="constrain">
+		<div class="product-navigation">
+			<div class="breadcrumbs">
+        <ul>
+          <% @category.ancestry.each do |c| %>
+            <li><a href="<%= c.url %>" title="<%= c.name %>"><%= c.name %></a></li>
+          <% end %>
+        </ul>
+      </div>
+		</div>
+		
+		<div class="product-grid" id="category-grid">
+		  <% if has_categories %>		  
+		  	<% @category.children.where(:status => 'Active').reorder(:sort_order).each do |c| %>
+		  		<% if c.active_products.count > 0 || c.children.count > 0 %>	  	  
+			  		<div class="product-unit category">
+			  			<div class="contain">
+				      	<a href="<%= c.url %>" title="<%= c.name %>" class="image-holder" style="background-image:url(<%= ApplicationHelper.image_for_category(c.id) %>);"></a>
+								<div class="product-meta">
+									<a href="<%= c.url %>" title="<%= c.name %>" class="product-title category"><%= c.name %></a>
+								</div>
+		         	</div>
+			      </div>
+			    <% end %>
+		  	<% end %>
+		  <% end %>
+		  <% if has_products %> 
+		    <% @category.category_memberships.reorder(:sort_order).all.each do |cm| %>
+		      <% p = cm.product %>
+		      <% next if p.nil? %>
+		      <% next if p.status != Caboose::Product::STATUS_ACTIVE %>
+					<% op1 = p.option1_media && p.option1 == 'Color' %>
+	      	<% op2 = p.option2_media && p.option2 == 'Color' %>
+	      	<% op3 = p.option3_media && p.option3 == 'Color' %>
+					<% colors = op1 ? p.option1_values_with_media : (op2 ? p.option2_values_with_media : (op3 ? p.option3_values_with_media : nil)) %>
+			    <div class="product-unit">
+			    	<div class="contain">
+				    	<% if p.on_sale %><div class="product-sale">SALE</div><% end %>
+				    	<% first_color = (colors && colors.first) ? colors.first[0] : '' %>
+				    	<% opt = op1 ? 'option1' : (op2 ? 'option2' : (op3 ? 'option3' : 'sku')) %>
+				    	<% var = p.variants.where("#{opt} = '#{first_color}'").first %>
+				    	<% img = p.featured_image ? p.featured_image.url(:large) : '//d9hjv462jiw15.cloudfront.net/assets/lockerroom/images/missing_image.jpg' %>
+				      <a href="/products/<%= p.id %>" title="<%= p.title %>" class="image-holder" style="background-image:url(<%= img %>);"></a>
+				      <div class="product-meta">
+				      	<a href="/products/<%= p.id %>" class="product-title"><%= p.title %></a>
+		            <% min_price = number_to_currency(p.price_range[0]) %>
+		            <% max_price = number_to_currency(p.price_range[1]) %>
+		            <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+		            <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+		            	<h4 class="product-price"><%= display_price %></h4>
+		            <% end %>
+				      </div>
+	        	</div>
+			    </div>
+		 		<% end %>
+			<% end %>
+		</div>
+		<% if !has_categories && !has_products %>
+			<div class="no-products">
+				<p>Sorry, no products were found.</p>
+			</div>
+		<% end %>
+  </div>
+</div>

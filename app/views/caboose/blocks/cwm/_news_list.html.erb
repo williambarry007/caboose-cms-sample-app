@@ -1,0 +1,51 @@
+<% post_limit = block.child_value("posts_to_show").blank? ? 10 : block.child_value("posts_to_show") %>
+<% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").limit(post_limit) %>
+<div class="news-list-block">
+	<div class="constrain">
+		<% posts.each_with_index do |p,i| %>
+			<% if i == 0 %>
+				<a class="story big" href="<%= p.uri %>">
+					<h2 class="post-title"><%= p.title %></h2>
+					<% if !p.subtitle.blank? %><h3 class="post-subtitle"><%= p.subtitle %></h3><% end %>
+					<% if !p.preview.blank? %>
+						<div class="preview">
+							<div class="richtext">
+								<% 
+	                html = Nokogiri::HTML( p.preview ) 
+	                text = html.at('body').inner_text
+	                words = text.blank? ? "" : text.split[0..100] 
+	              %>
+	              <% if !words.blank? && words.count > 99 %>
+	              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+	              <% else %>
+									<%= words.blank? ? "" : words.join(' ') %>
+	              <% end %>
+							</div>
+						</div>
+					<% end %>
+				</a>
+			<% else %>
+				<a class="story small" href="<%= p.uri %>">
+					<h2 class="post-title"><%= p.title %></h2>
+					<% if !p.subtitle.blank? %><h3 class="post-subtitle"><%= p.subtitle %></h3><% end %>
+					<% if !p.preview.blank? %>
+						<div class="preview">
+							<div class="richtext">
+								<% 
+	                html = Nokogiri::HTML( p.preview ) 
+	                text = html.at('body').inner_text
+	                words = text.blank? ? "" : text.split[0..30] 
+	              %>
+	              <% if !words.blank? && words.count > 29 %>
+	              	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+	              <% else %>
+									<%= words.blank? ? "" : words.join(' ') %>
+	              <% end %>
+							</div>
+						</div>
+					<% end %>
+				</a>
+			<% end %>
+		<% end %>
+	</div>
+</div>

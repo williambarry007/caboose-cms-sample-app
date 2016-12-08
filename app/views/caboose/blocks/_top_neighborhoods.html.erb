@@ -1,0 +1,25 @@
+<%
+limit = block.child_value('number_to_show').blank? ? 12 : block.child_value('number_to_show').to_i
+title = block.child_value('title')
+neighborhoods = CabooseRets::ResidentialProperty.find_by_sql("select subdivision, count(*) as count from rets_residential where style = 'Standard Home' and status = 'Active' and subdivision IS NOT NULL and subdivision != 'NONE' and subdivision != 'OTHER' group by subdivision order by count desc limit #{limit}")
+%>
+
+<div class="top-neighborhoods-block" id="block_<%= block.id %>">
+	<div class="arrow up"></div>
+	<div class="constrain">
+		<h2 class="title"><%= title %></h2>
+		<ul>
+			<% neighborhoods.each do |n| %>
+				<li>
+					<% slug = n.subdivision.gsub("&","%26").gsub(" ","+") %>
+					<a href="/residential/search?subdivision=<%= slug %>" title="<%= n.subdivision %>">
+						<span class="name"><%= n.subdivision.titleize %></span>
+						<div class="count">
+							<span class="number"><%= n.count %></span>
+						</div>
+					</a>
+				</li>
+			<% end %>
+		</ul>
+	</div>
+</div>

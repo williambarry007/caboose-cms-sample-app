@@ -1,0 +1,43 @@
+<!-- Begin main nav -->
+<div class="navbar-main">
+  <div class="navbar-main-body">
+    <% Caboose::Page.where(:parent_id => 959, :hide => false).reorder("sort_order, title").all.each do |p| %>
+      <% next if p.id <= 3 %>
+      <div class="navbar-dropdown-main">
+        <h6 style="color:#e8e8e8;" id="<%= p.slug %>-link" class="navbar-anchor"><%= raw p.title %></h6>
+        <% if p.children.where(:hide => false).count > 0 %>
+          <div class="navbar-links">
+            <% p.children.where(:hide => false).all.each do |p2| %>
+              <% if p2.children.where(:hide => false).count > 0 %>
+                <div class="navbar-dropdown-sub">
+                  <% if p2.redirect_url && p2.redirect_url.strip.length > 0 %>
+                    <a href="<%= p2.redirect_url %>" target="_blank" class="navbar-link" style="padding-left: 0.75em"><%= raw p2.title %></a>
+                  <% else %>
+                    <a href="<%= "/#{p2.uri}" %>" class="navbar-link" style="padding-left: 0.75em"><%= raw p2.title %></a>
+                  <% end %>
+                  
+                  <div class="navbar-links">
+                    <% p2.children.where(:hide => false).all.each do |p3| %>
+                      <% if p3.redirect_url && p3.redirect_url.strip.length > 0 %>
+                        <a href="<%= p3.redirect_url %>" target="_blank" class="navbar-link"><%= raw p3.title %></a>
+                      <% else %>
+                        <a href="<%= "/#{p3.uri}" %>" class="navbar-link"><%= raw p3.title %></a>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% else %>
+                <% if p2.redirect_url && p2.redirect_url.strip.length > 0 %>
+                  <a href="<%= p2.redirect_url %>" target="_blank" class="navbar-link" style="padding-left: 0.75em"><%= raw p2.title %></a>
+                <% else %>
+                  <a href="<%= "/#{p2.uri}" %>" class="navbar-link" style="padding-left: 0.75em"><%= raw p2.title %></a>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<!-- End main nav -->

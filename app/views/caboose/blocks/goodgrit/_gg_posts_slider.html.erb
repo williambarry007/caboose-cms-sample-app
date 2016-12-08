@@ -1,0 +1,146 @@
+<% cat = Caboose::PostCategory.where(:id => 121).first %>
+<% if cat && cat.posts.where("created_at < ?",DateTime.now).where(:site_id => site.id, :published => true).count > 0 %>
+	<% posts = cat.posts.where("created_at < ?",DateTime.now).where(:site_id => site.id, :published => true).order("created_at DESC").limit(5) %>
+<% else %>
+	<% posts = Caboose::Post.where("created_at < ?",DateTime.now).where(:site_id => site.id, :published => true).order("created_at DESC").limit(5) %>
+<% end %>
+<% cat2 = Caboose::MediaCategory.where(:id => 193).first %>
+<% if cat2 && cat2.media.count > 0 %>
+	<% images = cat2.media.order("id DESC").limit(5) %>
+<% end %>
+<%
+	transition = block.child_value('transition')
+	slide_function = "easeInOutSine"
+	if transition == "Fade"
+	  slide_function = "fade"
+	end
+	height = block.child_value('height')
+	arrow_position = "100px"
+  begin
+    arrow_position = ((height.to_i / 2) - 20).to_s + "px"
+  rescue
+    arrow_position = "100px"
+  end
+  def next_media(index, images)
+  	if index < images.count
+  		return images[index]
+  	else
+  		return nil
+  	end
+  end
+%>
+
+<div class="posts-slider" id="block_<%= block.id %>">
+	<% if posts.count > 0 %>
+		<div class="left-nav" id="nav-left-<%= block.id %>">
+      <div class="arrow icon-left-big"></div>
+    </div>
+		<div class="liquid-slider" id="slider-<%= block.id %>">
+			<% posts.each_with_index do |p,i| %>
+				<a href="<%= p.uri %>" title="<%= p.title %>" class="slide" style="background-image:url(<%= p.image.url(:huge) %>);">
+					<div class="text-wrapper">
+						<h3 class="title"><%= p.title %></h3>
+						<span class="panel-title"></span>
+						<div class="excerpt">
+							<%== p.preview %>
+						</div>
+					</div>
+				</a>
+				<% if images && images.count > 0 %>
+					<% m = next_media(i, images) %>
+						<% if m %>
+						<% if m.description.blank? %>
+							<div class="slide" style="background-image:url(<%= m.image.url(:huge) %>);">
+						<% else %>
+							<a href="<%= m.description %>" <% if m.description.starts_with?('http') %>target="_blank"<% end %> class="slide" style="background-image:url(<%= m.image.url(:huge) %>);">
+						<% end %>
+							<div class="text-wrapper">
+								<span class="panel-title"></span>
+							</div>
+						<% if m.description.blank? %>
+							</div>
+						<% else %>
+							</a>
+						<% end %>
+					<% end %>
+				<% end %>
+			<% end %>
+		</div>
+		<div class="right-nav" id="nav-right-<%= block.id %>">
+      <div class="arrow icon-right-big"></div>
+    </div>
+	<% elsif editing %>
+		<p>There are no posts to show.</p>
+	<% end %>
+</div>
+
+<% content_for :css do %>
+	<style type="text/css">
+		#block_<%= block.id %>, #slider-<%= block.id %>, #slider-<%= block.id %> .slide {
+			height: <%= height %>px;
+		}
+		#slider-<%= block.id %>-wrapper {
+			max-width: none !important;
+		}
+		#nav-left-<%= block.id %> {
+      top: <%= arrow_position %>;
+    }
+    #nav-right-<%= block.id %> {
+      top: <%= arrow_position %>;
+    }
+    @media all and (max-width: 800px) {
+			#block_<%= block.id %>, #slider-<%= block.id %>, #slider-<%= block.id %> .slide {
+				height: 400px;
+			}
+			#nav-left-<%= block.id %> {
+	      top: 180px;
+	    }
+	    #nav-right-<%= block.id %> {
+	      top: 180px;
+	    }
+		}
+		@media all and (max-width: 600px) {
+			#block_<%= block.id %>, #slider-<%= block.id %>, #slider-<%= block.id %> .slide {
+				height: 300px !important;
+			}
+			#nav-left-<%= block.id %> {
+	      top: 130px !important;
+	    }
+	    #nav-right-<%= block.id %> {
+	      top: 130px !important;
+	    }
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+  	<% if editing %>
+  		$("#slider-<%= block.id %>").find(".slide").click(function(event) {
+  			event.preventDefault();
+  		});
+  	<% end %>
+    $(document).ready(function() {
+      $("#slider-<%= block.id %>").liquidSlider({
+      	autoSlide: true,
+        autoSlideInterval: <%= block.child_value('duration').to_i * 1000 %>,
+        autoHeight: false,
+        slideEaseFunction: "<%= slide_function %>",
+        dynamicArrows: false
+     //   dynamicTabs: true,
+     //   dynamicTabsAlign: "center", 
+     //   dynamicTabsPosition: "bottom",
+     //   panelTitleSelector: ".panel-title"
+      });
+      var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+      $("#nav-left-<%= block.id %>").click(function() {
+        api.setNextPanel('left');
+        api.updateClass($(this)); 
+      });
+      $("#nav-right-<%= block.id %>").click(function() {
+        api.setNextPanel('right');
+        api.updateClass($(this)); 
+      });
+    });
+  </script>
+<% end %>

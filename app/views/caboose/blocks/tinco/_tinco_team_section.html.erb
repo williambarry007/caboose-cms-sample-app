@@ -1,0 +1,66 @@
+<% img = block.child_value('background_image').url(:huge) %>
+
+<% if modal %>
+  <% if block.child("title") %>
+  <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+    Title: <%= block.child_value('title') %>
+  </div>
+  <% end %>
+  <% if block.child("body") %>
+  <div id="block_<%= block.child('body').id %>" style="text-decoration:underline;cursor:pointer;">
+    Body: Click to Edit
+  </div>
+  <% end %>
+  <% if block.child("background_image") %>
+  <div id="block_<%= block.child('background_image').id %>" style="text-decoration:underline;cursor:pointer;">
+    Background Image: Click to Edit
+  </div>
+  <% end %>
+  <% members = block.children.where(:block_type_id => 2167).all %>
+  <p>Team:</p>
+  <ul>
+    <% members.each_with_index do |s,i| %>
+      <% name = s.child_value('name') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Member #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new team member!</a>
+<% else %>
+
+<%
+# video = block.child_value('background_video_path')
+# video = "http://cabooseit.s3.amazonaws.com/assets/soma/images/soma2.mp4"
+color = block.child_value('overlay_color').blank? ? 'transparent' : block.child_value('overlay_color')
+%>
+
+<div id="block_<%= block.id %>">  
+  <div id="team" class="section dark">
+    <div class="parallax"><img src="<%= img %>"></div>
+    <div class="container">
+      <div class="content">
+        <div class="text-center">
+          <h2 class="title"><%= block.child_value('title') %></h2>            
+        </div>
+        <div class="row">
+          <div class="col-md-2 col-sm-2 col-xs-12"></div>
+          <div class="col-md-8 col-sm-8 col-xs-12">
+            <%== block.child_value('body') %>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xs-12"></div>
+        </div>
+        <div class="row">
+          <% if block.children.count > 0 %>
+            <% block.children.each do |b| %>
+              <% next if b.block_type_id != 2167 %>
+              <%== block.render(b, local_assigns) %>
+            <% end %>
+          <% end %>
+        </div>
+      </div><!-- /.content -->
+    </div>
+  </div>
+</div>
+
+<% end %>

@@ -1,0 +1,73 @@
+<% user = logged_in_user %>
+
+<% if user && (user.site_id = 124 || user.id == 1) && user.id != 2 %>
+
+<div id="block_<%= block.id %>">
+  <form id="survey-form" class="l-grid grid-break-alto" accept-charset="utf-8" action="/form" method="POST">
+    <input type="hidden" name="block_id" value="<%= block.id %>" />
+    <input type="hidden" name="form_name" value="Feedback Form" />
+    <br />
+		<p style="text-align:center;">Please provide any feedback you think would make AAR better. Thanks in advance!</p>
+		<br />
+    <div class="grid-row">
+      <div class="unit1of2 left">
+        <input type="text" name="first_name_required" placeholder="First Name" />
+      </div>
+      <div class="unit1of2 right">
+        <input type="text" name="last_name_required" placeholder="Last Name" />
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="unit1of2 left">
+        <input type="email" name="email_required" placeholder="Email Address" />
+      </div>
+      <div class="unit1of2 right">
+        <input type="text" name="phone_number" placeholder="Phone Number" />
+      </div>
+    </div>
+    <textarea id="message_required" cols="50" name="message_required" rows="6"></textarea>
+    <input name="name" type="hidden" value="<%= user.first_name %> <%= user.last_name %>" />
+    <input id="subject" name="subject" type="hidden" value="Feedback Form Submission" />
+    <div id="controls" style="margin-top:10px;">
+      <input id="submit-survey-form" name="submit" type="submit" value="Submit" class="btn" />
+    </div>
+  </form>
+  <div id="message"></div>
+</div>
+
+<% else %>
+	<p style="text-align:center;">Please login to complete the survey.</p>
+<% end %>
+
+<% content_for :css do %>
+<style>
+@media all and (max-width: 800px) {
+#survey-form .unit1of2.left {
+margin-bottom: 10px;
+}
+}
+@media all and (min-width: 800px) {
+#survey-form .unit1of2.left {
+padding-right: 1.5%;
+}
+#survey-form .unit1of2.right {
+padding-right: 1.5%;
+}
+}
+</style>
+<% end %>
+
+<% content_for :js do %>
+  <%= javascript_include_tag "form_submit" %>
+  <script>
+    $(document).ready(function() {
+      $("#submit-survey-form").click(function(event) {
+        $("#name").val($("#first_name").val() + " " + $("#last_name").val());
+        event.preventDefault();
+        submit_form("survey-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>
+

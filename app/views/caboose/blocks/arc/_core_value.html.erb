@@ -1,0 +1,14 @@
+<div class="core-value" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="grid-row">
+			<div class="unit1of4">
+				<p class="orange btn"><%= block.child_value('name') %></p>
+			</div>
+			<div class="unit3of4">
+				<div class="description">
+					<%== block.child_value('description') %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

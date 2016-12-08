@@ -1,0 +1,96 @@
+<%
+  slides = block.children.where(:block_type_id => 1840).all
+  title = block.child_value('title')
+%>
+
+<% if modal %>
+  <p>Slides:</p>
+  <ul>
+    <% slides.each_with_index do |s,i| %>
+      <% name = '' %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Slide #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new slide!</a>
+<% else %>
+
+  <div class="announcement-slider-container" id="block_<%= block.id %>">
+    <h3 class="slider-title lined"><span><%= title %></span></h3>
+    <% if slides.size > 0 %>
+      <div class="slider-container" id="slider-container-<%= block.id %>">
+        <div class="left-nav" id="nav-left-<%= block.id %>">
+          <span class="arrow icon-left-big"></span>
+        </div>
+        <div class="liquid-slider" id="slider-<%= block.id %>" data-size="<%= slides.count %>">
+          <% slides.each_with_index do |slide, index| %>
+            <%
+              slide_title = slide.child_value('title')
+              body = slide.child_value('body_text')
+              color = slide.child_value('background_color')
+              btn_text = slide.child_value('button_text')
+              btn_url = slide.child_value('button_url')
+            %>
+            <div class="slide clearfix" id="slide-<%= index %>" <% if index > 0 %>style="display:none;"<% end %>>
+              <div class="slider-slide clearfix">
+                <div class="slide-content">
+                  <div class="content-holder">
+                    <% if !slide_title.blank? %><h4 class="title"><%= slide_title %></h4><% end %>
+                    <div class="body richtext">
+                    	<%== body %>
+										</div>
+                    <% if !btn_url.blank? && !btn_text.blank? %>
+                      <a href="<%= btn_url %>" title="<%= btn_text %>" class="white-outline btn"><%= btn_text %></a>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %><!-- end slide --> 
+        </div>
+        <div class="right-nav" id="nav-right-<%= block.id %>">
+          <span class="arrow icon-right-big"></span>
+        </div>
+      </div>
+    <% else %>
+      <% if editing %>
+        <p style="padding:10px;border:1px solid #000;">Empty announcement slider. Click to add slides.</p>
+      <% end %>
+    <% end %>
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+  </div>
+<% end %>
+
+<% content_for :css do %>
+  <style>
+    #slider-<%= block.id %>-wrapper {
+      max-width: none !important;
+    }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      $(".slide").show();
+      $("#slider-<%= block.id %>").liquidSlider({
+        autoSlide: true,
+        autoSlideInterval: 8000,
+        autoHeight: false,
+        slideEaseFunction: "easeInOutSine",
+        dynamicArrows: false,
+        dynamicTabs: false
+      });
+      var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+      $("#nav-left-<%= block.id %>").click(function() {
+        api.setNextPanel('left');
+        api.updateClass($(this)); 
+      });
+      $("#nav-right-<%= block.id %>").click(function() {
+        api.setNextPanel('right');
+        api.updateClass($(this)); 
+      });
+    });
+  </script>
+<% end %>

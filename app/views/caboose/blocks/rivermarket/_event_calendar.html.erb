@@ -1,0 +1,41 @@
+<div id="block_<%= block.id %>">
+  <div class="constrain" style="max-width:1050px;">
+   
+
+    <% events = Caboose::CalendarEvent.where(:calendar_id => 2).where("cast(begin_date as date) >= ?", DateTime.now).order(:begin_date).all %>
+    <% if events.count > 0 %>
+
+     <div class="calendar-grid clearfix">
+
+    <% events.each do |e| %>
+
+
+
+      <div class="event-unit">
+
+        <div class="event-wrapper" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/rivermarket/images/calendar_bg.png');">
+          <div class="overlay"></div>
+          <div class="event-content">
+            <h3 class="date"><%= e.begin_date.strftime("%B %-d, %Y") %></h3>
+            <h1 class="time"><%= e.begin_date.strftime("%-l:%M %P") %></h1>
+            <p class="name"><%= e.name %></p>
+            <p class="description"><%= e.description ? e.description.truncate(150) : '' %></p>
+          </div>
+        </div>
+      </div>
+
+    <% end %>
+
+  </div>
+
+    <% else %>
+
+    <div class="content-wrapper white" style="text-align:center;"><p>Sorry, there are no events in the near future.</p></div>
+
+    <% end %>
+    
+
+
+
+  </div>
+</div>

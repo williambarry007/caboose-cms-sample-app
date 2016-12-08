@@ -1,0 +1,59 @@
+<% img = block.child_value('background_image').url(:huge) %>
+
+<% if modal %>
+  <% if block.child("title") %>
+  <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+    Title: <%= block.child_value('title') %>
+  </div>
+  <% end %>
+  <% if block.child("body") %>
+  <div id="block_<%= block.child('body').id %>" style="text-decoration:underline;cursor:pointer;">
+    Body: Click to Edit
+  </div>
+  <% end %>
+  <% if block.child("background_image") %>
+  <div id="block_<%= block.child('background_image').id %>" style="text-decoration:underline;cursor:pointer;">
+    Background Image: Click to Edit
+  </div>
+  <% end %>
+  <% services = block.children.where(:block_type_id => 2227).all %>
+  <p>Services:</p>
+  <ul>
+    <% services.each_with_index do |s,i| %>
+      <% name = s.child_value('title') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Service #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new service!</a>
+<% else %>
+
+<div id="block_<%= block.id %>" <% if !img.include?('placehold') %> style="background-image:url(<%= img %>);background-size:cover;background-position:center center;-ms-behavior:url('/bg.htc');" <% end %>>
+  <div id="services" class="section gray">
+    <div class="container">
+      <div class="content">
+        <div class="text-center">
+          <h2 class="title"><%= block.child_value('title') %></h2>            
+        </div>
+        <div class="row">
+          <div class="col-md-2 col-sm-2 col-xs-12"></div>
+          <div class="col-md-8 col-sm-8 col-xs-12">
+            <%== block.child_value('body') %>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xs-12"></div>
+        </div>
+        <div class="row">
+          <% if block.children.count > 0 %>
+            <% block.children.each do |b| %>
+              <% next if b.block_type_id != 2227 %>
+              <%== block.render(b, local_assigns) %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% end %>

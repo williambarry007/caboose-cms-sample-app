@@ -1,0 +1,22 @@
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/shopifiedapp/images/white_logo.png" alt="Shopified App" class="logo" width="200" height="46" />
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 2341, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+        <li><a href="/affiliates">Affiliate Program</a></li>
+        <li><a href="/terms-of-service">Terms of Service</a></li>
+      </ul>
+    </nav>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

@@ -1,0 +1,19 @@
+<div class="buy-button-wrapper block" id="block_<%= block.id %>">
+  <div class="b-left">
+  	<span><%= block.child_value("price").blank? ? "$9.99" : block.child_value('price') %></span>
+  </div>
+  <div class="b-right">
+  	<a href="#" title="Buy Now" class="btn show-buy-modal">Buy Now</a>
+  </div>
+  <div class="buy-modal clearfix">
+    <a class="icon-close close-buy-modal"></a>
+    <div class="option">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/amazon.png" alt="Amazon" />
+      <a href="<%= block.child_value('amazon_url') %>" title="Buy on Amazon" class="buy btn" target="_blank">Buy Now</a>
+    </div>
+    <div class="option">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/muscle/images/ibooks.png" alt="iBooks" />
+      <a href="<%= block.child_value('ibooks_url') %>" title="Buy on iBooks" class="buy btn" target="_blank">Buy Now</a>
+    </div>
+  </div>
+</div>

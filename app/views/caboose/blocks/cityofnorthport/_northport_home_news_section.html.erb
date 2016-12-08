@@ -1,0 +1,47 @@
+<%
+title = block.child_value('title').blank? ? "About Our City" : block.child_value('title')
+text = block.child_value('text_content').blank? ? "Northport is Awesome." : block.child_value('text_content')
+%>
+
+<div id="block_<%= block.id %>">
+  <div class="home-news">
+    <div class="article">
+      <h4><%= title %></h4>
+      <%== text %>
+    </div>
+<!--     <h4 class="recent-news">Recent News</h4>
+    <% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").limit(3) %>
+    <% if posts.count > 0 %>
+      <% posts.each do |p| %>
+        <div class="news-post clearfix">
+          <% if p.image && !p.image.url.blank? && !p.image.url.include?('placehold') %>
+            <div class="image-holder" style="background-image:url(<%= p.image.url(:large) %>);"></div>
+          <% else %>
+            <div class="image-holder" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/<%= site.name %>/images/placeholder.png');"></div>
+          <% end %>
+          <div class="text">
+            <h5 class="title"><%= p.title %></h5>
+            <span class="date"><%= (p.created_at - 6.hours).strftime("%B %-d, %Y, %l:%M%P") %></span>
+            <div class="content">
+              <% 
+                html = Nokogiri::HTML( p.body ) 
+                text = html.at('body').inner_text
+                words = text.blank? ? "" : text.split[0..30] 
+              %>
+              <% if !words.blank? && words.count > 29 %>
+                <%= words.blank? ? "" : words.join(' ') + " ..." %>
+              <% else %>
+                <%= words.blank? ? "" : words.join(' ') %>
+              <% end %>
+            </div>
+            <a href="/posts/<%= p.id %>" class="btn red">Read More</a>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="no-posts">
+        <p>Sorry, there is no news to display. Check back later!</p>
+      </div>
+    <% end %> -->
+  </div>
+</div>

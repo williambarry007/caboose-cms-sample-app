@@ -1,0 +1,241 @@
+<div class="fires-map" id="block_<%= block.id %>">
+      
+  <div class="locations-map-container loading">
+    <div class="loading-screen"></div>
+    <div class="fire-count">
+      <% this_year = DateTime.now.strftime("%Y").to_i %>
+      <% last_year = this_year # - 1 %>
+      <span class="value"><%= Fire.where("date_part('year', date) = #{this_year} OR date_part('year', date) = #{last_year}").count %></span>
+      <p class="text">Fire fatalities in <%= this_year %></p>
+    </div>
+    <div class="search-form Left" id="map-filter-form">
+      <h5 class="form-title">Search Fires</h5>
+      <form>
+        <input type="text" id="address" name="address" placeholder="Enter Your ZIP Code" />
+        <select name="radius" id="radius">
+          <option value="8046">5 miles</option>
+          <option value="16093">10 miles</option>
+          <option value="40233">25 miles</option>
+          <option value="80467">50 miles</option>
+          <option value="160934">100 miles</option>
+        </select>
+        <input type="submit" value="Search" class="btn Alternate" />
+      </form>
+      <div id="filter-message"></div>
+    </div>
+
+    <div class='map' id="fires-map"></div>
+    <% content_for :css do %>
+      <style>
+        #fires-map {
+          height: 600px;
+          height: calc(100vh - 71px);
+        }
+      </style>
+    <% end %>
+    <% content_for :js do %>
+      <script>
+        window.map_block_id = "fires-map";
+        var protocol = "<%= request.protocol %>";
+        var marker_icon_url = "http://d9hjv462jiw15.cloudfront.net/assets/fireprevention/images/marker.png";
+      </script>
+      
+      <script>
+
+        var info_windows = [];
+        var markers = [];
+        var locations = [];
+        var map = null;
+
+        function get_fire_markers() {
+          $.ajax({
+            url: "/fires/map-markers",
+            type: 'get',
+            success: function(data) {
+              locations = data;
+              initialize_fire_map();
+            }
+          });
+        }
+
+        function initialize_fire_map() {
+          $(".locations-map-container").each(function(index, Element) {
+            var mapel = $(Element).find(".map"); 
+            var mapCanvasId, mapCenterLat, mapCenterLng, mapDefaultZoom, style, style_code;
+            mapCanvasId = mapel.attr("id");
+            mapCenterLat = 32.5;
+            mapCenterLng = -87.5;
+            mapDefaultZoom = 15;
+            if (typeof marker_icon_url !== 'undefined' && marker_icon_url != "") {
+              markerIcon = new google.maps.MarkerImage(marker_icon_url, null, null, null, new google.maps.Size(30,49));
+            }
+            style_code = [{"stylers":[{"hue":"#ff1a00"},{"invert_lightness":true},{"saturation":-100},{"lightness":33},{"gamma":0.5}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#2D333C"}]}];
+            var mapOptions = {
+              center: new google.maps.LatLng(mapCenterLat, mapCenterLng),
+              scrollwheel: false,
+              styles: style_code,
+              panControl: false,
+              streetViewControl: false,
+              zoom: mapDefaultZoom,
+              zoomControlOptions: {
+                position: google.maps.ControlPosition.LEFT_BOTTOM
+              }
+            };
+            map = new google.maps.Map(document.getElementById(mapCanvasId), mapOptions);
+            var latlngbounds = new google.maps.LatLngBounds();
+            $.each(locations, function(index, mark) {
+              var lat = parseFloat(mark['latitude']);
+              var lng = parseFloat(mark['longitude']);
+              var coords = new google.maps.LatLng(lat, lng);
+              latlngbounds.extend(coords);
+              var marker;
+              if (typeof marker_icon_url !== 'undefined' && marker_icon_url != "") {
+                marker = new google.maps.Marker({
+                 position: coords,
+                 icon: markerIcon,
+                 map: map
+                });
+                markers[index] = marker;
+              }
+              else {
+                marker = new google.maps.Marker({
+                 position: coords,
+                 map: map
+                });
+                markers[index] = marker;
+              }
+              // var text = ''
+              // if ( mark['text'] && mark['text'] != '' ) {
+              //   text = "<p class='description'><span>Description:</span> " + mark['text'] + "</p>"
+              // }
+              // else {
+              //   text = ''
+              // }
+              var cause = "<p class='cause'><span>Cause:</span> " + mark['cause'] + "</p>";
+              var toll = "<p class='toll'><span>Victim(s):</span>  " + mark['victims'] + "</p>";
+              if ( mark['dept'] && mark['dept'] != '' )
+                var dept = "<p class='dept'><span>Responding Dept:</span>  " + mark['dept'] + "</p>";
+              else
+                var dept = ''
+              var county = "<p class='county'><span>County:</span> " + mark['county'] + "</p>";
+              var date = "<p class='date'><span>Date:</span> " + mark['date'] + "</p>";
+          //    var address = "<p class='address'><span>Address:</span> " + mark['address'] + "</p>";
+              var info = new google.maps.InfoWindow({
+                content: "<div class='info-box-text'>" + date + cause + toll + dept + county + "</div>"
+              });
+              info_windows[index] = info;
+              google.maps.event.addListener(marker, 'click', function() {
+                $.each(info_windows, function(index) {
+                  info_windows[index].close();
+                });
+                info.open(map,marker);
+                map.panTo(marker.getPosition());
+              });
+            });
+            map.setCenter(latlngbounds.getCenter());
+            map.fitBounds(latlngbounds);
+          });
+          $(".locations-map-container").removeClass("loading");
+        }
+
+        function loadScript() {
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = "https://maps.googleapis.com/maps/api/js?v=3key=AIzaSyDENedoxisMHbY-o895uaR7xp_bPFHo-24&sensor=false&callback=get_fire_markers";
+          document.body.appendChild(script);
+        }
+          
+        window.onload = loadScript;
+
+        function filter_results(lat, lng, radius) {
+          search_area = {
+            map: map,
+            strokeOpacity: 0,
+            fillOpacity: 0,
+            clickable: false,
+            center : new google.maps.LatLng(lat, lng),
+            radius : parseInt(radius)
+          }
+          search_area = new google.maps.Circle(search_area);
+          var bounds = search_area.getBounds();
+          var number_results = 0;
+          var latlngbounds = new google.maps.LatLngBounds();
+          $.each(markers, function(i,marker) {
+            if ( bounds.contains(  marker.getPosition()  ) ) {
+              marker.setVisible(true);
+              latlngbounds.extend(marker.getPosition());
+              number_results += 1;
+             }
+             else {
+              marker.setVisible(false);
+             }
+          });
+          if (number_results == 0) {
+            $("#filter-message").html("<p>Sorry, no results were found.<a class='clear-map-results' href='#' onclick='reset_map()'>clear</a></p>").show();
+          }
+          else if (number_results == 1) {
+            $("#filter-message").html("<p>1 result found.<a class='clear-map-results' href='#' onclick='reset_map()'>clear</a></p>").show();
+            map.setCenter(latlngbounds.getCenter());
+            map.fitBounds(latlngbounds);
+          }
+          else {
+            $("#filter-message").html("<p>" + number_results + " results found.<a class='clear-map-results' href='#' onclick='reset_map()'>clear</a></p>").show();
+            map.setCenter(latlngbounds.getCenter());
+            map.fitBounds(latlngbounds);
+          }
+        }
+
+        function reset_map() {
+          $("#filter-message").html("");
+          $("input#address").val("");
+          var latlngbounds = new google.maps.LatLngBounds();
+          $.each(markers, function(i,marker) {
+            marker.setVisible(true);
+            latlngbounds.extend(marker.getPosition());
+          });
+          map.setCenter(latlngbounds.getCenter());
+          map.fitBounds(latlngbounds);
+        }
+
+        function filter_location_map(zip, radius) {
+          $.ajax({
+            url: protocol + "maps.googleapis.com/maps/api/geocode/json",
+            type: 'get',
+            data: {
+              sensor: false,
+              components: "country:us",
+              address: zip
+            },
+            success: function(data) {
+              if ( data.status != "ZERO_RESULTS") {
+                var lat = data['results'][0]['geometry']['location']['lat'];
+                var lng = data['results'][0]['geometry']['location']['lng'];
+                filter_results(lat, lng, radius);
+              }
+              else {
+                $("#filter-message").html("<p>Invalid address.</p>").show().delay(2000).fadeOut(200);
+              }
+            }
+          });
+        }
+
+      </script>
+
+      <%= javascript_include_tag "customSelect.js" %>
+      <script>
+        $(document).ready(function() {
+          $("select").customSelect();
+        });
+        $(window).load(function() {
+          $("#map-filter-form").submit(function(event) {
+            event.preventDefault();
+            var zip = $(this).find("#address").val();
+            var radius = $(this).find("#radius").val();
+            filter_location_map(zip, radius);
+          });
+        });
+      </script>
+    <% end %>
+  </div>
+
+</div>

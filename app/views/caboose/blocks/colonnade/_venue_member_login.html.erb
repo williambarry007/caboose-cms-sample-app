@@ -1,0 +1,21 @@
+<div class="buttons">
+  <% if @logged_in_user && @logged_in_user.username != "elo" %>
+    <% pages = get_pages_for_user(@logged_in_user) %>
+		<% if pages && pages.count > 0 %>
+			<% pages.each do |p| %>
+				<a href="/<%= p.uri %>" class="btn"><%= p.title %></a>
+			<% end %>
+		<% end %>
+		<% if !@venue.is_club %>
+			<a href="/dashboard" class="btn" title="Online Ordering">Online Ordering</a>
+		<% else %>
+			<a href="/dashboard" class="btn" title="Members Only">Members Only</a>
+		<% end %>
+	<% else %>
+		<% if @venue.is_club %>
+			<a href="/venue-login?venue_id=<%= @venue.id %>" class="btn" title="Members Only">Members Only</a>
+		<% else %>
+			<a href="/venue-login?venue_id=<%= @venue.id %>" class="btn" title="Online Ordering">Members Only</a>
+		<% end %>
+	<% end %>
+</div>

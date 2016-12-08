@@ -1,0 +1,18 @@
+<%
+title = block.child_value('title')
+subtitle = block.child_value('subtitle')
+price = block.child_value('price')
+meta = block.child_value('meta')
+%>
+
+<div class="package-block" id="block_<%= block.id %>">
+	<div class="contain">
+		<h3 class="title"><span><%== title %></span></h3>
+		<h4 class="subtitle"><%== subtitle %></h4>
+		<h2 class="price">$<%= price %></h2>
+		<h4 class="meta"><%== meta %></h4>
+		<div class="button-holder">
+			<a href="/schedule-appointment" class="btn alternate">Make Appointment</a>
+		</div>
+	</div>
+</div>

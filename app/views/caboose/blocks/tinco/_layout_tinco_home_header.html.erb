@@ -1,0 +1,141 @@
+<%
+# video = block.child_value('banner_video_path')
+# video = "http://cabooseit.s3.amazonaws.com/assets/soma/images/soma2.mp4"
+color = block.child_value('overlay_color').blank? ? 'transparent' : block.child_value('overlay_color')
+cat = Caboose::MediaCategory.where(:id => 1181).first
+images = cat ? Caboose::Media.where(:media_category_id => cat.id).order(:sort_order).all : []
+%>
+
+<div id="block_<%= block.id %>" class="header-wrapper full-height">
+  <div id="navbar" class="navbar navbar-inverse">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand scroll" href="#home">
+        <!--   <i class="fa fa-compass"></i><span>SUMMIT</span> -->
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/tinco/images/main_logo.png" alt="Tinco Landscaping" width="170" height="60">
+        </a>
+        <span class="phone">(205)-752-1053</span>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+ <!--          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">COLORS<i class="fa fa-caret-down"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="company-blue.html">Blue</a></li>
+              <li><a href="company-green.html">Green</a></li>
+            </ul>
+          </li> -->
+          <li><a class="scroll hidden" href="#home"></a></li>
+          <li><a class="scroll" href="#services">SERVICES</a></li>
+          <li><a class="scroll" href="#block_73652">TESTIMONIALS</a></li>
+          <li><a class="scroll" href="#portfolio">PORTFOLIO</a></li>
+          <li><a class="scroll" href="#team">TEAM</a></li>
+          <li><a class="scroll" href="#contact">CONTACT</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>    
+  <!-- All Page Modals -->      
+  <div class="modals">
+<!--     <div class="modal fade" id="contact-form" tabindex="-1" role="dialog">
+      <div class="wrapper">
+
+        <div class="container text-center">
+          <a class="close" data-dismiss="modal" href=""><i class="icon-remove"></i></a>            
+          <h1 class="text-center">Contact Us</h1>
+
+          <form role="form">
+            <div class="form-group">
+              <label for="exampleInputName"><i class="icon-tag"></i></label>
+              <input type="text" class="form-control" id="exampleInputName" placeholder="Full Name" required>
+              <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1"><i class="icon-inbox"></i></label>
+              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required>
+              <div class="clearfix"></div>
+            </div>
+            <div class="form-group textarea">
+              <label for="exampleInputMessage"><i class="icon-pencil"></i></label>
+              <textarea rows="6" class="form-control" id="exampleInputMessage" placeholder="Write Message" required></textarea>
+              <div class="clearfix"></div>
+            </div>
+
+            <button type="submit" class="btn">SEND MESSAGE</button>
+          </form>
+        </div>
+
+      </div> 
+    </div>      -->
+    
+  </div><!-- /.modals -->
+
+  <div id="home" class="section">   
+    <div class="parallax">
+      <% if images && images.count > 0 %>
+        <img class='bslide' id='slide0' src="<%= images.first.image.url(:huge) %>" />
+      <% end %>
+    </div>
+    <div class="row">
+      <div class="col-md-1 col-sm-1 col-xs-12 empty"></div>
+      <div class="col-md-10 col-sm-10 col-xs-12 full">
+        <div class="logo"><img src="//d9hjv462jiw15.cloudfront.net/assets/tinco/images/white_icon.png" alt="Tinco Landscaping" width="80" height="64"></div>
+        <h1 class="welcome">
+          <%= block.child_value('title') %><br />
+          <span><%= block.child_value('subtitle') %></span>
+        </h1> 
+        <div class="call-to-action">
+          <a class="btn scroll" href="#services"><i class="fa fa-angle-down"></i><%= block.child_value('button_text') %></a>
+        </div>   
+      </div>
+      <div class="col-md-1 col-sm-1 col-xs-12 empty"></div>
+    </div>     
+  </div><!-- /.container -->
+</div>
+
+
+<% content_for :css do %>
+<style>
+/*  body.blue .header-wrapper .section#home {
+    background: none;
+    background-color: <%= color %> !important;
+  }
+  body.blue .header-wrapper .section#home .parallax {
+    display: none;
+  }*/
+</style>
+<% end %>
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+    //  $("#home").vide("");
+
+      <% if images && images.count > 1 %>
+        <% images.each_with_index do |m,index| %>
+          <% next if index == 0 %>
+          $("<img class='bslide' id='slide<%= index %>' src='<%= m.image.url(:huge) %>' style='display:none;' />").insertAfter("#slide<%= index - 1 %>");
+        <% end %>
+      <% end %>
+
+
+      var $imgs = $("#home .parallax").find(".bslide"),
+        i = 0;
+
+      function changeImage(){
+          var next = (++i % $imgs.length);
+          $($imgs.get(next - 1)).fadeOut(700);
+          $($imgs.get(next)).fadeIn(700);
+      }
+      if ( $(window).width() > 700 ) {
+        var interval = setInterval(changeImage, 5000);
+      }
+
+    });
+  </script>
+<% end %>
+

@@ -1,0 +1,50 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="top reveal">
+    <div class="constrain">
+      <div class="left">
+        <div class="field">
+          <a href="tel:2054699066"><span class="icon-phone-2"></span>Phone: 205.469.9066</a>
+        </div>
+        <div class="field">
+          <a href="mailto:contact@steeleandassociatesllc.com"><span class="icon-mail"></span>Mail: contact@steeleandassociatesllc.com</a>
+        </div>
+      </div>
+      <div class="right">
+        <!--
+        <a href="http://www.jobs.net/jobs/warrensteeleandassociates/en-us/join" title="Join" class="btn alternate">Join Our Talent Network</a>
+        -->
+        <%== ApplicationHelper.social_links(site.id, "icon", "white") %>
+      </div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="Steele and Associates">
+        <img src="<%= site.logo.url(:large) %>" alt="Steele and Associates" width="230" height="59" />
+      </a>
+      <nav class="reveal">
+        <ul>
+          <li><a href="/" title="Home">Home</a></li>
+          <% Caboose::Page.where(:parent_id => 1362, :hide => false).order(:sort_order).all.each do |p| %>
+            <li class="li-1">
+              <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+              <% if subpages.count > 0 %>
+                <div class="dropdown">
+                  <ul>
+                    <% subpages.each do |s| %>
+                      <li class="li-2"><%== ApplicationHelper.nav_link(s, editing, false) %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </div>
+</header>

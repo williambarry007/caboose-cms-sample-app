@@ -1,0 +1,176 @@
+<%
+
+uid = params[:user].blank? ? false : params[:user]
+liu = controller ? controller.logged_in_user : false
+user = (uid && liu && (liu.id == 25833 || liu.id == 26157)) ? Caboose::User.find(uid.to_i) : liu
+cu = user ? (Ea::CompanyUser.where(:user_id => user.id).where("company_id IS NOT NULL")) : nil
+company_ids = cu ? cu.pluck(:company_id) : []
+where2 = company_ids.count > 0 ? "company_id in (" + company_ids.to_s.gsub("[","").gsub("]","") + ")" : ""
+where3 = company_ids.count > 0 ? "id in (" + company_ids.to_s.gsub("[","").gsub("]","") + ")" : ""
+company_names = Ea::Company.where(where3).pluck(:name)
+crs = company_ids.count > 0 ? Ea::CompanyReport.where(where2).pluck(:report_id) : []
+where = crs.count > 0 ? "id in (" + crs.to_s.gsub("[","").gsub("]","") + ")" : ""
+reports = crs.count > 0 ? Ea::Report.where(where).where(:status => "Active").order("id DESC").all : []
+rm = user ? Caboose::RoleMembership.where(:user_id => user.id).first : []
+company = company_ids.count > 0 ? Ea::Company.where(:id => company_ids.first).first : nil
+cads = company ? company.company_advertisements : []
+ad_ids = cads.count > 0 ? cads.pluck(:advertisement_id) : []
+where = ad_ids.count > 0 ? ("id in (" + ad_ids.to_s.gsub("[","").gsub("]","") + ")") : "id = 0"
+ads = Ea::Advertisement.where(:status => "Active").where(where).all
+numb = ads ? rand(ads.count) : false
+ad = numb ? ads[numb] : false
+
+@giga = 1073741824.0
+@mega = 1048576.0
+@kilo = 1024.0
+
+def readable_file_size(size, precision)
+  if size == 1 then "1 Byte"
+  elsif size < @kilo then "%d Bytes" % size
+  elsif size < @mega then "%.#{precision}f KB" % (size / @kilo)
+  elsif size < @giga then "%.#{precision}f MB" % (size / @mega)
+  else "%.#{precision}f GB" % (size / @giga) end
+end
+%>
+
+<div class="portal-wrapper" id="block_<%= block.id %>">
+	<div class="constrain">
+		<% if user && user.id != 25834 && company %>
+			<% if ad && ad.image && ad.image.url && !ad.image.url.include?('placehold') %>
+				<div class="ad-wrapper">
+					<a href="<%= ad.url %>" title="<%= ad.title %>" target="_blank">
+						<img src="<%= ad.image.url(:original) %>" alt="<%= ad.title %>" width="1100" height="200" />
+					</a>
+				</div>
+			<% end %>
+			<div class="user-meta">
+				<% if user %><h4 class="name"><%= user.first_name %> <%= user.last_name %></h4><% end %>
+				<% if company_names %><h5 class="company"><%= company_names.join(', ') %></h5><% end %>
+				<% if rm && false %>
+					<h5 class="role">
+						<% role = Caboose::Role.where(:id => rm.role_id).first %>
+						<%= role ? role.name.gsub(" User", "") : '' %>
+					</h5>
+				<% end %>
+				<div class="buttons">
+					<a href="/my-account" class="btn" title="Manage Account">Manage Account</a>
+					<a href="/logout" class="btn" title="Logout">Logout</a>
+				</div>
+			</div>
+			<% if reports.count > 0 %>
+				<table id="report-table" class="display hidden">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Title</th>
+						<% if company_ids.count > 1 %>
+							<th>Company</th>
+						<% end %>
+							<th>Category</th>
+							<th>Size</th>
+							<th>Expires</th>
+							<th>Download</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% reports.each do |r| %>
+							<% next if r.media_id.blank? || !r.media %>
+							<% ext = (r.media && r.media.file && !r.media.file_file_name.blank?) ? File.extname(r.media.file_file_name).gsub(".","") : '' %>
+							<% kind = ext == 'pdf' ? 'pdf' : (ext.blank? ? 'missing' : ((ext.include?('xls') || ext.include?('csv')) ? 'xls' : 'missing')) %>
+							<tr>
+								<td data-order="<%= kind %>"><img src="//d9hjv462jiw15.cloudfront.net/assets/eandateam/images/file_<%= kind %>.png" class="file-icon" width="45" height="62" alt="<%= kind %> file"></td>
+								<td class='r-title'><%= r.title %></td>
+								<% if company_ids.count > 1 %>
+									<% rcs = Ea::CompanyReport.where(:report_id => r.id).pluck(:company_id) %>
+									<% where4 = rcs.count > 0 ? "id in (" + rcs.to_s.gsub("[","").gsub("]","") + ")" : "" %>
+									<td><%= Ea::Company.where(where4).pluck(:name).join(', ') %></td>
+								<% end %>
+								<td><%= r.report_category ? r.report_category.name : '' %></td>
+								<td <% if r.media && !r.media.file_file_size.blank? %>data-order="<%= r.media.file_file_size %>"<% end %>>
+									<% if r.media && !r.media.file_file_size.blank? %>
+										<%= r.media.file_file_size ? readable_file_size(r.media.file_file_size, 1) : '' %>
+									<% elsif r.media && !r.media.image_file_size.blank? %>
+										<%= r.media.image_file_size ? readable_file_size(r.media.image_file_size, 1) : '' %>
+									<% end %>
+								</td>
+								<td><%= r.expiration_date ? r.expiration_date.strftime("%-m/%-d/%Y") : '' %></td>
+								<td>
+									<% if r.media && !r.media.file_file_name.blank? %>
+										<a href="<%= r.media.file.url %>" target="_blank" class="btn report-download-link" data-report="<%= r.id %>" title="<%= r.title %>">Download</a>
+									<% elsif r.media && r.media.image %>
+										<a href="<%= r.media.image.url(:original) %>" target="_blank" class="btn report-download-link" data-report="<%= r.id %>" title="<%= r.title %>">Download</a>
+									<% end %>
+								</td>
+							</tr>
+						<% end %>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Type</th>
+							<th>Title</th>
+							<th>Category</th>
+							<th>Size</th>
+							<th>Expires</th>
+							<th>Download</th>
+						</tr>
+					</tfoot>
+				</table>
+			<% else %>
+				<p>Sorry, you do not have access to any reports yet.</p>
+			<% end %>
+		<% elsif user && (user.id == 25833 || user.id == 26157) %>
+			<h2>Hello, Admin User.</h2>
+			<h4>Select a user to view the portal as:</h4>
+			<select name="company_user" id="company-user">
+				<option value="">Select a User</option>
+				<% all_companies = Ea::Company.order(:name).all %>
+				<% all_users = Caboose::User.where(:site_id => site.id).where("id NOT IN (25833,25834,25835,26157)").order(:last_name).all %>
+				<% all_companies.each do |c| %>
+					<% compuser = Ea::CompanyUser.where(:company_id => c.id).all %>
+					<% compuser.each do |cu| %>
+						<% next if cu.user_id.blank? || !Caboose::User.where(:id => cu.user_id).exists? %>
+						<option value="<%= cu.user_id %>"><%= c.name %> - <%= cu.user.first_name %> <%= cu.user.last_name %></option>
+					<% end %>
+					<% #comp = compuser ? compuser.company : nil %>
+				<% end %>
+			</select>
+		<% else %>
+			<p>Please <a href="/login">login</a> to access this page.</p>
+		<% end %>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<%= stylesheet_link_tag "https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" %>
+<% end %>
+
+<% content_for :js do %>
+	<%= javascript_include_tag "https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js" %>
+	<script>
+	$(document).ready(function() {
+		$("#report-table").DataTable({
+			paging: false,
+			"order" : [
+				[1, 'asc']
+			],
+			"columnDefs" : [
+				{ "orderable": false, "targets": [5] }
+			]
+		});
+		$("#report-table").removeClass("hidden");
+	});
+	$("#company-user").change(function() {
+		window.location = '/portal?user=' + $(this).val();
+	});
+	$(".report-download-link").click(function() {
+		var report_id = $(this).data("report");
+		$.ajax({
+	    url: '/admin/reports/' + report_id + "/increment-download",
+	    type: 'post',
+	    success: function(resp) {
+	   // 	console.log("download count incremented");
+	    }
+	  });
+	});
+	</script>
+<% end %>

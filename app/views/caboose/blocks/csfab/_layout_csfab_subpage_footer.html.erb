@@ -1,0 +1,24 @@
+<% hf = Caboose::Block.where(:block_type_id => 2695).last %>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="top">
+      <h3 class="title"><%= hf.child_value('title') %></h3>
+      <h5 class="subtitle"><%= hf.child_value('subtitle') %></h5>
+    </div>
+    <div class="grid-row">
+      <div class="unit1of2 left">
+        <%== hf.child_value('left_text') %>
+      </div>
+      <div class="unit1of2 right">
+        <%== hf.child_value('right_text') %>
+      </div>
+    </div>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section>
+  </div>
+</footer>

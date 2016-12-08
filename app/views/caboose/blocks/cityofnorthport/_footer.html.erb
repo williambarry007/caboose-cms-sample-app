@@ -1,0 +1,33 @@
+<footer class="main clearfix" id="block_<%= block.id %>">
+  <div class="photo-bar">
+    <div class="top-border"></div>
+  </div>
+  <div class="bottom clearfix">
+    <div class="constrain">
+      <div class="navigation">
+        <h5>Navigation</h5>
+        <ul>
+          <li><a href="/" title="Home">Home</a></li>
+          <% Caboose::Page.where(:parent_id => 11, :hide => false).order(:sort_order).all.each do |p| %>
+            <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="get-in-touch">
+        <h5>Get in Touch</h5>
+        <div class="richtext"><%== block.child_value('contact_text') %></div>
+      </div>
+      <div class="follow">
+        <h5>Follow Us</h5>
+        <p><%== block.child_value('social_text') %></p>
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+        <div class="nine">
+          <p>Designed and loved by:</p>
+          <a href="http://www.nine.is" target="_blank"><img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/nine_logo.png" alt="The Nine"></a>
+          <p>Powered by:</p>
+          <a href="http://www.caboosecms.com" target="_blank"><img class="caboose" src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/caboose_logo.png" alt="Caboose"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

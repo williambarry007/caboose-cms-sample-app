@@ -1,0 +1,28 @@
+<% 
+  line1 = block.child_value('line_1')
+  line2 = block.child_value('line_2')
+  line3 = block.child_value('line_3')
+
+  classes = []
+  if block.child_value('transparent') == "yes"
+    classes << "transparent"
+  end
+  if block.child_value('lined') == "yes"
+    classes << "lined"
+  end
+  classes = classes.join(" ")
+
+%>
+
+
+<div id="block_<%= block.id %>">
+  <div class="three-line-text <%= classes %>">
+    <div class="constrain">
+      <div class="text">
+        <p class="line-1"><%= line1 %></p>
+        <p class="line-2"><%= line2 %></p>
+        <p class="line-3"><%= line3 %></p>
+      </div>
+    </div>
+  </div>
+</div>

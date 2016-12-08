@@ -1,0 +1,40 @@
+<div id="sidr" style="display:none;">
+  <nav>
+    <ul>
+  <!--     <li>
+        <a href="#" title="The Nine" id="show-home">Home</a>
+      </li> -->
+      <li>
+        <a href="#" class="menu-link" style="bottom:10px;left:8px;" id="show-home">Home</a>
+        <span class="menu-icon icon-n"></span>
+      </li>
+      <li>
+        <a href="#" class="menu-link" title="Clients" id="show-clients" style="bottom:5px;">Clients</a>
+        <span class="menu-icon icon-client"></span>
+      </li>
+      <li>
+        <a href="/blog" class="menu-link" title="Blog" style="bottom:5px;">Blog</a>
+        <span class="menu-icon icon-blog"></span>
+      </li>
+ <!--      <li>
+        <a href="/playbook" class="menu-link" title="Nine Playbook">Nine Playbook</a>
+        <span class="menu-icon icon-ruby"></span>
+      </li> -->
+      <li>
+        <a href="/connect" class="menu-link" title="Connect With Us" id="show-contact-form">Connect With Us</a>
+        <span class="menu-icon icon-message"></span>
+      </li>
+      <li>
+        <a href="#" class="menu-link" title="Contact" id="show-contact-page">Contact</a>
+        <span class="menu-icon icon-marker"></span>
+      </li>
+    </ul>
+  </nav>
+  <div class="nav-social">
+    <p class="social-title">Get Social</p>
+    <%== ApplicationHelper.social_links(site.id, "outline", "white") %>
+  </div>
+  <div class="copyright">
+    <p>Copyright &copy; <%= DateTime.now.strftime("%Y") %> The Nine</p>
+  </div>
+</div>

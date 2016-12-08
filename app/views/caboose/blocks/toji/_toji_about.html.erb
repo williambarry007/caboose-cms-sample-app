@@ -1,0 +1,7 @@
+<div class="wrapper">
+  <div id="block_<%= block.id %>" class="about">
+    <%= block.render('toji_about_images', local_assigns) %>
+    <section><%== block.child_value('about_us') %></section>
+  </div>
+</div>
+

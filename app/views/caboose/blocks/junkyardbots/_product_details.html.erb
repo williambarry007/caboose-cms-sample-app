@@ -1,0 +1,53 @@
+<% p = @product %>
+
+<div class="product-details loading" id="product" data-id="<%= p.id %>">
+  <% if p.product_images.count > 0 %>   
+    <div class="loading-text">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/osp/images/icons/loading.gif" width="35" height="35" />
+      <h3>Loading images...</h3>
+    </div>
+  <% end %>
+  <div class="constrain">
+    <% if p.product_images.count > 0 %>
+      <div id="product-images"></div>
+    <% end %>
+    <div class="left-text-wrapper">
+      <h1 class="product-title"><%= @product.title %></h1>
+      <% unless @product.description.nil? or @product.description.empty? %>
+        <div class="box"><%= raw @product.description %></div>
+      <% end %>
+    </div>
+    <section class="product-details-wrapper">
+      <div id="product-price"></div>
+      <% if !@product.caption.blank? %>
+        <div class="caption">
+          <%= @product.caption %>
+        </div>
+      <% end %>
+
+      <div id="product-options" style="display:none !important;"></div>
+      <div id="add-to-cart" style="display:none !important;"></div>
+
+      <% if !@product.alternate_id.blank? && @product.caption != "SOLD" %>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="margin-top:20px;">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="<%= @product.alternate_id %>">
+          <input type="image" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png" border="0" name="submit" alt="Buy now with PayPal">
+          <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+      <% end %>
+
+    </section>
+  </div>
+</div>
+
+<%= content_for :css do %>
+  <%= stylesheet_link_tag 'caboose/product_images' %>
+  <%= stylesheet_link_tag 'caboose/product_options' %>
+<% end %>
+
+<%= content_for :js do %>
+  <%= javascript_include_tag 'caboose/imageZoom' %>
+  <%= javascript_include_tag 'caboose/cart_old' %>
+  <%= javascript_include_tag 'caboose/product' %>
+<% end %>

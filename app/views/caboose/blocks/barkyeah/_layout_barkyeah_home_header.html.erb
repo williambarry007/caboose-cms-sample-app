@@ -1,0 +1,55 @@
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main">
+    <div class="constrain">
+      <div class="left">
+        <div class="search">
+          <span id="show-search" class="icon-search colored"></span>
+          <span class="text">Search</span>
+        </div>
+        <div class="search-form-wrapper">
+          <form id="search-form" method="get" action="/products">
+            <input type="text" name="query" id="query" placeholder="Keyword" />
+          </form>
+          <a href="#" id="submit-search" class="btn"><span class="icon-search white"></span></a>
+        </div>
+      </div>
+      <div class="center">
+        <a class="logo-link" href="/">
+          <img src="<%= Rails.env == 'production' ? "//#{raw Caboose::cdn_domain}" : '' %>/assets/barkyeah/images/logo.jpg" alt="">
+        </a>
+      </div>
+      <div class="right">
+        <a class="cart reveal" href="/cart" title="Cart">  
+          <span class="icon-cart white"></span>
+          <span class="text">Cart (<span id='cart_item_count'><%= @invoice ? @invoice.item_count : 0 %></span>)</span>
+        </a>
+        <a href="/my-account" class="my-account-link">My Account</a>
+        <div id="fake-show-menu" class="hidden" style="display:none;"></div>
+        <div id="show-menu" style="padding:0;"><a class="icon-menu conceal" href="#"></a></div>
+        <div class="reveal"><%== ApplicationHelper.social_links(site.id, "circle", "colored") %></div>
+      </div>
+    </div>
+  </header>
+  <nav class="header-nav reveal">
+    <div class="constrain">
+      <ul>
+        <li><a href="/">Home</a></li>        
+        <% Caboose::Page.joins(:page_tags).where(:site_id => @site.id, :hide => false, :page_tags => { :tag => 'header' }).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<% content_for :js do %>
+  <script>
+    $(".submenu-link").hover(function() {
+      $(this).find(".submenu").slideToggle(); 
+    });
+    $("#submit-search").click(function(e) {
+      e.preventDefault();
+      $("#search-form").submit();
+    });
+  </script>
+<% end %>

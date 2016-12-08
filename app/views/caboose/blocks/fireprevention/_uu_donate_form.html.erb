@@ -1,0 +1,81 @@
+<div class="donate-form-block" id="block_<%= block.id %>">
+	<form action="/stripe/charge" action="post" id="donate-form">
+		<h3 class="section-title">Donate</h3>
+		<p>To donate to our campaign, please use the form below. Thanks in advance!</p>
+		<div class="field">
+			<span class="dollar">$</span><input type="text" name="amount" id="amount" placeholder="5.00" />
+		</div>
+		<input type="submit" id="submit-donate-form" class="btn" value="Donate" />
+		<p class="info">secure payment processing provided by <a href="http://www.stripe.com" title="Stripe" target="_blank">Stripe</a></p>
+	</form>
+	<div id="message"></div>
+</div>
+
+<% content_for :js do %>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script>
+		function create_charge(token) {
+			var form = $("#donate-form");
+			var mess = form.next("#message");
+			var input_amount = $("#donate-form").find("#amount").val();
+			$.ajax({
+		    url: '/stripe/charge',
+		    type: 'post',
+		    data: { stripeToken: token, amount: input_amount },
+		    success: function(resp) {
+		      if(resp.error) {
+		        form.find("input, textarea").each(function() {
+		          if ( $(this).val() == "" ) {
+		            $(this).val( $(this).attr("placeholder") );
+		          }
+		        });
+		        mess.html("<p class='note error'>" + resp.error + "</p>");
+		      } 
+		      if(resp.success) {
+		        form.slideUp(); 
+		        mess.html("<p class='note success'>" + resp.success + "</p>");
+		      }
+		    }
+		  });
+		}
+
+	  var handler = StripeCheckout.configure({
+	    key: 'pk_live_hKnVzep2sZQlR3S1albYIvTl',
+	    image: 'https://s3.amazonaws.com/stripe-uploads/acct_16zDZzB6qW6HYTKsmerchant-icon-1446066712449-turn.png',
+	    token: function(token) {
+	      var form = $("#donate-form");
+	      form.slideUp(); 
+	      create_charge(token.id);
+	    }
+	  });
+
+	  $('#submit-donate-form').on('click', function(e) {
+	    e.preventDefault();
+	    var form = $("#donate-form");
+	    var charge_amount = 0;
+	    var input_amount = $("#donate-form").find("#amount").val();
+	    input_amount = input_amount.replace(',','');
+	    if ( input_amount.indexOf(".") > -1 ) {
+	    	charge_amount = input_amount.replace('.','');
+	    }
+	    else {
+	    	charge_amount = parseInt(input_amount) * 100;
+	    }
+	    if ( charge_amount && charge_amount != 0) {
+	    	form.next("#message").html("");
+	    	handler.open({
+		      name: 'Turn Your Attention',
+		      description: 'Donation',
+		      amount: charge_amount
+		    });
+	    }
+	    else {
+	    	form.next("#message").html("<p class='note error'>Please enter an amount.</p>");
+	    }
+	  });
+
+	  $(window).on('popstate', function() {
+	    handler.close();
+	  });
+	</script>
+<% end %>

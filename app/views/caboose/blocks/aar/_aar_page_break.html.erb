@@ -1,0 +1,5 @@
+<% if editing %>
+<p style="background:yellow;" id="block_<%= block.id %>">This element clears any floated items.</p>
+<% else %>
+<div style="clear:left;" id="block_<%= block.id %>"></div>
+<% end %>

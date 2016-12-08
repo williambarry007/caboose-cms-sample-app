@@ -1,0 +1,29 @@
+<% hf = Caboose::Block.where(:block_type_id => 2325).first %>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of4" id="col1">
+        <h6 class="unit-title">Bessemer Housing Authority</h6>
+        <div class="richtext"><%== hf.child_value('contact_info') %></div>
+      </div>
+      <div class="unit1of4" id="col2">
+        <h6 class="unit-title">Hours of Operation</h6>
+        <div class="richtext"><%== hf.child_value('hours') %></div>
+      </div>
+      <div class="unit1of4" id="col3">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/besha/images/equal.png" width="90" alt="Equal Housing Opportunity" />
+      </div>
+      <div class="unit1of4" id="col4">
+        <h6 class="unit-title">Stay in Touch</h6>
+        <%== ApplicationHelper.social_links(site.id, "circle", "colored") %>
+        <section class="nine">
+          <span>Designed and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>
+</footer>

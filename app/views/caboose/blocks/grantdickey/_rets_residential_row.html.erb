@@ -1,0 +1,47 @@
+<div class="property" id="<%= p.mls_acct %>">
+  <div class='grid-row'>
+    <div class='unit1of4' id='list1'>
+      <a href="<%= p.url %>" class="image-link" title="More Details">
+        <img src='<%= p.images && p.images.count > 0 ? p.images[0].image_url(:thumb) : "" %>' width="400" />
+      </a>
+      <div class='property-meta'>
+        <address><% if !p.unit_num.nil? && p.unit_num.strip.length > 0 %>Unit <%= p.unit_num %>, <% end %><%= p.street_num %> <%= p.street_name.titleize %></address>           
+        <p class="listing-by"><% if p.agent %>Listing Courtesy of <%= p.agent.first_name.titleize %> <%= p.agent.last_name.titleize %><% end %></p>
+      </div>
+    </div>                            
+    <div class='unit1of4' id='list2'>
+      <% if p.current_price != 0 %><h3 class='price'><%=h number_to_currency(p.current_price, :precision => 0) %></h3><% end %>
+      <% if p.foreclosure_yn == 'Y' %> <p class='foreclosure'>(Foreclosure)</p><% end %>
+      <div class="info-meta">
+        <p class="list-info">Sq. footage: <span class='sqfeet'> <%= number_with_delimiter(p.tot_heat_sqft.to_i, :delimiter => ',') %></span></p>
+        <p class="list-info">Bedrooms: <%= p.bedrooms %></p>
+        <p class="list-info">Full baths: <%= p.baths_full %></p>
+        <p class="list-info">Half baths: <%= p.baths_half %></p>
+        <% if !p.acreage.blank? %><p class="list-info">Acreage: <%= p.acreage.to_i %></p><% end %>
+        <% if !p.year_built.blank? %><p class="list-info">Year Built: <%= p.year_built %></p><% end %>
+      </div>
+      <p class="mls-number">MLS#:  <%= p.mls_acct %></p>  
+    </div>
+    <div class='unit1of4' id='list3'>
+      <% if !p.subdivision.blank? && p.subdivision != "NONE" %><h4 class="sub">Subdivision: <span><%= p.subdivision.titleize %></span></h4><% end %>
+      <% if !p.remarks.blank? %>
+        <h4>Description:</h4>
+        <p class='description'><%= p.remarks ? p.remarks.truncate(200) : "" %></p>
+      <% end %>
+      <div class="list-schools">
+        <h4>Schools:</h4>
+        <p class="school"> Elementary - <%= p.elem_school.titleize %></p>
+        <p class="school">Middle - <%= p.middle_school.titleize %></p>
+        <p class="school">High - <%= p.high_school.titleize %></p>
+      </div>
+    </div>                            
+    <div class='unit1of4' id='list4'>
+      <a href="/residential/<%= p.mls_acct %>" class="btn" title="More Details">MORE DETAILS</a><br />      
+      <a href="/contact-grant" class="btn">Contact Grant</a>      
+      <br />
+      <% unless defined? p.virtual_tour && p.virtual_tour %>
+        <a href="<%= p.virtual_tour %>" class="btn">Take Virtual Tour</a>
+      <% end %>
+    </div>
+  </div>
+</div>

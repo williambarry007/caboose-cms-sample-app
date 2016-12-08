@@ -1,0 +1,15 @@
+<%
+  link     = block.child_value('link')
+  image    = block.child_value('image')
+  title    = block.child_value('title')
+  industry = block.child_value('industry')
+%>
+
+<div class="wd_service clearfix" id="block_<%= block.id %>" style="background:url(<%= image.url(:original) %>)">
+	<a href="<%= link %>">
+		<div class="color-overlay">
+			<span class="plus">+</span>
+			<span class="service-title"><%= title %></span>
+		</div>
+	</a>
+</div>

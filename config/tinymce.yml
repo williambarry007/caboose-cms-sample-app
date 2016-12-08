@@ -1,0 +1,14 @@
+default:
+  theme_advanced_toolbar_align: left
+  theme_advanced_buttons3_add:
+    - tablecontrols
+  plugins:
+    - table
+caboose:
+  width: '540px'
+  height: '130px'
+  convert_urls: false    
+  plugins: ["advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons template paste textcolor caboose"]
+  toolbar1: "caboose_save caboose_cancel | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"  
+  image_advtab: true
+  external_plugins: {"caboose": "//d9hjv462jiw15.cloudfront.net/assets/tinymce/plugins/caboose/plugin.js"}

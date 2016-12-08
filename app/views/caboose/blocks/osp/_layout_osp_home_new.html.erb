@@ -1,0 +1,87 @@
+<%
+sc = Caboose::SocialConfig.where(:site_id => site.id).where("twitter_username IS NOT NULL").first
+desc = page.meta_description.blank? ? "Welcome to the website for #{site.description}!" : page.meta_description
+domain = site.primary_domain.domain
+%>
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js ie lt-ie9 lt-ie8 lt-ie7" lang="en"><![endif]-->
+<!--[if IE 7]><html class="no-js ie ie7 lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if IE 8]><html class="no-js ie ie8 lt-ie9" lang="en"><![endif]-->
+<!--[if IE 9]><html class="no-js ie ie9" lang="en"><![endif]-->
+<!--[if !IE]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"><!--<![endif]-->
+<!--[if lt IE 9]><script src="/html5shiv.js"></script><![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta http-equiv="content-language" content="en">
+    <title><%== page.seo_title.blank? ? page.head_title : page.seo_title %></title>
+    <meta name="description" content="<%= desc %>" />
+    <meta property="og:title" content="<%== page.seo_title.blank? ? page.head_title : page.seo_title %>" />
+    <meta property="og:url" content="http://<%= domain %>/<%= page.uri %>" />
+    <meta property="og:site_name" content="<%= site.description %>"/>
+    <meta property="og:description" content="<%= page.fb_description.blank? ? desc : page.fb_description %>" />
+    <meta name="twitter:card" content="summary">
+    <% if sc %><meta name="twitter:site" content="@<%= sc.twitter_username %>" /><% end %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:image" content="http://d9hjv462jiw15.cloudfront.net/assets/osp/images/screenshot.jpg"/>
+    <meta name="robots" content="<%= page.meta_robots.blank? ? 'index, follow' : page.meta_robots %>">
+    <%= render :partial => "caboose/blocks/osp/icons" %>
+    <%= render :partial => "caboose/blocks/osp/fonts", :locals => {:site => site} %>
+    <%= raw css %>
+    <%= raw csrf_meta_tags %>
+
+    <!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '598546443670070');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=598546443670070&ev=PageView&noscript=1"
+/></noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code -->
+
+  </head>
+  <body>
+    <%= render :partial => "caboose/blocks/osp/mobile_navigation", :locals => {:editing => editing, :site => site} %>
+    <div class="container" id='block_<%= block.id %>'>
+      <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+      <![endif]-->
+      <%= raw block.render('header' , local_assigns) %>
+      <%= raw block.render('content', local_assigns) %>
+      <%= raw block.render('footer' , local_assigns) %>      
+    </div>
+  <%= raw js %>
+<script type="text/javascript">
+   (function(h,o,t,j,a,r){
+       h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+       h._hjSettings={hjid:327638,hjsv:5};
+       a=o.getElementsByTagName('head')[0];
+       r=o.createElement('script');r.async=1;
+       r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+       a.appendChild(r);
+   })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+   ga('create', 'UA-87929106-1', 'auto', {'name': 'property3'});      
+   ga('property3.send', 'pageview');
+/* <![CDATA[ */
+var google_conversion_id = 867416684;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/867416684/?guid=ON&amp;script=0"/>
+</div>
+</noscript>
+  </body>
+</html>

@@ -1,0 +1,151 @@
+<% images = Caboose::Media.where(:media_category_id => 2775).order(:sort_order).all # 2755 %>
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <header class="main home">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/bmccinc/images/white_logo.png" alt="<%= site.description %>" width="127" height="49" />
+        <span>Commercial General Contractors</span>
+      </a>
+      <nav class="reveal">
+        <ul>
+          <li class="top-li"><a href="/" title="Home">Home</a></li>
+          <% pages = Caboose::Page.where(:parent_id => 2064, :hide => false).order(:sort_order).all %>
+          <% pages.each_with_index do |p,i| %>
+            <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+            <li class="top-li">
+              <% if subpages.count > 0 %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+                <div class="dropdown <%= (pages.count - i < 3) ? 'right' : '' %>">
+                  <div class="contain">
+                    <ul class="level-2">
+                      <% subpages.each do |s| %>
+                        <li class="li-2">
+                          <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                          <% if grandchildren.count > 0 %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                            <ul class="level-3">
+                              <% grandchildren.each do |g| %>
+                                <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                              <% end %>
+                            </ul>
+                          <% else %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% else %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </header>
+  <div class="tagline">
+    <div class="constrain">
+      <h1 class="tagline">Proudly serving West Alabama and the Southeast for more than 50 years</h1>
+    </div>
+  </div>
+  <div class="home-banner">
+<!--     <img src="//d9hjv462jiw15.cloudfront.net/media/13781_white_logo2_large.png" alt="<%= site.description %>" /> -->
+    <!-- <h1 class="tagline">Proudly serving West Alabama and the Southeast for more than 50 years</h1> -->
+    <% if images && images.count > 0 %>
+      <div class="collage-overlay"></div>
+      <div class="logo-overlay"></div>
+      
+      <div class="Collage">
+      
+        <img class="slide" id="slide0" src="<%= images.first.image.url %>">
+      
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% content_for :js do %>
+  <script>
+
+    var imgArray = []
+
+    $(window).load(function () {
+        $('.Collage').collagePlus({
+          'targetHeight': 200,
+          'fadeSpeed' : 1000
+        });
+    });
+
+    var resizeTimer = null;
+    $(window).bind('resize', function() {
+        // hide all the images until we resize them
+        // set the element you are scaling i.e. the first child nodes of ```.Collage``` to opacity 0
+        // $('.Collage .Image_Wrapper').css("opacity", 0);
+
+        // set a timer to re-apply the plugin
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout($('.Collage').collagePlus({
+          'targetHeight': 200,
+          'fadeSpeed' : 1000
+          }), 200);
+    });
+
+    $(document).ready(function() {
+      // push first image
+      imgArray.push("<%= images.first.image.url %>");   
+
+      // add the rest of the images to the collage   
+      <% if images && images.count > 1 %>
+        <% images.each_with_index do |m,index| %>
+          <% next if index == 0 %>
+          $("<img class='slide' id='slide<%= index %>' src='<%= m.image.url(:huge) %>)'>").insertAfter("#slide<%= index - 1 %>");          
+          imgArray.push("<%= m.image.url(:huge) %>");
+        <% end %>
+      <% end %>
+      
+
+      // var $imgs = $(".home-banner").find(".slide"),
+      //   i = 0;
+      
+      // function changeImage() {
+      //     var next = (++i % $imgs.length);
+      //     $($imgs.get(next - 1)).fadeOut(700);
+      //     $($imgs.get(next)).fadeIn(700);
+      // }
+
+      // if ( $(window).width() > 700 ) {
+      //   var interval = setInterval(changeImage, 5000);
+      // }
+    });
+    
+    // select a random img in the collage to change
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    index = getRandomInt(0, imgArray.length);
+    imgDuration = 3000;
+
+    function slideshow() {
+      imgId = "slide" + index;
+      document.getElementById(imgId).className += "fadeOut";
+      
+      setTimeout(function() {
+        document.getElementById(imgId).src = imgArray[index];
+        document.getElementById(imgId).className = "slide";
+      }, 1000);
+      
+      index = getRandomInt(0, imgArray.length);
+      setTimeout(slideshow, imgDuration);
+    }
+
+    // slideshow();
+  </script>
+<% end %>

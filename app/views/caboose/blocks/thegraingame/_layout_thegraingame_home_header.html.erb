@@ -1,0 +1,123 @@
+<% color = rand(5) %>
+<% text = block.child_value('main_text').blank? ? "<p>Presenting God’s Word and the truth of His love to kids across the world.</p>" : block.child_value('main_text') %>
+<% video = YoutubeCache.where(:site_id => site.id).order("uploaded_at DESC").first %>
+<div class="color-overlay"></div>
+<div class="header main home color-<%= color %>" id="block_<%= block.id %>">
+  <div class="header-overlay conceal"></div>
+  <% if video %>
+    <div class="video-wrapper">
+      <div class="reveal">
+        <a href="<%= video.video_url %>" class="youtube-popup" target="_blank" title="<%= video.title %>">
+          <span class="icon-video" style="display:block;height:45px;"></span>
+          <h4><%= video.title %></h4>
+        </a>
+      </div>
+      <a href="https://www.youtube.com/watch?v=9EzB5-xtBwY&index=1&list=PLO8Q92fHLMO1DTv8x-RiPCVaDLxUyVrKr" target="_blank" style="margin-top:15px;">
+        <span class="icon-video" style="display:block;height:45px;"></span>
+        <h4>Grain Game Demos</h4>
+      </a>
+    </div>
+  <% end %>
+  <div class="constrain">
+    <a href="/" class="logo-link" title="Home">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/thegraingame/images/ie_logo.png" alt="The Grain Game" id="ie-logo" width="250" />
+      <%= render :partial => "caboose/blocks/thegraingame/logo", :locals => {:color => color, :alt => true} %>
+    </a>
+    <p class="tagline">Every kid. Every nation.</p>
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+    <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+      <span>toggle menu</span>
+    </a>
+    <div class="header-text">
+      <%== text %>
+    </div>
+    <% if Date.today < Date.parse("2016-08-30") %>
+      <div class="golf">
+        <a href="/events/the-grain-jacket">
+          <img src="//cabooseit.s3.amazonaws.com/assets/thegraingame/images/golf.png" alt="Golf" width="50" height="50" />
+          <span>The Grain Jacket</span>
+        </a>
+      </div>
+    <% end %>
+  </div>
+  <nav class="reveal nav">
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/thegraingame/images/white_logo.png" alt="The Grain Game" id="white-logo" />
+    <% top_pages = Caboose::Page.where(:parent_id => 774, :hide => false).order(:sort_order).all %>
+    <ul>
+      <li><a href="/" title="Home">Home</a></li>
+      <% top_pages.each do |p| %>
+        <li class="toplevel"><%== ApplicationHelper.nav_link(p, editing, false) %>
+          <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+          <% if subpages.count > 0 %>
+            <div class="dropdown" id="<%= p.slug %>">
+              <div class="constrain">
+                <nav>
+                  <ul>
+                    <% subpages.each do |p| %>
+                      <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+                    <% end %>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+</div>
+
+<% content_for :css do %>
+  <style>
+    @import url("http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/redmond/jquery-ui.css");
+    .golf {
+      position: absolute;
+      bottom: 85px;
+      left: 0;
+      text-align: center;
+      width: 100%;
+    }
+    .golf a {
+      text-decoration: none;
+      display: inline-block;
+    }
+    .golf a:hover span {
+      color: #F0A625;
+    }
+    .golf a img {
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .golf a span {
+      color: #fff;
+      position: relative;
+      bottom: 13px;
+      font-size: 20px;
+    }
+    #block_19265 {
+      min-height: 480px;
+    }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+  <%= javascript_include_tag "youtube.js" %>
+  <script>
+    if ($(window).width() > 800) {
+      $("a.youtube-popup").YouTubePopup({ hideTitleBar: true, showBorder: false, height: 390, overlayOpacity: 0.8 });
+    }
+    $(window).scroll(function(e){ 
+      $el = $('.header.main.home').find(".nav");
+      var diff = $('.header.main.home').outerHeight() - $(".header.home").find(".nav").outerHeight();
+      if ( $(this).scrollTop() > diff ) { 
+        $('.header.main.home').css("z-index",10);
+        $el.addClass("fixed");
+      }
+      else {
+        $el.removeClass("fixed"); 
+        $('.header.main.home').css("z-index",2);
+      }
+    });
+  </script>
+<% end %>

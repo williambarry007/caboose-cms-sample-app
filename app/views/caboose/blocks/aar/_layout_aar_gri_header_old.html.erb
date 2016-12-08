@@ -1,0 +1,59 @@
+<% hh = Caboose::Block.where(:block_type_id => 1404).first %>
+
+<div class="main header gri" id="block_<%= block.id %>">
+  <div class="constrain" style="height:100%;">
+    <div class="porch reveal">
+      <% img = hh.child_value('porch_property_image').url(:large) %>
+      <img src="<%= img %>" alt="Porch and Property" />
+      <p><%= hh.child_value('porch_property_text') %></p>
+      <a href="<%= hh.child_value('porch_property_link_url') %>" target="_blank" title="Porch and Property">Click Here</a>
+    </div>
+    <a href="/gri" class="logo_link gri" title="Graduate Realtor Institute">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/new_gri_logo.png" alt="Graduate Realtor Institute">
+    </a>
+    <div class="links">
+      <div class="icon mail"></div><a href="/contact" title="Contact">Contact</a><br />
+      <% user = controller.logged_in_user %>
+      <% if user && user.id != 2 %>
+        <a href="/logout" title="Logout" class="btn">Logout</a>
+      <% else %>
+        <a href="/login" title="Login" class="btn">Login</a>
+      <% end %>
+    </div>
+    <a href="#sidr" id="show_menu" target="_self" title="Show Menu">
+      <img src="//d9hjv462jiw15.cloudfront.net/assets/aar/images/icon/sidr.png" alt="Menu">
+    </a>
+    <div class="top nav">
+      <ul>
+        <% top_pages = Caboose::Page.where(:parent_id => 959, :hide => false).order(:sort_order) %>
+        <% split = top_pages.size / 2 %>
+        <% top_pages.each_with_index do |t,i| %>
+          <li>
+            <a href="#" title="<%== t.title %>"><span><%== t.title %></span>
+              <div class="drop-down <%= i >= split ? 'right' : 'left' %>">
+                <div class="link-list">
+                  <% pages = Caboose::Page.where(:parent_id => t.id, :hide => false).order(:sort_order) %>
+                  <% pages.each do |p| %>
+                    <div class="whole_link">
+                      <span class="ex_link" data-link="/<%= p.uri %>"><%= raw p.title %>
+                        <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order) %>
+                        <% if subpages.size > 0 %>
+                          <div class="sub-menu">
+                            <% subpages.each do |s| %>
+                              <% next if s.id == 983 || s.id == 993 || s.id == 1180 %>
+                              <span class="ex_link" data-link="/<%= s.uri %>"><%= raw s.title %></span>
+                            <% end %>
+                          </div>
+                        <% end %>
+                      </span>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

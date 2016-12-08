@@ -1,0 +1,43 @@
+<% icons = block.children.where(:block_type_id => 332).order(:sort_order).all %>
+
+<% if modal %>
+  <ul>
+    <% icons.each_with_index do |s,i| %>
+      <% name = s.child_value('company_name') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;"><%= name.blank? ? ("Icon #{(i + 1).to_s}") : name %></li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new icon!</a>
+<% else %>
+
+
+<div id="block_<%= block.id %>" class="vendor-list">
+
+			<div class="constrain">
+				
+				<% if icons.count > 0 %>
+
+				<h1 class="section-title"><%= block.child_value('section_title') %></h1>
+
+				<div class="farmer-grid-container clearfix">
+					
+					<% icons.each do |i| %>
+						<div class="farmer-unit">
+							<img src="//d9hjv462jiw15.cloudfront.net/assets/rivermarket/images/icons/<%= i.child_value('icon').downcase %>.png" alt="<%= i.child_value('icon') %>" class="farmer-icon">
+							<h4 class="company-name"><%= i.child_value('company_name') %></h4>
+							<p class="contact-name"><%= i.child_value('contact_name') %></p>
+						</div>
+					<% end %>
+
+				</div>
+
+				<% end %>
+
+
+				<a href="/become-a-vendor" class="orange btn" title="Become a Vendor">Become A Vendor</a>
+
+			</div>
+
+</div>
+
+<% end %>

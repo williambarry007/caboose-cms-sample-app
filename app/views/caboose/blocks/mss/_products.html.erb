@@ -1,0 +1,15 @@
+<div id="block_<%= block.id %>">
+	<% if @product  #  Single product %>
+		<%= render :partial => "caboose/blocks/mss/product_details", :locals => { :block => block } %>
+	<% elsif @category  #  Multiple products %>
+		<% if params[:vendor_id]  #  Products for vendor %>
+			<%= render :partial => "caboose/blocks/mss/vendor_products", :locals => { :vendor_id => params[:vendor_id] } %>
+		<% elsif params[:query]  #  Products for search query %>
+			<%= render :partial => "caboose/blocks/mss/search_results", :locals => { :query => params[:query] } %>
+		<% else  #  Products for category %>
+			<%= render :partial => "caboose/blocks/mss/product_index", :locals => { :block => block } %>
+		<% end %>
+	<% else  #  Invalid product %>
+		<p>Invalid product.</p>
+	<% end %>
+</div>

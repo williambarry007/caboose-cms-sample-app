@@ -1,0 +1,24 @@
+<% 
+  sc = Caboose::SocialConfig.where(:site_id => site.id).last
+  un = sc ? sc.twitter_username : ''
+  un = un.blank? ? '' : un.downcase
+%>
+<div class="twitter-feed-block" id="block_<%= block.id %>">
+	<% if !un.blank? %>
+		<% tweets = TwitterCache.where(:username => un).order("created_at DESC").take(block.child_value('number_of_tweets').to_i) %>
+		<% if tweets.count > 0 %>
+			<div class="tweets-wrapper">
+				<% tweets.each do |t| %>
+					<div class="tweet">
+						<p class="time"><%= time_ago_in_words(t.created_at) %> ago</p>
+						<p class="body"><%== t.body %></p>
+					</div>
+				<% end %>
+			</div>
+		<% end %>
+	<% else %>
+		<% if editing %>
+			<p style="padding:10px;background:#fff;border:1px solid gray;text-align:center;">Empty Twitter feed. Please make sure username is correct in Social Media settings and allow 10 minutes for the feed to refresh.</p>
+		<% end %>
+	<% end %>
+</div>

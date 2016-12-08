@@ -1,0 +1,74 @@
+<%
+@vendors = Caboose::Vendor.where(:status => "Active", :site_id => @site.id).order(:name).all
+%>
+
+<div class="product-index">          
+	<div class="constrain">  
+
+		<div class="product-navigation">
+			<input type="text" id="search" class="media-boxes-search" placeholder="Filter by Keyword">
+			<div class="breadcrumbs">
+        <ul>
+          <li><a href="/products" title="All Products">All Products</a></li>
+          <li><a href="/brands" title="Brands">Brands</a></li>
+        </ul>
+      </div>
+		</div>
+
+			 
+		<div class="media-grid" id="vendor-grid">
+
+			<% @vendors.each do |v| %>
+				<% next if v.products.where(:status => "Active").count < 1 %>
+				<% product = v.products.where(:status => "Active").first %>
+				<% img = product.featured_image.url(:large) %>
+				<% if (v.image && !v.image.url(:large).include?('placehold')) %>
+					<% img = v.image.url(:large) %>
+				<% end %>
+		    <div class="media-box vendor <%= v.name %>" href="/products?vendor_id=<%= v.id %>">
+		    	<div class="media-box-image">
+		        <div data-thumbnail="<%= img %>"></div>
+		        <div class="thumbnail-overlay">
+	            <span class="view-vendor">View Vendor</span>
+	        	</div>
+			    </div>
+			    <div class="vendor-name"><%= v.name %></div> 
+		    </div>
+	 		<% end %>
+
+		</div>
+
+		<% content_for :js do %>
+			<script>
+				// Initialize the vendor grid
+				$('#vendor-grid').mediaBoxes({
+		      boxesToLoadStart: 20,
+		      boxesToLoad: 4,
+		      search: '#search',
+		      horizontalSpaceBetweenBoxes: 10,
+		      verticalSpaceBetweenBoxes: 10,
+		  		searchTarget: '.vendor-name',
+		  		noMoreEntriesWord: "No more vendors"
+		    });
+		    $("#vendor-grid .media-box, #vendor-grid .media-box-hidden").each(function() {
+		    	$(this).click(function(event) {
+		    		window.location = $(this).attr("href");
+		    	});
+		    });
+			</script>
+		<% end %>
+
+
+
+  </div>
+</div>
+
+<% content_for :js do %>
+	<script>
+    // Fix the placeholder bug
+    $(window).load(function() {
+    	$("#search").val("");
+    	$("#search").change();
+    });
+	</script>
+<% end %>

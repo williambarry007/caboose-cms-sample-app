@@ -1,0 +1,18 @@
+<% 
+kind = block.child_value('kind').blank? ? 'line' : block.child_value('kind') 
+sym = block.child_value('symbol').blank? ? 'AAPL' : block.child_value('symbol').upcase
+%>
+
+<div class="stock-chart constrain" style="padding:20px 2%;text-align:center;min-height:440px;" id="block_<%= block.id %>"></div>
+
+<% content_for :js do %>
+<script>
+	$(function(){
+		var sym = $.url().param('symbol') || "<%= sym %>";
+		var dur = $.url().param('duration') || 3650;
+		var title = "<%= block.child_value('title') %>";
+		var chart = '<%= kind %>';
+		new Markit.InteractiveChartApi(sym, dur,title,"block_<%= block.id %>",chart);
+	});
+</script>
+<% end %>

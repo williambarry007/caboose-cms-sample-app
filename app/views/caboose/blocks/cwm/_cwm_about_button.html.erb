@@ -1,0 +1,22 @@
+<%
+title = block.child_value('title')
+body = block.child_value('body')
+%>
+
+<div class="about-button" id="block_<%= block.id %>">
+	<a href="#" class="white btn"><%= title %></a>
+</div>
+
+<% if !body.blank? %>
+	<div class="fullscreen-overlay">
+	  <div class="table modal-wrapper">
+	    <div class="table-cell">
+	      <div class="modal">
+	        <a href="#" class="icon-close close-modal"></a>
+	        <h3 class="title"><%= title %></h3>
+	        <div class="body richtext"><%== body %></div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+<% end %>

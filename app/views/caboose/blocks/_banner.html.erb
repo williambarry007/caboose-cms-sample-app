@@ -1,0 +1,141 @@
+<%
+  width = block.child('advanced_options').child_value('width').blank? ? "100%" : block.child('advanced_options').child_value('width')
+  padding = block.child_value('padding').blank? ? "100px 0" : block.child_value('padding')
+  bg_color = block.child('advanced_options').child_value('background_color').blank? ? "#ffffff" : block.child('advanced_options').child_value('background_color')
+  bg_image = (block.child_value('background_image').blank? || block.child_value('background_image').url.include?('placehold')) ? "" : block.child_value('background_image').url(:huge)
+  bg_image = bg_image.blank? ? "" : bg_image.gsub('http://', '//').gsub('https://', '//')
+  image_overlay = (block.child('advanced_options').child_value('image_overlay').blank? || block.child('advanced_options').child_value('image_overlay').url.include?('placehold')) ? "" : block.child('advanced_options').child_value('image_overlay').url(:large)
+  image_overlay_width = block.child('advanced_options').child_value('image_overlay_width').blank? ? "200px" : block.child('advanced_options').child_value('image_overlay_width')
+  btn_url = block.child('advanced_options').child_value('button_link_url').blank? ? "" : block.child('advanced_options').child_value('button_link_url')
+  btn_text = block.child('advanced_options').child_value('button_text').blank? ? "" : block.child('advanced_options').child_value('button_text')
+  btn_style = block.child('advanced_options').child_value('button_style').blank? ? "Solid Color" : block.child('advanced_options').child_value('button_style')
+  image_sizing = block.child('advanced_options').child_value('image_sizing').blank? ? "Fill (Center)" : block.child('advanced_options').child_value('image_sizing')
+  overlay_color = block.child('advanced_options').child_value('overlay_color').blank? ? "#000000" : block.child('advanced_options').child_value('overlay_color')
+  overlay_opacity = block.child('advanced_options').child_value('overlay_opacity').blank? ? "0%" : block.child('advanced_options').child_value('overlay_opacity')
+  text_overlay = block.child_value('text_overlay').blank? ? "" : block.child_value('text_overlay')
+  font_size = block.child('advanced_options').child_value('font_size').blank? ? "24px" : block.child('advanced_options').child_value('font_size')
+  text_align = block.child('advanced_options').child_value('text_align').blank? ? "Center" : block.child('advanced_options').child_value('text_align')
+  btn_class = ""
+  if btn_style == "Solid White"
+    btn_class = "white"
+  elsif btn_style == "Color Outline"
+    btn_class = "color-outline"
+  elsif btn_style == "White Outline"
+    btn_class = "white-outline"
+  end
+  opacity = "0." + overlay_opacity.gsub("%","")
+  sizing = image_sizing.include?('Fill') ? "cover" : "contain"
+  btn_target = "parent"
+  if !btn_url.blank? 
+    btn_target = btn_url.start_with?('/') ? "parent" : "blank"
+    btn_url = btn_url.start_with?('www.') ? ("http://" + btn_url) : btn_url
+  end
+  position = "center"
+  position = image_sizing.include?('Top') ? "top" : position
+  position = image_sizing.include?('Bottom') ? "bottom" : position
+  parallax = block.child('advanced_options').child_value('parallax').blank? ? 0 : block.child('advanced_options').child_value('parallax')
+%>
+
+<% if parallax == "1" %>
+  <div class="banner-block" id="block_<%= block.id %>" data-parallax="scroll" data-image-src="<%= bg_image %>">
+<% else %>
+  <div class="banner-block" id="block_<%= block.id %>">
+<% end %>
+  <div class="overlay" id="overlay-<%= block.id %>"></div>
+  <div class="constrain">
+    <div class="content">
+      <% if !image_overlay.blank? %>
+        <img src="<%= image_overlay %>" style="width:<%= image_overlay_width %>" />
+      <% end %>
+      <% if !text_overlay.blank? %>
+        <div class="text-overlay clearfix">
+          <div class="text-contain">
+            <%== text_overlay %>
+          </div>
+        </div>
+      <% end %>
+      <% if !btn_text.blank? && !btn_url.blank? %>
+        <div class="block-button">
+          <a href="<%= btn_url %>" target="_<%= btn_target %>" class="btn <%= btn_class %>"><%= btn_text %></a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+
+  <% content_for :css do %>
+    <style>
+      #block_<%= block.id %> {
+        max-width: 100%;
+        padding: <%= padding %>;
+        width: <%= width %>;
+        margin: 0 auto;
+        position: relative;
+        -ms-behavior: url('/bg.htc');
+        background-repeat: no-repeat;
+        overflow: hidden;
+      <% if parallax != "1" %>
+        background-image: url('<%= bg_image %>');
+        background-color: <%= bg_color %>;
+      <% end %>
+        background-size: <%= sizing %>;
+        background-position: center <%= position %>;
+      }
+      #block_<%= block.id %> em {
+        font-style: italic;
+      }
+      #block_<%= block.id %> .overlay {
+        background-color: <%= overlay_color %>;
+        opacity: <%= opacity %>;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0; 
+        left: 0;
+      }
+      #block_<%= block.id %> .content {
+        text-align: <%= text_align %>;
+      }
+      <% if text_align == "Left" %>
+        #block_<%= block.id %> .content {
+          padding-left: 5%;
+        }
+      <% elsif text_align == "Right" %>
+        #block_<%= block.id %> .content {
+          padding-right: 5%;
+        }
+        #block_<%= block.id %> .content .text-overlay {
+          width: 100%;
+          max-width: none;
+        }
+        #block_<%= block.id %> .content .text-overlay .text-contain {
+          max-width: 700px;
+          float: right;
+        }
+      <% else %>
+        #block_<%= block.id %> .content .text-overlay {
+          <% if !btn_text.blank? && !btn_url.blank? %>
+            margin: 0 auto 30px auto;
+          <% else %>
+            margin: 0 auto;
+          <% end %>
+        }
+      <% end %>
+      #block_<%= block.id %> .content .text-overlay {
+        font-size: <%= font_size %>;
+      }
+      #block_<%= block.id %> .content .image-overlay {
+        <% if !text_overlay.blank? %>
+          margin-bottom: 30px;
+        <% end %>
+      }
+      #block_<%= block.id %> .content .text-overlay {
+        width: 90%;
+        max-width: 700px;
+        <% if !btn_text.blank? && !btn_url.blank? %>
+          margin-bottom: 30px;
+        <% end %>
+      }
+    </style>
+  <% end %>
+</div>

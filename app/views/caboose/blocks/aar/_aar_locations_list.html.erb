@@ -1,0 +1,47 @@
+<% locations = Caboose::Block.where(:block_type_id => 1486).all %>
+<% seen = [] %>
+<div id="block_<%= block.id %>">
+<% if editing && locations.count == 0 %>
+	<p>Empty location list.</p>
+<% else %>
+<h4 style="text-align:center;">Courses are offered in the following locations:</h4>
+	<ul class="location-list">
+	<% locations.each do |l| %>
+
+		<% if Caboose::Block.where(:id => l.parent_id).exists? && !seen.include?(l.value) %>
+			<li><%= l.value %><a href="/gri/courses/location/<%= l.value.downcase.gsub(' ','-') %>" class="btn">View Courses</a></li>
+			<% seen << l.value %>
+		<% end %>
+	<% end %>
+	</ul>
+
+<% end %>
+
+</div>
+
+<% content_for :css do %>
+<style>
+.location-list {
+	width: 100%;
+	max-width: 550px;
+	margin: 0 auto;
+	padding: 0;
+	margin-top: 30px;
+}
+.location-list li {
+	padding: 15px 10px;
+	background: #eaeaea;
+}
+.location-list li:nth-of-type(even) {
+	background: #fff;
+}
+.location-list li .btn {
+	color: #fff;
+	float: right;
+	padding: 2px 8px;
+	font-size: 14px;
+	position: relative;
+	bottom: 6px;
+}
+</style>
+<% end %>

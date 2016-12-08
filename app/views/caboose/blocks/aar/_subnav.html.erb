@@ -1,0 +1,25 @@
+<% if @page %>
+  <%
+  p = @page
+  while p.parent_id && p.parent_id >= 1
+    p = p.parent
+  end  
+  %>
+  <div class="sidebar-section-body">
+    <nav class="m-sidenav">
+      <% p.children.each do |p2| %>
+        <% next if p2.hide %>
+        <% if p2.children.where(:hide => false).count > 0 %>
+          <span class="sidenav-anchor"><%= raw p2.title %></span>
+          <div class="sidenav-submenu">
+            <% p2.children.where(:hide => false).all.each do |p3| %>
+              <%= raw nav_link(p3, 'sidenav-link') %>              
+            <% end %>
+          </div>
+        <% else %>
+          <%= raw nav_link(p2, 'sidenav-link') %>        
+        <% end %>
+      <% end %>
+    </nav>
+  </div>
+<% end %>

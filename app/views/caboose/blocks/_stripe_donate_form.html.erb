@@ -1,0 +1,111 @@
+<% default = block.child_value('default_amount').blank? ? 10.00 : block.child_value('default_amount').to_f %>
+<% pk = Caboose::Setting.where(:site_id => site.id, :name => 'stripe_public_key').first %>
+<% public_key = pk ? pk.value : false %>
+<% piu = block.child_value('profile_image_url') %>
+<% text = block.child_value('main_text') %>
+<% title = block.child_value('title') %>
+<% req = block.child_value('require_address') %>
+<% add = req && (req == 1 || req == '1') ? true : false %>
+<% ch_desc = block.child_value('charge_description').blank? ? 'Donation' : block.child_value('charge_description') %>
+
+<div class="stripe-donate-form-block" id="block_<%= block.id %>">
+	<form action="/stripe/charge" action="post" id="donate-form">
+		<h3 class="section-title"><%= title %></h3>
+		<div class="richtext"><%== text %></div>
+		<div class="field">
+			<span class="dollar">$</span><input type="text" name="amount" id="amount" placeholder="<%= sprintf('%.2f', default) %>" />
+		</div>
+		<% if !public_key.blank? %>
+			<input type="submit" id="submit-donate-form" class="alternate btn" value="Donate" />
+		<% elsif editing %>
+			<p>Stripe API keys need to be added.</p>
+		<% end %>
+		<p class="info">secure payment processing provided by <a href="http://www.stripe.com" title="Stripe" target="_blank">Stripe</a></p>
+	</form>
+	<div id="message"></div>
+</div>
+
+<% content_for :js do %>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script>
+		function create_charge(token) {
+			var form = $("#donate-form");
+			var mess = form.next("#message");
+			$.ajax({
+		    url: '/stripe/charge',
+		    type: 'post',
+		    data: form.serialize(),
+		    success: function(resp) {
+		      if(resp.error) {
+		        form.find("input, textarea").each(function() {
+		          if ( $(this).val() == "" ) {
+		            $(this).val( $(this).attr("placeholder") );
+		          }
+		        });
+		        mess.html("<p class='note error'>" + resp.error + "</p>");
+		      } 
+		      if(resp.success) {
+		        form.slideUp(); 
+		        mess.html("<p class='note success'>" + resp.success + "</p>");
+		      }
+		    }
+		  });
+		}
+	  var handler = StripeCheckout.configure({
+	    key: '<%= public_key %>',
+	    <% if !piu.blank? %>
+	    	image: '<%= piu %>',
+	    <% end %>
+	    <% if add %>
+	    	billingAddress: true,
+	    <% end %>
+	    token: function(token) {
+	      var form = $("#donate-form");
+	      var email_field = $("<input type='hidden' name='stripeEmail' />").val(token.email);
+	      var token_field = $("<input type='hidden' name='stripeToken' />").val(token.id);
+	      var ch_desc = $("<input type='hidden' name='chargeDescription' />").val("<%= ch_desc %>");
+	      var input_amount = $("#donate-form").find("#amount").val();
+	      var input_field = $("<input type='hidden' name='amount' />").val(input_amount);
+	      if (token.card && token.card.name) {
+	      	var name_field = $("<input type='hidden' name='stripeBillingName' />").val(token.card.name);
+	      	form.append(name_field);
+	      }
+	      form.append(email_field);
+	      form.append(token_field);
+	      form.append(input_field);
+	      form.append(ch_desc);
+	      form.slideUp(); 
+	      create_charge(token.id);
+	    }
+	  });
+
+	  $('#submit-donate-form').on('click', function(e) {
+	    e.preventDefault();
+	    var form = $("#donate-form");
+	    var charge_amount = 0;
+	    var input_amount = $("#donate-form").find("#amount").val();
+	    input_amount = input_amount.replace(',','');
+	    if ( input_amount.indexOf(".") > -1 ) {
+	    	charge_amount = input_amount.replace('.','');
+	    }
+	    else {
+	    	charge_amount = parseInt(input_amount) * 100;
+	    }
+	    if ( charge_amount && charge_amount != 0) {
+	    	form.next("#message").html("");
+	    	handler.open({
+		      name: '<%= site.description %>',
+		      description: 'Donation',
+		      amount: charge_amount
+		    });
+	    }
+	    else {
+	    	form.next("#message").html("<p class='note error'>Please enter an amount.</p>");
+	    }
+	  });
+
+	  $(window).on('popstate', function() {
+	    handler.close();
+	  });
+	</script>
+<% end %>

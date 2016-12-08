@@ -1,0 +1,37 @@
+<%
+bi = block.child_value('banner_image')
+img = (bi && bi.url && !bi.url.include?('placehold')) ? bi.url(:huge) : '//d9hjv462jiw15.cloudfront.net/assets/ellis/images/banner.jpg'
+if @mc
+	fm = @mc.media.first
+	img = fm.image.url(:large) if fm && !fm.image.url.include?('placehold')
+end
+title = block.child_value('title').blank? ? page.title : block.child_value('title')
+title = @mc.name if @mc
+%>
+
+<div class="header-wrapper <% if @mc %>gallery<% end %>" id="block_<%= block.id %>">
+	<header class="main subpage">
+	  <div class="constrain">
+	    <a href="/" class="logo-link">
+	    	<img src="//d9hjv462jiw15.cloudfront.net/assets/ellis/images/white_logo.png" alt="<%= site.description %>">
+	    </a>
+	    <a href="#" class="show-menu-link">
+	      <span class="text">MENU</span>
+	      <span class="icon-menu-4"></span>
+	    </a>
+	  </div>
+	</header>
+	<div class="subpage-banner" style="background-image:url(<%= img %>);">
+		<div class="overlay"></div>
+		<h1 class="title"><%= title %></h1>
+	</div>
+	<% if @mc && @mc.parent %>
+		<div class="back-bar">
+			<a href="/experience/<%= @mc.parent.name.parameterize %>">Back to <%= @mc.parent.name %></a>
+		</div>
+	<% else %>
+		<div class="back-bar">
+			<%== ApplicationHelper.breadcrumbs(page) %>
+		</div>
+	<% end %>
+</div>

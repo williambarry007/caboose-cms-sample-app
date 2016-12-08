@@ -1,0 +1,94 @@
+<% slides = block.children.where(:block_type_id => 264).all %>
+<% if modal %>
+  <ul>
+    <% slides.each_with_index do |s,i| %>
+      <% name = s.child_value('title') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;"><%= name.blank? ? ("Slide #{(i + 1).to_s}") : name %></li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= @block.id %>/new'>Add a new slide!</a>
+<% else %>
+
+<div id="block_<%= block.id %>">
+  <% height = block.child_value('height').nil? ? "500" : block.child_value('height') %>
+  <% if slides.size > 0 %>
+
+    <div class="slider-container">
+      <div class="left-nav reveal">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/westervelt/images/back.png" alt="Back">
+      </div>
+      <div class="liquid-slider" id="slider-<%= block.id %>" data-size="<%= slides.count %>">
+        <% slides.each_with_index do |slide, index| %>
+          <div class="slide" data-title="<%= slide.child_value('title') %>" data-index="<%= index %>" id="slide-<%= index %>">
+            <div class="slider-slide" style="background-image:url(<%= slide.child_value('background_image').url(:large) %>);height:<%= height %>px;">
+              <div class="slider-overlay"></div>
+              <% link = slide.child_value('link_url') %>
+              <% if !editing && !link.blank? && link != "#" %><a href="<%= link %>" class="slide-link"><% end %>
+              <% if !editing && !link.blank? && link != "#" %></a><% end %>
+              <div class="text-overlay"><div class="contain"><%== slide.child_value("text_overlay") %></div></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="right-nav reveal">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/westervelt/images/next.png" alt="Next">
+      </div>
+    </div>
+
+    <style>
+      #slider-<%= block.id %>-wrapper {
+        max-width: 1500px !important;
+      }
+      #slider-<%= block.id %>-wrapper, 
+      .liquid-slider#slider-<%= block.id %>, 
+      #slider-<%= block.id %>-wrapper .slide,
+      #slider-<%= block.id %>-wrapper .slider-slide {
+        height: <%= height %>px;
+      }
+    </style>
+
+  <% else %>
+    <% if editing %>
+      <p style="padding:10px;border:1px solid brown;">Empty slider container. Click to add slides.</p>
+    <% end %>
+  <% end %>
+
+  <% content_for :js do %>
+    <% auto = block.child_value('auto_play') %>
+    <% ms = block.child_value('time_interval').nil? ? 6000 : block.child_value('time_interval').to_i * 1000 %>
+    <script>
+      $(document).ready(function() {
+        $("#slider-<%= block.id %>").liquidSlider({
+          autoSlide: <%= auto == "Yes" ? true : false %>,
+          autoSlideInterval: <%= ms %>,
+          autoHeight: false,
+          slideEaseDuration: 800,
+          slideEaseFunction: "fade",
+     //     animateIn: "fadeInLeft", 
+      //    animateOut: "fadeOutDown",
+          dynamicArrows: false,
+          dynamicTabs: false
+          // callback: function() {
+          //   var self = this;
+          //   $('.slider-<%= block.id %>-panel').each(function() {
+          //     $(this).removeClass('animated ' + self.options.animateIn);
+          //   });
+          // }
+        });
+        var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+        $(".left-nav").click(function() {
+          api.setNextPanel('left');
+          api.updateClass($(this)); 
+        });
+        $(".right-nav").click(function() {
+          api.setNextPanel('right');
+          api.updateClass($(this)); 
+        });
+      });
+
+    </script>
+  <% end %>
+
+</div>
+
+<% end %>

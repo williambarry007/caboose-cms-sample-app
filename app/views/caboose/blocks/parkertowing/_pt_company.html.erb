@@ -1,0 +1,17 @@
+<%
+name = block.child_value('name')
+description = block.child_value('description')
+logo = block.child_value('logo').url(:large)
+%>
+
+<div class="company-block clearfix" id="block_<%= block.id %>">
+	<div class="image-wrapper">
+		<% if !logo.blank? && !logo.include?('placehold') %><img src="<%= logo %>" alt="<%= name %>" /><% end %>
+	</div>
+	<div class="text-wrapper">
+		<h3 class="company-name"><%= name %></h3>
+		<div class="richtext">
+			<%== description %>
+		</div>
+	</div>
+</div>

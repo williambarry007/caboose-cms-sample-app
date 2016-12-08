@@ -1,0 +1,64 @@
+<% contact = block.child_value('contact_info').blank? ? "<p>208 McFarland Circle N<br />Tuscaloosa, AL 35406<br />205-345-7000</p>" : block.child_value('contact_info') %>
+<% quick = block.child_value('quick_info').blank? ? "" : block.child_value('quick_info') %>
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row">
+      <div class="unit1of4">
+        <a href="/patients" class="unit-title">Patients</a>
+        <nav>
+          <ul>
+            <% Caboose::Page.find(1323).children.where(:hide => false).order(:sort_order).each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p) %></li>
+            <% end %>
+          </ul>
+        </nav>
+        <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+      </div>
+      <div class="unit1of4">
+        <a href="/physicians" class="unit-title">Physicians</a>
+        <nav>
+          <ul>
+            <% Caboose::Page.find(1322).children.where(:hide => false).order(:sort_order).each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+      <div class="unit1of4">
+        <h4 class="unit-title">Contact</h4>
+        <div class="richtext"><%== contact %></div>
+      </div>
+      <div class="unit1of4">
+        <h4 class="unit-title">Quick Info</h4>
+        <div class="richtext"><%== quick %></div>
+      </div>
+    </div>
+    <nav class="center">
+      <ul>
+        <li>
+            <a title='About The Radiology Clinic' href='/general/about'>About</a>
+        </li>
+        <li>
+            <a title='Career Opportunities' href='/general/career-opportunities'>Careers</a>
+        </li>
+        <li>
+            <a title='Directions and Map' href='/general/directions-and-map'>Directions</a>
+        </li>
+        <li>
+            <a title='FAQ' href='/general/faq'>FAQ</a>
+        </li>
+        <li>
+            <a title='Privacy' href='/privacy-practices'>Privacy</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="copyright">Copyright &copy; <%= DateTime.now.strftime("%Y") %> The Radiology Clinic</div>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+        <span class="ie-nine">The Nine</span>
+      </a>
+    </section>
+  </div>
+</footer>

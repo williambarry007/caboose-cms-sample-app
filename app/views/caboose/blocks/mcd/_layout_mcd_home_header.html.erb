@@ -1,0 +1,23 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <img class="mobile-logo" src="//d9hjv462jiw15.cloudfront.net/assets/mcd/images/main_logo2.png" alt="Matt Clinton Design" />
+    <div class="top">
+      <a href="/" title="Home" class="logo-link">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/mcd/images/main_logo2.png" alt="Matt Clinton Designs" class="logo" />
+      </a>
+      <h1 class="site-title">Matt Clinton Designs</h1>
+      <h2 class="date reveal">Est. 2006</h2>
+    </div>
+    <a class="icon-menu-4" href="#" id="show-menu"></a>
+  </div>
+  <nav>
+    <div class="constrain">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 649, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,22 @@
+<% hf = Caboose::Block.where(:block_type_id => 1999).first %>
+
+<footer class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="top clearfix">
+      <div class="text-wrapper">
+        <div class="richtext"><%== hf.child_value('left_text') %></div>
+      </div>
+      <section class="nine">
+        <span>Site built and powered by:</span>
+        <a href="http://www.nine.is" target="_blank">
+          <%= render 'svg/nine' %>
+        </a>
+      </section>
+    </div>
+    <div class="bottom">
+      <div class="text-wrapper">
+        <div class="richtext"><%== hf.child_value('bottom_text') %></div>
+      </div>
+    </div>    
+  </div>
+</footer>

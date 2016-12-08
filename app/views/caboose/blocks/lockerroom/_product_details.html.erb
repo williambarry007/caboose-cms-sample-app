@@ -1,0 +1,31 @@
+<% p = @product %>
+
+<div class="product-details" id="product" data-id="<%= p.id %>">
+  <div class="constrain">                            
+    <div id="product-images"></div>
+    <section class="product-details-wrapper">
+      <h1 class="product-title"><%= @product.title %></h1>
+      <% if @product.status == Caboose::Product::STATUS_ACTIVE %>
+        <% unless @product.description.nil? or @product.description.empty? %>
+          <div class="box"><%= raw @product.description %></div>
+        <% end %>        
+        <div id="product-options"></div>
+        <div id="product-price"></div>
+        <div id="add-to-cart"></div>
+      <% else %>
+        <p>This product is no longer active.</p>
+      <% end %>      
+    </section>
+  </div>
+</div>
+
+<%= content_for :css do %>
+  <%= stylesheet_link_tag 'caboose/product_images' %>
+  <%= stylesheet_link_tag 'caboose/product_options' %>   
+<% end %>
+
+<%= content_for :js do %>
+  <%= javascript_include_tag 'caboose/imageZoom' %>
+  <%= javascript_include_tag 'caboose/cart_old' %>
+  <%= javascript_include_tag 'caboose/product' %>
+<% end %>

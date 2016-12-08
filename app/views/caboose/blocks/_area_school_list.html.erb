@@ -1,0 +1,69 @@
+<%
+min = block.child_value('minimum_houses_for_sale').blank? ? 1 : block.child_value('minimum_houses_for_sale').to_i
+title = block.child_value('title')
+elem = CabooseRets::ResidentialProperty.find_by_sql("select elem_school, count(*) as count from rets_residential where elem_school IS NOT NULL and status = 'Active' and elem_school != 'NONE' and elem_school != 'OTHER' group by elem_school order by count desc limit 50")
+middle = CabooseRets::ResidentialProperty.find_by_sql("select middle_school, count(*) as count from rets_residential where middle_school IS NOT NULL and status = 'Active' and middle_school != 'NONE' and middle_school != 'OTHER' group by middle_school order by count desc limit 50")
+high = CabooseRets::ResidentialProperty.find_by_sql("select high_school, count(*) as count from rets_residential where high_school IS NOT NULL and status = 'Active' and high_school != 'NONE' and high_school != 'OTHER' group by high_school order by count desc limit 50")
+%>
+
+<div class="area-schools-block" id="block_<%= block.id %>">
+	<div class="arrow up"></div>
+	<div class="constrain">
+		<h2 class="title"><%= title %></h2>
+
+		<div class="grid-row">
+			<div class="unit1of3 left">
+				<h4 class="unit-title">Elementary School</h4>
+				<ul>
+					<% elem.each do |s| %>
+						<% next if s.count.to_i < min %>
+						<li>
+							<% slug = s.elem_school.gsub("&","%26").gsub(" ","+") %>
+							<a href="/residential/search?elem_school=<%= slug %>" title="<%= s.elem_school %>">
+								<span class="name"><%= s.elem_school.titleize %></span>
+								<div class="count">
+									<span class="number"><%= s.count %></span>
+								</div>
+							</a>
+						</li>
+					<% end %>
+				</ul>
+			</div>
+			<div class="unit1of3 middle">
+				<h4 class="unit-title">Middle School</h4>
+				<ul>
+					<% middle.each do |s| %>
+						<% next if s.count.to_i < min %>
+						<li>
+							<% slug = s.middle_school.gsub("&","%26").gsub(" ","+") %>
+							<a href="/residential/search?middle_school=<%= slug %>" title="<%= s.middle_school %>">
+								<span class="name"><%= s.middle_school.titleize %></span>
+								<div class="count">
+									<span class="number"><%= s.count %></span>
+								</div>
+							</a>
+						</li>
+					<% end %>
+				</ul>
+			</div>
+			<div class="unit1of3 right">
+				<h4 class="unit-title">High School</h4>
+				<ul>
+					<% high.each do |s| %>
+						<% next if s.count.to_i < min %>
+						<li>
+							<% slug = s.high_school.gsub("&","%26").gsub(" ","+") %>
+							<a href="/residential/search?high_school=<%= slug %>" title="<%= s.high_school %>">
+								<span class="name"><%= s.high_school.titleize %></span>
+								<div class="count">
+									<span class="number"><%= s.count %></span>
+								</div>
+							</a>
+						</li>
+					<% end %>
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+</div>

@@ -1,0 +1,44 @@
+<% if modal %>
+  <% if block.child("category") %>
+    <div id="block_<%= block.child('category').id %>" style="text-decoration:underline;cursor:pointer;">
+      Category: <%= block.child_value('category') %>
+    </div>
+  <% end %>
+  <% if block.child("date_completed") %>
+    <div id="block_<%= block.child('date_completed').id %>" style="text-decoration:underline;cursor:pointer;">
+      Date Completed: <%= block.child_value('date_completed') %>
+    </div>
+  <% end %>
+  <% if block.child("square_footage") %>
+    <div id="block_<%= block.child('square_footage').id %>" style="text-decoration:underline;cursor:pointer;">
+      Sq. Footage: <%= block.child_value('square_footage') %>
+    </div>
+  <% end %>
+  <% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+  <% if block.child("description") %>
+    <div id="block_<%= block.child('description').id %>" style="text-decoration:underline;cursor:pointer;">
+      Description: Click to edit
+    </div>
+  <% end %>
+  <% if block.child("photo") %>
+    <div id="block_<%= block.child('photo').id %>" style="text-decoration:underline;cursor:pointer;">
+      Featured Photo: Click to edit
+    </div>
+  <% end %>
+  <% images = block.children.where(:block_type_id => 716).order(:sort_order).all %>
+  <% if !images.blank? %><br /><p>Additional photos:</p><% end %>
+  <ul>
+    <% images.each_with_index do |s,i| %>
+      <% name = "" %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Image #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+	</ul>
+	<br />
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= @block.id %>/new'>Add additional photo</a>
+<% end %>

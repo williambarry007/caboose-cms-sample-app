@@ -1,0 +1,53 @@
+<%
+hf = Caboose::Block.where(:block_type_id => 2480).last
+%>
+
+<footer class="main sem" id="block_<%= block.id %>">
+  <div class="constrain">
+    <nav>
+      <ul>
+        <li><a href="/sem">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 2326, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <div class="grid-row">
+      <div class="unit1of3 left">
+        <div class="richtext">
+          <p>
+            1419 22nd Ave.<br />
+            Tuscaloosa, AL 35401<br />
+            <a href="http://maps.google.com/maps?q=1419+22nd+Ave,+Tuscaloosa,+AL+35401&hl=en&sll=33.288202,-86.802478&sspn=0.017094,0.033023&z=17" target="_blank" title="Directions">Directions</a>
+          </p>
+        </div>
+      </div>
+      <div class="unit1of3 center">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/specialevents/images/white_logo.png" alt="Special Events" width="50" height="55" />
+        <h1 class="logo-title">Special Events <span class="small">Management</span></h1>
+        <ul class="links">
+          <li><a href="/" title="Special Events Home" class="blue">Special Events Home</a></li>
+        </ul>
+      </div>
+      <div class="unit1of3 right">
+        <div class="richtext">
+          <p>
+            p. 205.469.7464<br />
+            f. 205.752.5946<br />
+            <a href="mailto:sarah@specialeventsal.com" title="Email">sarah@specialeventsal.com</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="constrain">
+      <section class="nine">
+        <span>Designed and loved by:</span>
+        <a href="http://www.nine.is" target="_blank">
+          <%= render 'svg/nine' %>
+        </a>
+      </section>
+    </div>
+  </div>
+</footer>

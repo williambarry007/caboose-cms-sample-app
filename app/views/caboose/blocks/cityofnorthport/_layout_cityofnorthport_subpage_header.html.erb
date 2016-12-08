@@ -1,0 +1,72 @@
+<header class="main subpage" id="block_<%= block.id %>">
+  <div class="constrain top_nav">
+    <div class="left">
+      <a href="/"><h1>The City of Northport</h1></a>
+    </div>
+    <ul class="buttons">
+      <li id="last"><a href="/agenda-and-minutes" class="btn" id="minutes">Agenda &amp; Minutes</a></li>
+    </ul>
+    <div class="right reveal">
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <li id="last"><a href="/public-notices" title="Public Notices">Public Notices</a></li>
+        <li><a href="/pay-my-water-bill" title="Pay My Water Bill">Pay My Water Bill</a></li>
+        <li id="last"><a href="https://mail.cityofnorthport.org/owa" target="_blank" title="Employee Email">Employee Email</a></li>
+      </ul>
+    </div>
+    <a href="#sidr" id="show-menu" title="Show Menu" class="icon-menu-4 conceal"></a>
+  </div>
+  <div class="banner-links reveal">
+    <div class="constrain">
+      <div class="sub-nav reveal">
+        <ul>
+          <li><a href="/job-openings" title="Job Openings">Job Openings</a></li>
+    <!--       <li><a href="/news">News</a></li> -->
+          <li><a href="/forms" title="Forms">Forms</a></li>
+          <li id="last"><a href="/contact-us" title="Contact Us">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="mobile_show_link above conceal">
+        <a href="#" id="show_banner_links">Show Menu</a>
+      </div>
+      <div class="grid-row reveal">
+        <div class="unit unit1of5"><a href="/leadership" title="Leadership">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/leadership.png" alt="Leadership" class="icon">
+            <h3>Leadership</h3>
+          </a></div>
+        <div class="unit unit1of5"><a href="/departments" title="Departments">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/departments.png" alt="Departments" class="icon">
+            <h3>Departments</h3>
+          </a></div>
+        <div class="unit unit1of5"><a href="/visitors" title="Visitors">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/visitors.png" alt="Visitors" class="icon">
+            <h3>Visitors</h3>
+          </a></div>
+        <div class="unit unit1of5"><a href="/residents" title="Residents">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/residents.png" alt="Residents" class="icon">
+            <h3>Residents</h3>
+          </a></div>
+        <div class="unit unit1of5"><a href="/i-want-to" title="I Want To">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/cityofnorthport/images/icons/retailers.png" alt="Retailers" class="icon">
+            <h3>I Want To...</h3>
+          </a></div>
+      </div>
+    </div>
+  </div>
+  <div class="search-bar clearfix">
+    <div class="grid-row constrain">
+      <div class="unit unit1of2">
+        <div class="breadcrumbs">
+          <h3>You are here:</h3>
+          <%== ApplicationHelper.breadcrumbs(page) %>
+        </div>
+      </div>
+      <div class="unit unit1of2 reveal" id="right">
+        <form action="/search" method="get" id="search">
+          <input type="text" name="q" id="q" placeholder="Enter Keywords">
+          <input type="submit" value="Search" class="btn">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>

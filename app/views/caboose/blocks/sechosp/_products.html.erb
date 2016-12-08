@@ -1,0 +1,15 @@
+<% if @sale_categories %>
+	<%= render :partial => "caboose/blocks/sechosp/product_sales" %>
+<% elsif @product %>
+	<%= render :partial => "caboose/blocks/sechosp/product_details" %>
+<% elsif @category %>
+	<% if params[:vendor_id] %>
+		<%= render :partial => "caboose/blocks/sechosp/vendor_products", :locals => { :vendor_id => params[:vendor_id] } %>
+	<% elsif params[:query]  %>
+		<%= render :partial => "caboose/blocks/sechosp/search_results", :locals => { :query => params[:query] } %>
+	<% else %>
+		<%= render :partial => "caboose/blocks/sechosp/product_index" %>
+	<% end %>
+<% else %>
+	<p>Invalid product.</p>
+<% end %>

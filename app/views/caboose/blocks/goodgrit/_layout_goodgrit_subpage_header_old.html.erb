@@ -1,0 +1,66 @@
+<header class="main subpage" id="block_<%= block.id %>">
+  <div class="main-header">
+    <div class="top">
+      <div class="constrain">
+        <a class="logo-link" href="/" title="<%= site.description %>">
+          <h1 class="title"><span class="good">Good</span><br /><span class="grit">Grit</span></h1>
+        </a>
+        <nav class="reveal">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <% Caboose::Page.where(:parent_id => 879, :hide => false).order(:sort_order).all.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+
+              <% if p.id == 880 && false # after About page show Exclusive Content link %>
+                <% user = logged_in_user %>
+                <% if user && user.id != 2 %>
+                  <li><a href="/stories/exclusive-content" title="Exclusive Content">Exclusive Content</a></li>
+                <% else %>
+                  <li><a href="#" title="Login" class="show-login">Login</a></li>
+                <% end %>
+              <% end %>
+            <% end %>
+          </ul>
+        </nav>
+        <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu">
+          <span>toggle menu</span>
+        </a>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="constrain">
+        <nav class="reveal">
+          <% g = (post || page.children.where(:hide => false).count == 0) ? Caboose::Page.where(:id => 886).first : page %>
+          <ul>
+            <% g.children.where(:hide => false).order(:sort_order).all.each do |p| %>
+              <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <% imgbk = block.child_value('category_photo') %>
+  <% img = imgbk ? imgbk.url(:huge) : "" %>
+  <% if img && !img.blank? && !img.include?('placehold') %>
+    <div class="subpage-banner" style="background-image:url(<%= img %>);">
+      <h2 class="title"><%= page.title %></h2>
+    </div>
+  <% end %>
+</header>
+
+<% content_for :css do %>
+  <style>
+  @media all and (min-width: 800px) {
+  <% if img && !img.blank? && !img.include?('placehold') %>
+    .subpage-banner {
+      margin: 110px auto 15px auto;
+    }
+  <% else %>
+    .subpage-content {
+      padding-top: 100px;
+    }
+  <% end %>
+  }
+  </style>
+<% end %>

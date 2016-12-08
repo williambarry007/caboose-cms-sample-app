@@ -1,0 +1,92 @@
+<%
+  mcid = block.child_value('media_category')
+  mc = Caboose::MediaCategory.where(:id => mcid).first
+  media = mc && mc.media ? mc.media.all : []
+  height = block.child_value('height').blank? ? '400px' : block.child_value('height')
+  height += 'px' if !height.include?('px')
+  begin
+    arrow_position = ((block.child_value('height').to_i / 2) - 10).to_s + "px"
+  rescue
+    arrow_position = "100px"
+  end
+  slide_function = "easeInOutSine"
+  if block.child_value('transition') == "fade"
+    slide_function = "fade"
+  end
+  interval = block.child_value('duration').blank? ? 8 : block.child_value('duration')
+  begin
+    ms = interval.to_i * 1000
+  rescue
+    ms = 8000
+  end
+  auto_slide = block.child_value('auto_slide').blank? ? 'yes' : block.child_value('auto_slide')
+  auto_slide = auto_slide == 'yes' ? true : false
+  arrow_color = block.child_value('arrow_color').blank? ? 'white' : block.child_value('arrow_color')
+  show_captions = block.child_value('show_captions').blank? ? 'yes' : block.child_value('show_captions')
+%>
+<div class="media-category-slider" id="block_<%= block.id %>">
+  <% if media.count > 0 %>
+    <div class="slider-container" id="slider-container-<%= block.id %>">
+      <div class="left-nav" id="nav-left-<%= block.id %>">
+        <div class="arrow icon-left-big"></div>
+      </div>
+      <div class="liquid-slider" id="slider-<%= block.id %>">
+        <% slide = media.first %>
+        <% bg_image = slide.image && !slide.image.url.include?('placehold') ? slide.image.url(:large) : '' %>
+        <div class="slide clearfix" id="slide-0">
+          <div class="slider-slide" style='background-image:url(<%= bg_image %>);'>
+            <% if show_captions == 'yes' %><p class="caption"><%== slide.description %></p><% end %>
+          </div>
+        </div>
+      </div>
+      <div class="right-nav" id="nav-right-<%= block.id %>">
+        <div class="arrow icon-right-big"></div>
+      </div>
+    </div>
+  <% end %>
+</div>
+<% content_for :css do %>
+<style>
+  #block_<%= block.id %> .liquid-slider {
+    height: <%= height %>;
+  }
+  #nav-left-<%= block.id %>, #nav-right-<%= block.id %> {
+    top: <%= arrow_position %>;
+    color: <%= arrow_color %>;
+  }
+  <% if show_captions == 'no' %>
+    #block_<%= block.id %> .liquid-slider p.caption {
+      display: none;
+      opacity: 0;
+    }
+  <% end %>
+</style>
+<% end %>
+<% content_for :js do %>
+  <script>
+    $(document).ready(function() {
+      <% media.each_with_index do |slide, index| %>
+        <% bg_image = slide.image && !slide.image.url.include?('placehold') ? slide.image.url(:large) : '' %>
+        <% next if index == 0 || bg_image.blank? %>
+        $("#slider-<%= block.id %>").append($('<div/>').addClass('slide clearfix').attr('id','slide-<%= index %>').append( $('<div/>').addClass('slider-slide').css('background-image','url(<%= bg_image %>)').append( $('<div/>').html('<p class="caption"><%= slide.description %></p>')) ));
+      <% end %>
+      $("#slider-<%= block.id %>").liquidSlider({
+        autoSlide: <%= auto_slide %>,
+        autoHeight: false,
+        autoSlideInterval: <%= ms %>,
+        slideEaseFunction: "<%= slide_function %>",
+        dynamicArrows: false,
+        dynamicTabs: false
+      });
+      var api = $.data( $('#slider-<%= block.id %>')[0], 'liquidSlider');
+      $("#nav-left-<%= block.id %>").click(function() {
+        api.setNextPanel('left');
+        api.updateClass($(this)); 
+      });
+      $("#nav-right-<%= block.id %>").click(function() {
+        api.setNextPanel('right');
+        api.updateClass($(this)); 
+      });
+    });
+  </script>
+<% end %>

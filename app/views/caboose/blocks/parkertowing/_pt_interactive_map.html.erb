@@ -1,0 +1,160 @@
+<div class="interactive-map" id="block_<%= block.id %>">
+
+  <div class="map-container">
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/parkertowing/images/map5.jpg" width="480" height="797" usemap="#ports-map" alt="Map" class="reveal" />
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/parkertowing/images/map5.jpg" width="350" usemap="#ports-map" alt="Map" class="conceal" />
+
+    <%
+      birmingham = [368,310,347,322,349,366,363,383,379,377,423,382,423,395,491,397,491,379,535,378,534,362,380,361,384,350,390,328]
+      centre = [668,73,666,60,672,54,660,31,670,16,686,13,700,32,688,54,692,73,701,82,757,78,758,102,623,101,621,75]
+      pickens = [172,417,159,398,167,377,187,377,198,394,184,415,191,423,220,425,256,428,256,438,272,443,268,458,177,460,177,449,165,441,161,429,168,416]
+      mobile = [211,979,205,975,194,979,192,991,197,999,193,1004,161,1004,150,1016,150,1027,204,1034,213,1025,215,1007,215,991]
+      shipbuilding = [187,946,199,956,195,969,194,973,194,983,192,996,181,999,152,998,127,997,127,987,129,975,137,958,158,952]
+      whistler = [298,972,279,972,232,972,208,976,198,970,199,962,195,952,195,940,207,934,231,939,293,944,314,947,315,965]
+      decatur = [361,136,370,154,364,186,321,183,322,206,442,202,441,184,399,181,396,158,407,139,400,111,365,111]
+      northport = [304,405,290,422,302,448,298,459,307,470,314,484,313,496,295,512,296,527,437,526,433,508,389,506,410,494,409,481,397,457,384,442,369,438,339,450,324,458,319,448,328,433,328,415,316,404]
+      def get_coords(array, ratio)
+        array.map{ |c| (c * ratio).to_i }.join(',').gsub('[','').gsub(']','')
+      end
+    %>
+    <map name="ports-map" id="ports-map">
+      <area id="birmingham" href="#" alt="Birmingham Marine Terminal" title="Birmingham Marine Terminal" shape="poly" coords="<%= get_coords(birmingham, 0.6) %>" style="outline:none;" target="_self"     />
+      <area id="centre" href="#" alt="Centre South Port" title="Centre South Port" shape="poly" coords="<%= get_coords(centre, 0.6) %>" style="outline:none;" target="_self"     />
+      <area id="pickens" href="#" alt="Pickens County Port" title="Pickens County Port" shape="poly" coords="<%= get_coords(pickens, 0.6) %>" style="outline:none;" target="_self"     />
+      <area id="mobile" href="#" alt="Mobile Operations" title="Mobile Operations" shape="poly" coords="<%= get_coords(mobile, 0.6) %>" style="outline:none;" target="_self"     />
+      <area id="decatur" href="#" alt="Port of Decatur" title="Port of Decautr" shape="poly" coords="<%= get_coords(decatur, 0.6) %>" style="outline:none;" target="_self" />
+      <area id="whistler" href="#" alt="Whistler Machine Works, Inc." title="Whistler Machine Works, Inc." shape="poly" coords="<%= get_coords(whistler, 0.6) %>" style="outline:none;" target="_self"     />
+    <!--   <area id="shipbuilding" href="#" alt="Mobile Shipbuilding and Repair" title="Mobile Shipbuilding and Repair" shape="poly" coords="<%= get_coords(shipbuilding, 0.6) %>" style="outline:none;" target="_self"     /> -->
+      <area id="northport" href="#" alt="Northport State Docks and Parker Towing Home Offices" title="Northport State Docks and Parker Towing Home Offices" shape="poly" coords="<%= get_coords(northport, 0.6) %>" style="outline:none;" target="_self" />
+    </map>
+
+    <map name="ports-small-map" id="ports-small-map">
+      <area id="birmingham" href="#" alt="Birmingham Marine Terminal" title="Birmingham Marine Terminal" shape="poly" coords="<%= get_coords(birmingham, 0.4375) %>" style="outline:none;" target="_self"     />
+      <area id="centre" href="#" alt="Centre South Port" title="Centre South Port" shape="poly" coords="<%= get_coords(centre, 0.4375) %>" style="outline:none;" target="_self"     />
+      <area id="pickens" href="#" alt="Pickens County Port" title="Pickens County Port" shape="poly" coords="<%= get_coords(pickens, 0.4375) %>" style="outline:none;" target="_self"     />
+      <area id="mobile" href="#" alt="Mobile Operations" title="Mobile Operations" shape="poly" coords="<%= get_coords(mobile, 0.4375) %>" style="outline:none;" target="_self"     />
+      <area id="whistler" href="#" alt="Whistler Machine Works, Inc." title="Whistler Machine Works, Inc." shape="poly" coords="<%= get_coords(whistler, 0.4375) %>" style="outline:none;" target="_self"     />
+      <area id="decatur" href="#" alt="Port of Decatur" title="Port of Decautr" shape="poly" coords="<%= get_coords(decatur, 0.4375) %>" style="outline:none;" target="_self" />
+    <!--   <area id="shipbuilding" href="#" alt="Mobile Shipbuilding and Repair" title="Mobile Shipbuilding and Repair" shape="poly" coords="<%= get_coords(shipbuilding, 0.4375) %>" style="outline:none;" target="_self"     /> -->
+      <area id="northport" href="#" alt="Northport State Docks and Parker Towing Home Offices" title="Northport State Docks and Parker Towing Home Offices" shape="poly" coords="<%= get_coords(northport, 0.4375) %>" style="outline:none;" target="_self" />
+    </map>
+
+      <div class="modal" id="birmingham">
+        <a href="#" class="close-modal icon-close" id="birmingham"></a>
+        <div class="contain">
+          Birmingham Marine Terminal<br />
+          2701 Powhatan Road (Mailing )<br />
+          8701 Birmingport Road (Physical)<br />
+          Mulga, AL 35118<br />
+          P – 205-436-3080<br />
+          F – 205-436-4050
+        </div>
+      </div>
+      <div class="modal" id="centre">
+        <a href="#" class="close-modal icon-close" id="centre"></a>
+        <div class="contain">
+          Centre South Industrial Port<br />
+          359 River Terminal Road<br />
+          Chattanooga, TN 37406<br />
+          P – 423-698-7727<br />
+        </div>
+      </div>
+      <div class="modal" id="pickens">
+        <a href="#" class="close-modal icon-close" id="pickens"></a>
+        <div class="contain">
+          Pickens County Port<br />
+          2665 Highway 86<br />
+          Carrollton, AL 35447<br />
+          P – 205-349-1677
+        </div>
+      </div>
+      <div class="modal" id="mobile">
+        <a href="#" class="close-modal icon-close" id="mobile"></a>
+        <div class="contain">
+          Mobile Operations<br />
+          Yeend St.<br />
+          Mobile, AL 36603<br />
+          P – 251-433-2079<br />
+          F – 251-433-2078
+        </div>
+      </div>
+      <div class="modal" id="whistler">
+        <a href="#" class="close-modal icon-close" id="whistler"></a>
+        <div class="contain">
+          Whistler Machine Works Inc.<br />
+          3036 Turner Road<br />
+          Mobile, AL 36612<br />
+          P – 251-452-0070<br />
+          <a href="http://www.whistlermachine.com" target="_blank" title="Whistler Machine Works">www.whistlermachine.com</a>
+        </div>
+      </div>
+      <div class="modal" id="decatur">
+        <a href="#" class="close-modal icon-close" id="decatur"></a>
+        <div class="contain">
+          Port of Decatur<br />
+          500 Market St. NW<br />
+          Decatur, AL 35602<br />
+          P – 256-353-9601<br />
+          F – 256-353-1777
+        </div>
+      </div>
+      <div class="modal" id="northport">
+        <a href="#" class="close-modal icon-close" id="northport"></a>
+        <div class="contain">
+          Parker Towing Company, Inc.<br />
+          1001 3rd St.<br />
+          Northport, AL 35476<br />
+          P - 205-349-1677<br />
+          F - 205-758-0061
+        </div>
+      </div>
+ <!--      <div class="modal" id="shipbuilding">
+        <a href="#" class="close-modal icon-close" id="shipbuilding"></a>
+        <div class="contain">
+          Mobile Shipbuilding and Repair<br />
+          P.O. Box 2964<br />
+          Mobile, AL 36652<br />
+          P - 251-456-1880<br />
+          F - 251-456-1910
+        </div>
+      </div> -->
+
+
+
+  </div>
+
+</div>
+
+<% content_for :js do %>
+  <script>
+    $("map area").hover(function() {
+      $(".modal").removeClass("shown");
+      $(".modal#" + $(this).attr("id")).addClass("shown");
+    });
+    $("map area").click(function(event) {
+      event.preventDefault();
+    });
+    $(".close-modal").click(function(event) {
+      event.preventDefault();
+      $(".modal").removeClass("shown");
+    });
+    $(window).resize(function() {
+      var width = $(window).width();
+      if ( width < 800 ) {
+        $(".map-container img").attr("usemap","#ports-small-map");
+      }
+      else {
+        $(".map-container img").attr("usemap","#ports-map");
+      }
+    });
+    $(window).load(function() {
+      var width = $(window).width();
+      if ( width < 800 ) {
+        $(".map-container img").attr("usemap","#ports-small-map");
+      }
+      else {
+        $(".map-container img").attr("usemap","#ports-map");
+      }
+    });
+  </script>
+<% end %>

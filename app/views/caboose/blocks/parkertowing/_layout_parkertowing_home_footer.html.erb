@@ -1,0 +1,74 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="grid-row buttons">
+      <div class="unit1of3">
+        <a href="/company/our-companies" class="btn">Our Companies</a>
+      </div>
+      <div class="unit1of3">
+        <a href="/company/newsletter" class="btn">Newsletter</a>
+      </div>
+      <div class="unit1of3">
+        <a href="/company/video-media" class="btn">Videos &amp; Media</a>
+      </div>
+    </div>
+    <div class="grid-row content">
+      <div class="unit1of3 industry-links">
+        <h4 class="unit-header">Industry Links</h4>
+        <% il = block.children.where(:block_type_id => 699).last %>
+        <% if il && il.children.where(:block_type_id => 700).count > 0 %>
+          <ul class="links">
+            <% il.children.where(:block_type_id => 700).order(:sort_order).all.each do |l| %>
+              <li><a href="<%= l.child_value('url') %>" target="_blank"><%= l.child_value('name') %></a></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+      <div class="unit1of3 newsletter" style="height:1px;">
+
+      </div>
+      <div class="unit1of3 contact">
+        <h4 class="unit-header">Contact Us</h4>
+        <div class="mailing-address">
+          <%== block.child_value('mailing_address') %>
+        </div>
+        <div class="street-address">
+          <%== block.child_value('street_address') %>
+        </div>
+        <div class="meta">
+          <span>T. <%= block.child_value('phone_number') %></span>
+        </div>
+        <br />
+        <div class="meta">
+          <span>F. <%= block.child_value('fax') %></span>
+        </div>
+        <br />
+        <div class="meta">
+          <span>E. <a href="mailto:<%= block.child_value('email') %>"><%= block.child_value('email') %></a></span>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 556, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <div class="grid-row info">
+      <div class="unit1of2">
+        <div class="copyright">
+          &copy; <%= DateTime.now.strftime("%Y") %> ParkerTowing.com
+        </div>
+      </div>
+      <div class="unit1of2">
+        <section class="nine">
+          <span>site built and loved by:</span>
+          <a href="http://www.nine.is" target="_blank">
+            <%= render 'svg/nine' %>
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>
+</footer>

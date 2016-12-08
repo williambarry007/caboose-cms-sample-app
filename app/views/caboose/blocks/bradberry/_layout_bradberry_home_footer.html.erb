@@ -1,0 +1,53 @@
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+  <div class="flexbox">
+    
+    <div>
+      <h6>address</h6>
+      <% if !block.child_value('address').blank? %>
+        <div>
+          <%= raw block.render('address' , local_assigns) %>
+        </div>
+      <% end %>
+    </div>
+    <div>
+      <h6>hours</h6>
+      <% if !block.child_value('hours').blank? %>
+        <div>
+          <%= raw block.render('hours' , local_assigns) %>
+        </div>
+      <% end %>
+    </div>
+    <div>
+      <h6>navigation</h6>
+      <ul>
+        <% pages = Caboose::Page.index_page(site.id) ? Caboose::Page.index_page(site.id).children.where(:hide => false).order(:sort_order).all : [] %>
+        <% pages.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </div>
+    <div>
+      <h6>follow us</h6>
+      <ul>
+        <% options = ["facebook", "twitter", "instagram", "linkedin", "google_plus", "youtube", "vimeo", "pinterest", "rss"] %>
+        <% options.each do |o| %>
+          <% url = ApplicationHelper.social_config(site.id, (o + "_url")) %>
+          <% if !url.blank? %>
+            <% name = o.gsub("_feed","").gsub("_","-") %>
+            <li><a href='<%= url %>' target='_blank'><%= name.titleize %></a></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+    
+    
+    <!-- <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank">
+        <%= render 'svg/nine' %>
+      </a>
+    </section> -->
+  </div>
+  </div>
+</footer>

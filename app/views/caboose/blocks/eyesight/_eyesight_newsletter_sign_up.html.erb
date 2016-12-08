@@ -1,0 +1,11 @@
+<div class="newsletter-sign-up-block" id="block_<%= block.id %>">
+	<div class="constrain">
+		<h1 class="main-text"><%= block.child_value('text') %></h1>
+		<form id="newsletter-form">
+			<input type="email" name="email" placeholder="Email address goes here..." />
+			<a href="#" id="submit-newsletter-form" class="white btn">Sign Up Now</a>
+		</form>
+		<div id="message"></div>
+		<%== ApplicationHelper.social_links(site.id, "outline", "white") %>
+	</div>
+</div>

@@ -1,0 +1,115 @@
+<% videos = block.children.where(:block_type_id => 1189).order(:sort_order).all %>
+<% section_title = block.child_value('section_title').blank? ? "Recent Videos" : block.child_value('section_title') %>
+<% if modal %>
+	 <% if block.child("section_title") %>
+    <div id="block_<%= block.child('section_title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Section Title: <%= block.child_value("section_title") %>
+    </div>
+  <% end %>
+  <% if block.child("announcement_title") %>
+    <div id="block_<%= block.child('announcement_title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Announcement Title: <%= block.child_value("announcement_title") %>
+    </div>
+  <% end %>
+  <% if block.child("announcement_text") %>
+    <div id="block_<%= block.child('announcement_text').id %>" style="text-decoration:underline;cursor:pointer;">
+      Announcement Text: Click to Edit %>
+    </div>
+  <% end %>
+	<p>Videos:</p>
+  <ul>
+    <% videos.each_with_index do |s,i| %>
+      <% name = s.child_value('title') %>
+      <li id="block_<%= s.id %>" style="text-decoration:underline;cursor:pointer;">
+        <%= name.blank? ? ("Video #{(i + 1).to_s}") : name %>
+      </li>
+    <% end %>
+  </ul>
+  <a href='/admin/pages/<%= block.page_id %>/blocks/<%= block.id %>/new'>Add a new video!</a>
+<% else %>
+	<div class="video-grid-block" id="block_<%= block.id %>">
+		<h4 class="grid-title lined"><span><%= section_title %></span></h4>
+		<div class="grid-wrapper clearfix">
+			<% videos.each do |v| %>
+				<% city = v.child_value('city').blank? ? "" : v.child_value('city').downcase %>
+				<div class="video-unit city-<%= city %>" id="video-<%= v.id %>" data-url="<%= v.child_value('url') %>">
+					<div class="image-holder" style="background-image:url('//d9hjv462jiw15.cloudfront.net/assets/utunum/images/icons/loading.gif');"></div>
+					<h5 class="video-title"></h5>
+				</div>
+			<% end %>
+		</div>
+		<section class="announcement">
+			<h4 class="announcement-title lined"><span><%== block.child_value('announcement_title') %></span></h4>
+			<div class="richtext">
+				<%== block.child_value('announcement_text') %>
+			</div>
+		</section>
+	</div>
+	<% content_for :js do %>
+		<script>
+			$(".video-unit").click(function(event) {
+				event.preventDefault();
+				var url = $(this).data("url");
+	      var regExp = /http(s)?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+	      var match = url.match(regExp);
+	    	if (match && match[3]) {
+	    		play_video( match[3], 1 );
+	    	}
+			});
+
+			function play_video(video_id, autoplay) {
+				 var banner = $("#block_21941");
+		      var height = banner.outerHeight();
+		      banner.css("height",height + "px");
+		      banner.css("padding","15px 0");
+		      banner.find(".content").fadeOut();
+		      banner.delay(500).css("background","black");
+		      var iframe = "<iframe src='//player.vimeo.com/video/" + video_id + "?autoplay=" + autoplay + 
+		      "' width='" + "100%" +  "' height='" + (height - 30) +  "' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"; 
+		      banner.find(".content").html(iframe);
+		      banner.find(".content").fadeIn();
+			}
+
+			function get_video_data(video_id, div_id) {
+				$.ajax({
+				  url: "https://vimeo.com/api/v2/video/" + video_id + ".json",
+				  success: function(object) {
+				  	var url = object[0].thumbnail_large;
+				  	var title = object[0].title;
+				  	set_thumbnail( url, div_id );
+				  	set_title( title, div_id );
+				  }
+				});
+			}
+
+			$(window).load(function() {
+				var fv = $(".video-unit").first();
+				var url = fv.data("url");
+	      var regExp = /http(s)?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+	      var match = url.match(regExp);
+	    	if (match && match[3]) {
+	    		play_video( match[3], 0 );
+	    	}
+			});
+
+			function set_thumbnail(url, div_id) {
+				$("#" + div_id).find(".image-holder").css("background-image","url(" + url + ")");
+			}
+
+			function set_title(title, div_id) {
+				$("#" + div_id).find(".video-title").html(title);
+			}
+
+			$(document).ready(function() {
+				$(".video-unit").each(function() {
+					var url = $(this).data("url");
+					var regExp = /http(s)?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+	      	var match = url.match(regExp);
+	      	if (match && match[3]) {
+	      		get_video_data(match[3], $(this).attr("id"));
+	      	}
+				});
+			});
+		</script>
+	<% end %>
+<% end %>

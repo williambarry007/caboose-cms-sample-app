@@ -1,0 +1,36 @@
+<% p = block.page %>
+<% b = Caboose::Block.where(:page_id => p.id, :block_type_id => 1381).last %>
+<% v = Caboose::Block.where(:page_id => p.id, :block_type_id => 1383).last %>
+<div class="subpage-header-wrapper" id="block_<%= block.id %>">
+  <% if v && !v.value.blank? %>
+    <div class="page-header video" id="reel-video" style="background-color: black;background-image:url('//d9hjv462jiw15.cloudfront.net/assets/nine/images/icons/loading.gif');background-size:250px;">
+    <% content_for :js do %>
+      <script>
+        var reel_video = null;
+        $(document).ready(function() {
+          reel_video = $("#reel-video").vide("<%= v.value %>");
+        });
+      </script>
+    <% end %>
+  <% else %>
+    <div class="page-header" style="background-image:url('<%= (b.media && b.media.image) ? b.media.image.url(:huge) : "" %>');">
+  <% end %>
+    <div class="text">
+      <h1 class="title"><%= p.title %></h1>
+      <h4 class="subtitle"><%= p.menu_title %></h4>
+      <p class="meta"><%= p.page_tags.count > 0 ? p.page_tags.first.tag : "more from The Nine" %></p>
+    </div>
+  </div>
+  <% sections = Caboose::Block.where(:page_id => p.id, :block_type_id => 1384).order(:sort_order).all %>
+  <div class="page-nav">
+    <nav>
+      <ul>
+        <% sections.each do |s| %>
+          <% title = s.child_value('section_title') %>
+          <% slug = title.blank? ? "" : title.downcase.gsub(" ","-") %>
+          <li><a class="current-page" href="#block_<%= s.id %>"><%= title %></a></li>
+        <% end %>
+      </ul>
+    </nav>
+  </div>
+</div>

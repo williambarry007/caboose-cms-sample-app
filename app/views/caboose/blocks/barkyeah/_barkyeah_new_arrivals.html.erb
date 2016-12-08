@@ -1,0 +1,28 @@
+<% 
+products = Caboose::Product.where(:status => "Active", :site_id => @site.id, :featured => true).order("random()").limit(4) %>
+%>
+<% if products && products.count > 0 %>
+<div class="new-arrivals" id="block_<%= block.id %>">
+	<div class="constrain">
+		<h4 class="section-title"><%= block.child_value('section_title') %></h4>
+		<div class="product-slider">
+
+			<% products.each do |p| %>
+				<a class="product-unit" href="/products/<%= p.id %>" title="<%= p.title %>">
+					<div class="image-holder" style="background-image:url(<%= p.featured_image ? (p.featured_image.url(:large).include?('placehold') ? '//d9hjv462jiw15.cloudfront.net/assets/barkyeah/images/missing_image.jpg' : p.featured_image.url(:large)) : ('//d9hjv462jiw15.cloudfront.net/assets/barkyeah/images/missing_image.jpg') %>);"></div>
+					<div class="text">
+						<p class="product-name"><%= p.title %></p>
+						<% min_price = number_to_currency(p.price_range[0]) %>
+            <% max_price = number_to_currency(p.price_range[1]) %>
+            <% display_price = (min_price == max_price) ? min_price : (min_price + " - " + max_price) %>
+            <% if min_price != "$100,000.00" && max_price != "$0.00" %>
+              <p class="product-price"><%= display_price %></p>
+            <% end %>
+					</div>
+				</a>
+			<% end %>
+
+		</div>
+	</div>
+</div>
+<% end %>

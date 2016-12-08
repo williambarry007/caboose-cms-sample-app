@@ -1,0 +1,46 @@
+<% 
+cat_id = block.child_value('media_category')
+cats = Caboose::MediaCategory.where(:parent_id => cat_id).all
+sizes = {
+	1 => [1],
+	2 => [2],
+	3 => [1,2],
+	4 => [1,2,1],
+	5 => [2,1,2],
+	6 => [2,1,2,1],
+	7 => [1,2,1,2,1],
+	8 => [1,2,1,3,1],
+	9 => [1,2,1,3,2],
+	10 => [2,3,2,3],
+	11 => [2,1,3,2,3],
+	12 => [3,2,1,2,3,1],
+	13 => [3,2,3,2,3],
+	14 => [3,2,1,3,2,3],
+	15 => [3,2,3,2,3,2]
+}
+index = 0
+%>
+
+<div class="project-gallery" id="block_<%= block.id %>">
+	<% size = sizes[cats.count] %>
+	<% size.each_with_index do |s,i| %>
+		<div class="grid-row">
+			<% 1.upto(s) do |k| %>
+				<% c = cats[index] %>
+				<% m = c.media && c.media.count > 0 ? c.media.first : nil %>
+				<% img = m && m.image && !m.image.url.include?('placehold') ? m.image.url(:large) : '' %>
+				<div class="unit unit1of<%= s %>" style="background-image:url(<%= img %>);">
+					<% link = c.children.count == 0 ? "/galleries/#{c.id}" : "/experience/#{c.name.parameterize}" %>
+					<a href="<%= link %>" title="<%= c.name %>">
+						<div class="table">
+							<div class="table-cell">
+								<h3><%= c.name %></h3>
+							</div>
+						</div>
+					</a>
+				</div>
+				<% index += 1 %>
+			<% end %>
+		</div>
+	<% end %>
+</div>

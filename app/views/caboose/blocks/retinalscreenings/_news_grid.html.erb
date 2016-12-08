@@ -1,0 +1,36 @@
+<% posts = Caboose::Post.where(:site_id => site.id, :published => true).order("created_at DESC").limit(4) %>
+
+<div class="container">
+<div class="news-grid-block clearfix entry-box" id="block_<%= block.id %>">
+	
+	<h3><a href="/resources/iris-news">News</a></h3>
+
+	
+		
+			
+			<% posts.each do |p| %>
+			<div class="four columns">
+			<h4><a href="<%= p.uri %>" title="<%= p.title %>"><%= p.title %></a></h4>
+			<% if !p.body.blank? %>
+        <div class="post-excerpt">
+          <% 
+            html = Nokogiri::HTML( p.body ) 
+            text = html.at('body').inner_text
+            words = text.blank? ? "" : text.split[0..30] 
+          %>
+          <% if !words.blank? && words.count > 29 %>
+          	<%= words.blank? ? "" : words.join(' ') + " ..." %>
+          <% else %>
+						<%= words.blank? ? "" : words.join(' ') %>
+          <% end %>
+        </div>
+      <% end %>
+			<a href="<%= p.uri %>">Read&nbsp;More&nbsp;&raquo;</a>
+	</div>
+			<% end %>
+
+	
+
+
+</div>
+</div>

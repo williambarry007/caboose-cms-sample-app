@@ -1,0 +1,77 @@
+<div class="wd-request clearfix" id="block_<%= block.id %>">
+	<div class="constrain">
+		<div class="text">
+			<h3 class="section-title"><%= block.child_value('title') %></h3>
+			<div class="content"><%== block.child_value('description') %></div>
+		</div>
+		<form id="contact_form">
+			<input type="hidden" name="block_id" value="<%= block.id %>" />
+			<input type="hidden" name="form_name" value="Request Information Form" />
+			<div class="grid-row">
+				<div class="unit1of2" style="padding-right:1.5%;">
+					<input type="text" name="company_name_required" placeholder="Company Name">
+				</div>
+				<div class="unit1of2" style="padding-left:1.5%;">
+					<input type="text" name="name_required" placeholder="Your Name">
+				</div>
+			</div>
+			<div class="grid-row" style="margin-top:10px;">
+				<div class="unit1of3" style="padding-right:2%;">
+					<input type="email" name="email_required" placeholder="Email Address">
+				</div>
+				<div class="unit1of3" style="padding-left:1%;padding-right:1%;">
+					<input type="text" name="address_required" placeholder="Physical Address">
+				</div>
+				<div class="unit1of3" style="padding-left:2%;">
+					<input type="text" name="phone" placeholder="Phone Number">
+				</div>
+			</div>
+			<div class="field">
+				<label for="company_fuel_needs" style="float:left;margin-top:10px;">Which best describes your company's fuel needs?</label>
+					<select id="company_fuel_needs" name="company_fuel_needs">
+						<option value="I have a commercial delivery fleet to fuel">I have a commercial delivery fleet to fuel</option>
+						<option value="I have a construction site with equipment to fuel">I have a construction site with equipment to fuel</option>
+						<option value="I have a backup generator that needs routine top-offs">I have a backup generator that needs routine top-offs</option>
+						<option value="I have a backup generator and I want to ensure I will have fuel if the power ever fails">I have a backup generator and I want to ensure I will have fuel if the power ever fails</option>
+						<option value="I am interested in buying or renting fuel equipment (tanks, pumps, trucks, ect)">I am interested in buying or renting fuel equipment (tanks, pumps, trucks, ect)</option>
+					</select>
+			</div>
+			<div class="grid-row">
+				<div class="unit1of1">
+					<textarea name="comments_required" placeholder="Comments" rows="6"></textarea>
+				</div>
+			</div>
+			<% if block.child_value('show_captcha') && block.child_value('show_captcha') == "Yes" %>
+				<div class="recaptcha clearfix">
+					<div style="margin:10px 0;" class="g-recaptcha clearfix" data-sitekey="6LcOOQATAAAAAK0PVSzlqmm0X_RggYhM7GMuot4X"></div>
+				</div>
+			<% end %>
+			<div class="bottom clearfix">
+				<a href="#" class="btn" id="submit-contact-form">Send</a>
+			</div>
+		</form>
+		<div id="message"></div>
+	</div>
+</div>
+
+<% content_for :css do %>
+	<style>
+		.recaptcha > div > div {
+			float: right;
+		}
+	</style>
+<% end %>
+
+<% content_for :js do %>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<%= javascript_include_tag "form_submit" %>
+	<script>
+		$(document).ready(function() {
+			$("#submit-contact-form").click(function(event) {
+				event.preventDefault();
+				submit_form("contact_form"); 
+				return false;
+			});
+		});
+	</script>
+<% end %>

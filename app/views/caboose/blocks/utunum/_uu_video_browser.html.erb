@@ -1,0 +1,143 @@
+<% cats = "Church Services", "Fundamentals of Christianity", "Music", "Conversations" %>
+
+<div class="video-browser" id="block_<%= block.id %>">
+	<div class="filter-bar">
+		<ul>
+			<li><a href="#" data-name="all" class="btn cat active">All</a></li>
+			<% cats.each do |c| %>
+				<li><a href="#" data-name="<%= c %>" class="btn cat inactive"><%= c %></a></li>
+			<% end %>
+		</ul>
+	</div>
+	<div class="content-wrapper clearfix constrain">
+		<a href="#" id="show-filter" class="btn">Show Filter</a>
+		<div class="sidebar">
+			<div class="filter-bar mobile">
+				<ul>
+					<li><a href="#" data-name="all" class="btn cat active">All</a></li>
+					<% cats.each do |c| %>
+						<li><a href="#" data-name="<%= c %>" class="btn cat inactive"><%= c %></a></li>
+					<% end %>
+				</ul>
+			</div>
+			<form id="blog-filter">
+				<section>
+					<div id="text-filter-wrapper">
+						<input id="text-filter" type="text" name="filter" placeholder="Keyword" />
+					</div>
+				</section>
+				<section>
+					<h6 class="section-title">Tags</h6>
+					<% tags = [] %>
+					<% vcs = VimeoCache.select(:tags).where(:site_id => site.id).all %>
+					<% vcs.each do |vc| %>
+						<% all = (vc.tags.blank? ? [] : vc.tags.split(',')[0..-1]) %>
+						<% all.each do |a| %>
+							<% next if tags.include?(a.strip) || cats.include?(a.strip) %>
+							<% tags << a.strip %>
+						<% end %>
+					<% end %>
+					<ul class="tags-container" id="tags">
+						<% tags.each do |t| %>
+							<li class="tag inactive"><%= t %></li>
+						<% end %>
+					</ul>
+				</section>
+				<section>
+					<a href="#" id="clear-filter" class="reset btn">Clear Filter</a>
+				</section>
+			</form>
+		</div>
+		<div class="grid">
+			<% videos = VimeoCache.where(:site_id => site.id).order("uploaded_at DESC").take(36) %>
+			<% videos.each_with_index do |v,i| %>
+				<% tags = [] %>
+				<% if !v.tags.blank? %>
+					<% v.tags.split(', ')[0..-1].each do |c| %>
+						<% tags << c %>
+					<% end %>
+				<% end %>
+				<div class="video-unit" style="background-image:url(<%= v.thumbnail_url %>);" data-tags="<%= tags.join(', ') %>" data-title="<%= v.title %>">
+					<div class="overlay"></div>
+					<div class="table">
+						<div class="table-cell">
+							<h5 class="video-title"><%= v.title %></h5>
+							<a href="/videos?vid=<%= v.video_id %>" class="btn color-outline">Watch Now</a>
+						</div>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<% content_for :js do %>
+	<script>
+		$(document).ready(function() {
+		  var $grid = $('#block_<%= block.id %> .grid'),
+		      $sizer = $grid.find('.video-unit');
+		  $grid.shuffle({
+		    itemSelector: '.video-unit',
+		    sizer: $sizer
+		  });
+		  $('#text-filter').on('keyup change', function() {
+		  	update_filter();
+			});
+			$("#clear-filter").click(function(event) {
+				event.preventDefault();
+				$("#text-filter").val("");
+				$(".tag").removeClass("active").addClass("inactive");
+				$(".cat").removeClass("active").addClass("inactive");
+				$(".cat").first().addClass("active").removeClass("inactive");
+				update_filter();
+			});
+			function match_tags(tags, query) {
+				for (var i = 0; i < query.length; i++) {
+					if (tags.indexOf(query[i]) < 0)
+						return false;
+				}
+				return true;
+			}
+			function update_filter() {
+				var tags = [];
+				$(".tag.active").each(function() {
+					tags.push($(this).text());
+				});
+				$(".cat.active").each(function() {
+					if ( $(this).text() != "All")
+						tags.push($(this).text());
+				});
+				var keyword = $("#text-filter").val().toLowerCase();
+				$grid.shuffle('shuffle', function($el, shuffle) {
+					return ( (tags == "all" || match_tags($el.data("tags"), tags)) && (keyword == "" || keyword == "keyword" ||  $el.data("title").toLowerCase().indexOf(keyword) >= 0  )     );
+				});
+			}
+			$("#show-filter").click(function(event) {
+				event.preventDefault();
+				if ( $(".sidebar").is(":visible") ) {
+					$(".sidebar").slideUp();
+					$(this).text("Show Filter");
+				}
+				else {
+					$(".sidebar").slideDown();
+					$(this).text("Hide Filter");
+				}
+			});
+			$(window).resize(function() {
+				if ( $(window).width() > 600 ) {
+					$(".sidebar").show();
+				}
+			});
+			$(".tag").on("click", function() {
+				$(this).toggleClass("inactive");
+				$(this).toggleClass("active");
+				update_filter();
+			});
+			$(".cat").on("click", function() {
+				$(".cat").removeClass("active").addClass("inactive");
+				$(this).addClass("active").removeClass("inactive");
+				update_filter();
+			});
+		});
+	</script>
+<% end %>

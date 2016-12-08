@@ -1,0 +1,18 @@
+<%
+cats = Aliceville::BusinessCategory.order(:name).all
+%>
+
+<div class="business-directory-block" id="block_<%= block.id %>">
+	<div class="constrain">
+<!-- 		<h1>Business Directory</h1> -->
+		<h4>Jump to Industry:</h4>
+		<ul class="cat-links">
+			<% cats.each do |c| %>
+				<% next if c.businesses.where(:hidden => false).count == 0 %>
+				<li>
+					<a href="/chamber/business-directory/<%= c.slug %>" class="btn"><%= c.name %></a>
+				</li>
+			<% end %>
+		</ul>
+	</div>
+</div>

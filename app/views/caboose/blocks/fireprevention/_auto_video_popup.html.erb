@@ -1,0 +1,51 @@
+<%
+pname  = block.child_value('param_name')
+pvalue = block.child_value('param_value')
+ytid   = block.child_value('youtube_id')
+pname  = pname   && pname.strip.length  > 0 ? pname.strip  : nil
+pvalue = pvalue  && pvalue.strip.length > 0 ? pvalue.strip : nil
+ytid   = ytid    && ytid.strip.length   > 0 ? ytid.strip   : nil
+
+%>
+
+<% if editing %>
+  <div id='block_<%= block.id %>'><p>Popup Video Block</p></div>
+<% else %>
+
+  <% if ytid && pname && pvalue %>
+    <% content_for :js do %>            
+      <script type='text/javascript'>
+      
+      function get_querystring_param_by_name(name) 
+      {  
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        var results = regex.exec(location.search);
+        if (results == null) return '';
+        return decodeURIComponent(results[1].replace("+", " "));
+      }
+      
+      $(document).ready(function() {
+      
+        var show_video = get_querystring_param_by_name(<%= raw Caboose.json(pname) %>);        
+        if (show_video == <%= raw Caboose.json(pvalue) %> && $(window).width() > 800)
+        {          
+          var href= 'https://www.youtube.com/embed/<%= ytid %>?autoplay=true&origin=' + window.location.href;
+          $.colorbox({  
+            href: href,
+            iframe: true,               
+            innerWidth: 880,
+            innerHeight: 490,
+            //  scrolling: false,
+            //  transition: 'fade',
+            //  closeButton: false,
+            //  onComplete: caboose_fix_colorbox,
+            opacity: 0.50       
+          });
+        }
+      });
+      
+      </script>
+    <% end %>  
+  <% end %>
+<% end %>

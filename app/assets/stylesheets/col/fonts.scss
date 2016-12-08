@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://cdn.myfontastic.com/ciSXGQx5SKF6gQBmKDuiEJ/icons.css');
+
+@font-face {
+  font-family: 'Garamond';
+  font-weight: normal;
+  font-style: normal;
+  src: url('/assets/col/garamond.eot'); /* IE9 Compat Modes */
+  src: url('/assets/col/garamond.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/assets/col/AGaramondPro-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+       url('/assets/col/AGaramondPro-Regular.ttf')  format('truetype') /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: 'Garamond';
+  font-weight: normal;
+  font-style: italic;
+  src: url('/assets/col/garamond-italic.eot'); /* IE9 Compat Modes */
+  src: url('/assets/col/garamond-italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/assets/col/AGaramondPro-Italic.woff') format('woff'), /* Pretty Modern Browsers */
+       url('/assets/col/AGaramondPro-Italic.ttf')  format('truetype') /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: 'Garamond';
+  font-weight: bold;
+  font-style: normal;
+  src: url('/assets/col/AGaramondPro-Semibold.eot'); /* IE9 Compat Modes */
+  src: url('/assets/col/AGaramondPro-Semibold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/assets/col/AGaramondPro-Semibold.woff') format('woff'), /* Pretty Modern Browsers */
+       url('/assets/col/AGaramondPro-Semibold.ttf')  format('truetype') /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: 'Garamond';
+  font-weight: bold;
+  font-style: italic;
+  src: url('/assets/col/AGaramondPro-SemiboldItalic.eot'); /* IE9 Compat Modes */
+  src: url('/assets/col/AGaramondPro-SemiboldItalic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/assets/col/AGaramondPro-SemiboldItalic.woff') format('woff'), /* Pretty Modern Browsers */
+       url('/assets/col/AGaramondPro-SemiboldItalic.ttf')  format('truetype') /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: "body-light";
+  src: url('//cabooseit.s3.amazonaws.com/assets/fonts/Montserrat-Light.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}

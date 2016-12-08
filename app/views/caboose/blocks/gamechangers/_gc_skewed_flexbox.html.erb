@@ -1,0 +1,19 @@
+<%
+  panels = block.children.where(:block_type_id => 3142).all
+  height = block.child_value('height')
+%>
+
+<div class="gc-skewed-flexbox" id="block_<%= block.id %>">
+  <!-- <div class="constrain"> -->
+    <% panels.each_with_index do |p, i| %>
+      <section style="background:url(<%= p.child_value('image').url(:original) %>) no-repeat center center;background-size: cover;min-height:<%= height %>;">
+        <% if i != 0 && i != 4 %>
+          <article>        
+            <h2><%= p.child_value('title') %></h2>
+            <%= raw block.render(p.child('text'), local_assigns) %>
+          </article>
+        <% end %>
+      </section>
+    <% end %>
+  <!-- </div> -->
+</div>

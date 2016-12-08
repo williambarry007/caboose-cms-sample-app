@@ -1,0 +1,31 @@
+<% sponsors = block.children.where(:block_type_id => 1811).all %>
+
+<footer class="main home" id="block_<%= block.id %>">
+  <div class="constrain">
+    <div class="sponsors">
+      <h5>Thanks to Our Additional Sponsors</h5>
+      <div class="table">
+        <% sponsors.each do |s| %>
+          <a class="table-cell" href="<%= s.child_value('link') %>" title="<%= s.child_value('name') %>" target="_blank">
+            <img src="<%= s.child_value('logo').url(:large) %>" alt="<%= s.child_value('name') %>" />
+          </a>
+        <% end %>
+      </div>
+    </div>
+  <!--  <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% Caboose::Page.where(:parent_id => 1309, :hide => false).order(:sort_order).all.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p, editing, false) %></li>
+        <% end %>
+      </ul>
+    </nav> -->
+  </div>
+  <section class="nine">
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+    <span>Designed and loved by:</span>
+    <a href="http://www.nine.is" target="_blank">
+      <%= render 'svg/nine' %>
+    </a>
+  </section>
+</footer>

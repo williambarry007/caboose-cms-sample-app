@@ -1,0 +1,22 @@
+<% slugs = ['store', 'products', 'blog', 'free-graphic-organizers', 'checkout', 'cart', 'my-account'] %>
+
+<div class="content_wrapper" id='block_<%= block.id %>'>          
+  <div class="content_body <% if !slugs.include?(page.slug) && !post %>constrain<% end %>">    
+  	<% if !slugs.include?(page.slug) && !post %>
+  		<div class="subpage-sidebar"><img src="//d9hjv462jiw15.cloudfront.net/assets/mss/images/color_logo.png" alt="Differentiated Visual Tools" /></div>
+  		<div class="subpage-content">
+  	<% end %>
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>    
+      <%= raw controller_view_content %>
+    <% elsif post %>
+      <%== block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <% block.children.each do |b| %><%= raw block.render(b, local_assigns) %><% end %>
+    <% else %>
+      <% if editing %>
+        <p style="border:1px dashed gray;padding:10px;">Empty content area. Click to add child blocks.</p>
+      <% end %>
+    <% end %>
+    <% if !slugs.include?(page.slug) && !post %></div><% end %>
+  </div>
+</div>

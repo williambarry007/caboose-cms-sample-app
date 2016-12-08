@@ -1,0 +1,33 @@
+<div class="fullscreen-overlay" id="login-modal">
+  <div class="table modal-wrapper animated fadeInDown">
+    <div class="table-cell">
+      <div class="modal">
+        <a id="close-modal" class="icon-close" onclick="close_login_form(); return false;"></a>
+        <h5>Member Login</h5>
+        <form action="/login" method="post" id="user-login-form">
+          <input type="hidden"   name="return_url" value="/" />
+          <div class="field clearfix">
+            <label for="username">NRDS #</label>
+            <input type="email" name="username" id="username" placeholder="NRDS #" />
+          </div>
+          <div class="field bottom clearfix">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" placeholder="Password" />
+          </div>
+          <div id="message"></div>
+          <div class="clearfix">
+            <ul id="login-options">
+              <li><a href="/forgot-password" title="Forgot Password" class='forgot'>Forgot password?</a></li>
+              <li class="remember">
+                <input type="checkbox" name="remember" id="remember" value="1" checked="true" /><span>Remember me</span>
+              </li>
+            </ul>
+            <p class="buttons">
+              <input type="submit" class="btn" value="Login" onclick='user_login(); return false;' />
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,191 @@
+// #my_account {
+//   max-width: 450px;
+//   margin: 0 auto;
+//   padding: 20px 2%;
+//   h1 {
+//   	text-align: center;
+//   	margin-bottom: 20px;
+//   }
+//   input[type="text"], input[type="email"] {
+//   	display: block;
+//   	width: 100% !important;
+//   }
+//  	& > p:last-of-type {
+//  		text-align: center;
+//  	}
+//   div.mb_container div.mb_placeholder {
+// 		left: 6px;
+// 		top: 11px;
+// 		span {
+// 			font-size: 16px;
+// 		}
+// 	}
+// 	.btn {
+// 		margin-top: 20px;
+// 	}
+// }
+
+.btn.cancel {
+  background: #9e9e9e;
+  &:hover {
+    background: #6f6f6f;
+  }
+}
+
+.content_body #financial_status #payment_method_container,
+.content_body > #payment_form {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+body .subnavigation-block {
+  ul {
+    li {
+      .btn {
+        color: #fff;
+      }
+    }
+  }
+}
+
+header.main .db-return {
+  position: absolute;
+  right: 2%;
+  right: calc(2% + 12px);
+  top: 101%;
+  top: calc(100% + 10px);
+  text-decoration: none;
+  color: $color-main;
+  &:hover {
+    color: $color-alt;
+  }
+}
+
+.content_body.home-content > h1:first-of-type {
+  margin-top: 30px;
+  padding: 0 2%;
+  max-width: $max-width;
+}
+.content_body > p > input[type="button"].btn {
+  margin: 0 2% 80px 2%;
+}
+table.invoices {
+  margin: 0 2% 20px 2%;
+  max-width: $max-width;
+  width: 96%;
+  tr {
+    th {
+      padding: 0 10px 2px 10px;
+      text-align: left;
+    }
+  }
+}
+.home-content > #overview_table, .home-content > #invoice_table {
+  padding: 0 2%;
+  max-width: $max-width;
+  tr {
+    th {
+      text-align: left;
+    }
+  }
+}
+#invoice_table .invoice .package_header {
+  display: none;
+}
+.home-content #overview_table .invoice #customer a {
+  text-decoration: none;
+  color: $color-dark;
+  cursor: default;
+}
+.home-content #invoice_table .line_item_details {
+  p {
+    margin-bottom: 0;
+    a {
+      text-decoration: none;
+      color: $color-dark;
+      cursor: default;
+    }
+  }
+  p:last-of-type {
+    display: none;
+  }
+}
+
+.cognito {
+  min-height: 300px;
+  background-image: url('/assets/shared/loading.gif');
+  background-size: 36px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  &.c-safari {
+    background-image: none;
+  }
+  .c-forms-form {
+    margin: 0 auto;
+  }
+  & > div:last-of-type {
+    visibility: hidden !important;
+  }
+}
+
+.login-wrapper {
+  padding: 40px 2%;
+  text-align: center;
+  &#campus-11, &#campus-20 {
+    .login-form-wrapper {
+      background: $color-alt;
+      color: #fff;
+      form {
+        a.forgot {
+          color: #fff;
+          &:hover {
+            color: $color-main;
+          }
+        }
+      }
+    }
+  }
+  .login-form-wrapper {
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 12px 12px 6px 12px;
+    background: $color-light;
+    border-radius: 12px;
+    .logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      max-width: 180px;
+    }
+    p.venue {
+      margin-bottom: 12px;
+    }
+    form {
+      input[type="text"], input[type="password"] {
+        display: block;
+        width: 100%;
+        margin-bottom: 12px;
+      }
+      a.forgot {
+        text-align: right;
+        font-size: 14px;
+        color: $color-main;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        &:hover {
+          color: $color-alt;
+        }
+      }
+      .buttons {
+        margin-top: 15px;
+        text-align: right;
+      }
+    }
+  }
+  #message {
+    p.note {
+      padding: 9px 15px 6px 15px;
+    }
+  }
+}

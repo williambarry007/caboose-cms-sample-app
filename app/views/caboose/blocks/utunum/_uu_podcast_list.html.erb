@@ -1,0 +1,24 @@
+<div class="podcast-list" id="block_<%= block.id %>">
+	<div class="post-list constrain">
+		<h2 class="podcast-title"><span class="text">Podcast</span><span class="line"></span></h2>
+		<% cat = Caboose::PostCategory.where(:name => "Podcast", :site_id => 73).first %>
+		<% if cat %>
+			<% if cat.posts.count == 0 %>
+				<p class='none'>Sorry, there are no podcasts yet. Check back later!</p>
+			<% end %>
+			<% cat.posts.each_with_index do |p, i| %>
+				<div class="unit-container">
+					<a class="podcast-unit" href="<%= p.uri %>" title="<%= p.title %>">
+						<div class="image-wrapper" style="background-image:url(<%= p.image.url(:large) %>);"></div>
+						<div class="text-wrapper">
+							<h3 class="title"><span><%= p.title %></span></h3>
+						</div>
+					</a>
+				</div>
+				<% if i % 2 == 0 || i != 0 %>
+					<p class="line"></p>
+				<% end %>
+			<% end %>
+		<% end %>
+	</div>
+</div>

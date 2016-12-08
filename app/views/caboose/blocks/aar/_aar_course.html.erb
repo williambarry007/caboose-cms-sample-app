@@ -1,0 +1,124 @@
+<%
+title = block.child_value('title')
+description = block.child_value('description')
+location = block.child_value('location')
+instructor = block.child_value('instructor')
+cost = block.child_value('cost')
+time = block.child_value('time')
+link_url = block.child_value('link_url')
+instructor_url = block.child_value('instructor_url')
+logo = block.child_value('logo')
+%>
+<div id="block_<%= block.id %>">
+<% if !title.blank? %>
+  <div class="course-block clearfix" id="block_<%= block.id %>">
+    <% if logo && logo.url && !logo.url.include?('missing') %>
+      <div class="image-banner clearfix" style="position:relative;">
+        <div class="text-wrapper">
+          <% if !title.blank? %>
+            <h3 class="title"><%= title %></h3>
+          <% end %>
+          <% if !cost.blank? %>
+            <p class="meta">Cost: <%= cost %></p>
+          <% end %>
+          <% if !location.blank? %>
+            <p class="meta">Location: <%= location %></p>
+          <% end %>
+          <% if !instructor.blank? %>
+            <% if instructor_url.blank? %>
+              <p class="meta">Instructor: <%= instructor %></p>
+            <% else %>
+              <p class="meta">Instructor: <a href="<%= instructor_url %>"><%= instructor %></a></p>
+            <% end %>
+          <% end %>
+          <% if !time.blank? %>
+            <p class="meta">GRI Hours: <%= time %></p>
+          <% end %>
+          <a href="<%= link_url %>" title="Register for <%= title %>" target="_blank" class="course-register-btn btn">Register Now</a>
+        </div>
+        <div class="image-wrapper">
+          <img src="<%= logo.url(:large) %>" alt="<%= title %>" />
+        </div>
+      </div>
+    <% else %>
+      <div style="height:30px;width:100%;"></div>
+    <% end %>
+    <div class="text">
+      <div class="description"><%== description %></div>
+      <div class="buttons">
+        <a href="<%= link_url %>" target="_blank" title="Register for <%= title %>" class="btn">Register Now</a>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if !block.child_value('show_courses').blank? && block.child_value('show_courses') != "None" %>
+  <% fields = Caboose::Block.where(:block_type_id => 1485, :value => block.child_value('show_courses')).order(:sort_order).all %>
+  <% fields.each do |f| %>
+
+    <%
+
+    this_block = Caboose::Block.where(:id => f.parent_id).first
+    if this_block
+      course = this_block.child_value('course')
+      month = this_block.child_value('month') 
+      day = this_block.child_value('day') 
+      year = this_block.child_value('year') 
+      date = "#{month} #{day}, #{year}"
+      location = this_block.child_value('location')
+      instructor = this_block.child_value('instructor')
+      cost = this_block.child_value('cost')
+      img = "//alabamarealtors.s3.amazonaws.com/uploads/GRI_#{course}.png"
+      title = course
+      if course == "Accountability"
+        title = "Accountability &amp; Development"
+      elsif course == "Buyers"
+        title = "Working with Buyers"
+      elsif course == "Sellers"
+        title = "Working with Sellers"
+      end
+      link = ""
+      if course == "Accountability"
+        link = "/gri/courses/gri-core-accountability--development---6-gri-hours"
+      elsif course == "Contracts"
+        link = "/gri/courses/gri-core-contracts---6-gri-hours"
+      elsif course == "Professionalism"
+        link = "/gri/courses/gri-core-professionalism---6-gri-hours"
+      elsif course == "Technology"
+        link = "/gri/courses/gri-core-technology---6-gri-hours"
+      elsif course == "Buyers"
+        link = "/gri/courses/gri-core-working-with-buyers---6-gri-hours"
+      elsif course == "Sellers"
+        link = "/gri/courses/gri-core-working-with-sellers---6-gri-hours"
+      end
+      %>
+
+      <div class="course-event-block clearfix">
+        <div class="image-wrapper">
+          <div class="image-holder" style="background-image:url(<%= img %>);">
+          </div>
+        </div>
+        <div class="text-wrapper">
+          <h3 class="title"><span>GRI CORE:</span> <%== title %></h3>
+          <% if !location.blank? %><h4 class="location"><a href="/gri/courses/location/<%= location.downcase %>"><%= location %></a></h4><% end %>
+          <% if !date.blank? %><h4 class="date"><%= date %></h4><% end %>
+          <% if !cost.blank? %><h4 class="cost">Cost: <%= cost %></h4><% end %>
+          <% if !instructor.blank? %><h4 class="instructor">Instructor: <%= instructor %></h4><% end %>
+        </div>
+        <div class="cal-wrapper">
+          <div class="cal-icon">
+            <div class="month"><%= month %></div>
+            <div class="day-wrapper">
+              <span class="day"><%= day %></span>
+            </div>
+          </div>
+          <a href="<%= this_block.child_value('register_url').blank? ? '/gri/register' : this_block.child_value('register_url') %>" class="btn">Register Now</a>
+        </div>
+      </div>
+    <% end %>
+
+
+  <% end %>
+<% end %>
+</div>
+

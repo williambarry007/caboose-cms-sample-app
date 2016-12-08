@@ -1,0 +1,108 @@
+<%
+bg = block.child_value("background_image").url(:huge)
+logo = block.child_value('logo').url(:large)
+top_pages = [1249,1358,1359,1360,1361]
+images = Caboose::Media.where(:media_category_id => 1677).order(:sort_order).all
+%>
+<div id="block_<%= block.id %>">
+  <div class="home-banner">
+    <% if images && images.count > 0 %>
+      <div class="slide-overlay"></div>
+      <div class='slide' id='slide0' style="background-image:url('<%= images.first.image.url(:huge) %>');"></div>
+    <% end %>
+    <div class="corner shadow"><span id="menu-show">MENU</span></div>
+    <header class="main home">
+      <div class="constrain">
+        <div class="logo-wrapper">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/soma/images/blue_logo.png" alt="Soma Church" class="logo" />
+        </div>
+        <nav class="grid-row">
+          <% top_pages.each do |tp| %>
+            <% p = Caboose::Page.where(:id => tp).first %>
+            <% if tp %>
+              <div class="unit1of5">
+                <h4 class="unit-title"><%== ApplicationHelper.nav_link(p, editing, false) %></h4>
+                <% if p.children.where(:hide => false).count > 0 %>
+                  <ul>
+                    <% p.children.where(:hide => false).order(:sort_order).all.each do |s| %>
+                      <li><%== ApplicationHelper.nav_link(s, editing, false) %></li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </nav>
+<!--         <div class="search-wrapper">
+          <input type="text" name="query" />
+        </div> -->
+      </div>
+    </header>
+    <div class="logo-link">
+      <img src="<%= logo %>" alt="Soma Church" />
+    </div>
+    <div class="greek">
+      <h3 class="word">σῶμα</h3>
+      <h3 class="soma">Soma</h3>
+      <p>body, flesh; the body of the Church</p>
+    </div>
+    <%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+  </div>
+  <header class="home-below main subpage">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="Home">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/soma/images/black_logo.png" alt="Soma Church" class="logo" width="134" height="73" />
+      </a>
+      <nav class="reveal">
+        <ul>
+          <% Caboose::Page.where(:parent_id => 1248, :hide => false).order(:sort_order).all.each do |p| %>
+            <li>
+              <a <% if request.original_url.include?(p.slug) %> class="active" <% end %> href="<%= p.uri %>" title="<%= p.title %>"><%= p.menu_title.blank? ? p.title : p.menu_title %></a>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+      <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+        <span>toggle menu</span>
+      </a>
+    </div>
+  </header>
+</div>
+
+<% content_for :js do %>
+  <script>
+    $(window).on("scroll", function(e) {
+      if ($(window).scrollTop() > $(window).height()) {
+        $(".home-below").addClass("fixed");
+        $(".home-content").css("padding-top",80);
+      } else {
+        $(".home-below").removeClass("fixed");
+        $(".home-content").css("padding-top",0);
+      }
+    });
+  <% if images.count < 1 %>
+    $(document).ready(function() {
+      $(".home-banner").vide("http://cabooseit.s3.amazonaws.com/assets/soma/images/soma2.mp4");
+    });
+  <% else %>
+    $(document).ready(function() {
+      <% if images && images.count > 1 %>
+        <% images.each_with_index do |m,index| %>
+          <% next if index == 0 %>
+          $("<div class='slide' id='slide<%= index %>' style='background-image:url(<%= m.image.url(:huge) %>);display:none;'></div>").insertAfter("#slide<%= index - 1 %>");
+        <% end %>
+      <% end %>
+      var $imgs = $(".home-banner").find(".slide"),
+        i = 0;
+      function changeImage(){
+          var next = (++i % $imgs.length);
+          $($imgs.get(next - 1)).fadeOut(700);
+          $($imgs.get(next)).fadeIn(700);
+      }
+      if ( $(window).width() > 700 ) {
+        var interval = setInterval(changeImage, 5000);
+      }
+    });
+  <% end %>
+  </script>
+<% end %>

@@ -1,0 +1,17 @@
+<%
+img = block.child_value('photo')
+name = block.child_value('name')
+quote = block.child_value('quote')
+location = block.child_value('location')
+%>
+
+<div class="testimonial-block" id="block_<%= block.id %>">
+	<div class="image-wrapper">
+		<img src="<%= img.url(:large) %>" alt="<%= name %>" />
+	</div>
+	<div class="text-wrapper">
+		<div class="quote richtext"><%== quote %></div>
+		<h5 class="name"><%= name %></h5>
+		<h6 class="location"><%= location %></h6>
+	</div>
+</div>

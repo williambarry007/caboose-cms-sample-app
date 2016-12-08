@@ -1,0 +1,37 @@
+<div class="content_wrapper home" id='block_<%= block.id %>'>
+	<div class="constrain social-container">
+		<%== ApplicationHelper.social_links(site.id, "circle", "white") %>
+	</div>
+  <div class="content_body">    
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>    
+      <%= raw controller_view_content %>
+    <% elsif post && post.body %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <% block.children.each do |b| %>
+        <% next if b.block_type_id == 1264 %>
+        <%= raw block.render(b, local_assigns) %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<% content_for :css do %>
+  <style>
+    #block_13754 {
+      background-image: none;
+      background-color: transparent;
+    }
+  </style>
+<% end %>
+
+<% video_path = block.child_value('video_path').blank? ? "http://d9hjv462jiw15.cloudfront.net/assets/parkertowing/images/parker_towing" : block.child_value('video_path') %>
+
+<% content_for :js do %>
+  <script>
+    var home_video = null;
+    $(document).ready(function() {
+      home_video = $("#block_13754").vide("<%= video_path %>");
+    });
+  </script>
+<% end %>

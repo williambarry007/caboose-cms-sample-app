@@ -1,0 +1,21 @@
+<section class="current-initiatives" id="block_<%= block.id %>">
+  <div class="constrain">
+    <h2 class="section-title"><%= block.child_value('section_title') %></h2>
+    <div class="grid-row">
+      <div class="unit1of2">
+        <h4 class="unit-title"><%= block.child_value('title_1') %></h4>
+        <div class="content">
+          <img src="<%= block.child_value('image_1').url(:large) %>" alt="<%= block.child_value('title_1') %>">
+          <div class="text"><%== block.child_value('text_1') %></div>
+        </div>
+      </div>
+      <div class="unit1of2">
+        <h4 class="unit-title"><%= block.child_value('title_2') %></h4>
+        <div class="content">
+          <img src="<%= block.child_value('image_2').url(:large) %>" alt="<%= block.child_value('title_2') %>">
+          <div class="text"><%== block.child_value('text_2') %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

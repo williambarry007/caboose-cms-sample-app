@@ -1,0 +1,18 @@
+<footer class="basic" id="block_<%= block.id %>">
+  <div class="constrain">
+    <nav>
+      <ul>
+        <li><a href="/" title="Home">Home</a></li>
+        <% pages = Caboose::Page.where(:parent_id => 59, :hide => false).order(:sort_order).all %>
+        <% pages.each do |p| %>
+          <li><%== ApplicationHelper.nav_link(p) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <section class="nine">
+      <span>Designed and loved by:</span>
+      <a href="http://www.nine.is" target="_blank"><img src="/assets/shared/nine_logo.png" alt="The Nine"></a>
+    </section>
+    <p class="copyright">Copyright    <%= DateTime.now.strftime("%Y") %> The Westervelt Company</p>
+  </div>
+</footer>

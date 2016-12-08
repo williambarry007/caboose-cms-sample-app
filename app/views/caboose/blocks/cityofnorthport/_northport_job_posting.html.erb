@@ -1,0 +1,15 @@
+<%
+title = block.child_value('title')
+date = block.child_value('date')
+description_file = block.child_value('description_file').url
+announcement_file = block.child_value('announcement_file').url
+%>
+
+
+	<div class="job-posting" id="block_<%= block.id %>">
+		<h3 class="title"><%= title %><span class="date"><%= date.blank? ? "" : "- #{date}" %></span></h3>
+		<div class="buttons">
+			<% if !announcement_file.include?('missing') %><a href="<%= announcement_file %>" class="btn" target="_blank">Announcement</a><% end %>
+			<% if !description_file.include?('missing') %><a href="<%= description_file %>" class="btn" target="_blank">Description</a><% end %>
+		</div>
+	</div>

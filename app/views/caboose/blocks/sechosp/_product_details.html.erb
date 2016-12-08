@@ -1,0 +1,58 @@
+<% p = @product %>
+
+<%
+if p.variants.count == 1
+  v = p.variants.first
+  uid = @logged_in_user ? @logged_in_user.id : Caboose::User.logged_out_user(@site.id)
+#  vl = Caboose::VariantLimit.where(:variant_id => v.id, :user_id => uid).first
+  vl = Caboose::VariantLimit.where(:variant_id => v.id, :user_id => uid).first
+  vl = Caboose::VariantLimit.where(:variant_id => v.id, :user_id => Caboose::User.logged_out_user_id(@site.id)).first if vl.nil?  
+end
+%>
+
+<div class="product-details loading" id="product" data-id="<%= p.id %>">
+  <div class="loading-text">
+    <img src="//d9hjv462jiw15.cloudfront.net/assets/osp/images/icons/loading.gif" width="35" height="35" />
+    <h3>Loading product...</h3>
+  </div>
+  <div class="constrain">
+    <div class="left-text-wrapper">
+      <h1 class="product-title"><%= @product.title %></h1>
+      <% unless @product.description.nil? or @product.description.empty? %>
+        <div class="box richtext"><%== @product.description %></div>
+      <% end %>
+    </div>
+    <section class="product-details-wrapper">
+      <div id="product-price"></div>
+      <% if vl %>
+        <% if vl.max_quantity(@invoice) == 0 %>
+          <p class="variant-limit"></p>
+        <% else %>
+          <p class="variant-limit">Maximum <%= vl.max_quantity(@invoice) %> per person.</p>
+        <% end %>
+      <% end %>
+      <% if !@product.caption.blank? %>
+        <div class="caption">
+          <%= @product.caption %>
+        </div>
+      <% end %>
+      <div id="product-options"></div>
+      <% if !vl || (vl && vl.max_quantity(@invoice) && vl.max_quantity(@invoice) > 0) %>
+        <div id="add-to-cart"></div>
+      <% else %>
+        <p>Sorry, this item is currently unavailable.</p>
+      <% end %>
+    </section>
+  </div>
+</div>
+
+<%= content_for :css do %>
+  <% # stylesheet_link_tag 'caboose/product_images' %>
+  <%= stylesheet_link_tag 'caboose/product_options' %>
+<% end %>
+
+<%= content_for :js do %>
+  <% # javascript_include_tag 'caboose/imageZoom' %>
+  <%= javascript_include_tag 'caboose/cart_old' %>
+  <%= javascript_include_tag 'caboose/product' %>
+<% end %>

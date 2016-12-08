@@ -1,0 +1,43 @@
+<%
+s1i = block.child_value('service_1_image').url(:large)
+s1t = block.child_value('service_1_title')
+s1l = block.child_value('service_1_link')
+s2i = block.child_value('service_2_image').url(:large)
+s2t = block.child_value('service_2_title')
+s2l = block.child_value('service_2_link')
+s3i = block.child_value('service_3_image').url(:large)
+s3t = block.child_value('service_3_title')
+s3l = block.child_value('service_3_link')
+%>
+
+<div class="services-grid" id="block_<%= block.id %>">
+	<div class="grid-row">
+		<div class="unit1of3 left">
+			<div class="bg-img" style="background-image:url(<%= s1i %>);"></div>
+			<div class="gradient"></div>
+			<a href="<%= s1l %>" title="<%= s1t %>" class="table">
+				<div class="table-cell">
+					<h4 class="title"><%= s1t %></h4>
+				</div>
+			</a>
+		</div>
+		<div class="unit1of3 center">
+			<div class="bg-img" style="background-image:url(<%= s2i %>);"></div>
+			<div class="gradient"></div>
+			<a href="<%= s2l %>" title="<%= s2t %>" class="table">
+				<div class="table-cell">
+					<h4 class="title"><%= s2t %></h4>
+				</div>
+			</a>
+		</div>
+		<div class="unit1of3 right">
+			<div class="bg-img" style="background-image:url(<%= s3i %>);"></div>
+			<div class="gradient"></div>
+			<a href="<%= s3l %>" title="<%= s3t %>" class="table">
+				<div class="table-cell">
+					<h4 class="title"><%= s3t %></h4>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>

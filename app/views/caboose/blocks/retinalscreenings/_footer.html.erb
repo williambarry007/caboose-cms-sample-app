@@ -1,0 +1,37 @@
+<% if modal %>
+  <div id="block_<%= block.id %>">Footer</div>
+<% else %>
+  <div class="footer" id="block_<%= block.id %>">
+    <div class="container">
+      <div class="row">
+        <div class="one-third column">
+          <ul class="footerMenu">
+            <li><a href="/about/who-we-are/">Who We Are</a></li>
+            <li><a href="/about/how-we-help/">How We Help</a></li>
+            <li><a href="/about/who-we-help/">Who We Help</a></li>
+            <li><a href="/resources/iris-news">IRIS News</a></li>
+          </ul>
+        </div>
+        <div class="one-third column">
+          <ul class="footerMenu">
+            <li><a href="/resources/case-studies">Case Studies</a></li>
+            <li><a href="/resources/careers/">Careers at IRIS</a></li>
+            <li><a href="/resources/gallery/">Photo/Video Galleries</a></li>
+            <li><a href="/contact-us/">Contact Us</a></li>
+          </ul>
+          <p>&nbsp;</p>
+        </div>
+        <div class="one-third column alignCenter">
+          <p><img src="//d9hjv462jiw15.cloudfront.net/assets/retinalscreenings/images/images-index/logo_white.png" width="150" height="67" alt="IRIS"></p>
+          <p>1-888-535-2574<br>
+          <span data-eeEncEmail_KmRaWqQoVY='1'>.(JavaScript must be enabled to view this email address)</span><script type="text/javascript">/*<![CDATA[*/var out = '',el = document.getElementsByTagName('span'),l = ['>','a','/','<',' 109',' 111',' 99',' 46',' 115',' 103',' 110',' 105',' 110',' 101',' 101',' 114',' 99',' 115',' 108',' 97',' 110',' 105',' 116',' 101',' 114',' 64',' 111',' 102',' 110',' 105','>','\"',' 109',' 111',' 99',' 46',' 115',' 103',' 110',' 105',' 110',' 101',' 101',' 114',' 99',' 115',' 108',' 97',' 110',' 105',' 116',' 101',' 114',' 64',' 111',' 102',' 110',' 105',':','o','t','l','i','a','m','\"','=','f','e','r','h','a ','<'],i = l.length,j = el.length;while (--i >= 0)out += unescape(l[i].replace(/^\s\s*/, '&#'));while (--j >= 0)if (el[j].getAttribute('data-eeEncEmail_KmRaWqQoVY'))el[j].innerHTML = out;/*]]>*/</script></p>
+        </div>
+      </div>
+      <div class="row copyright">
+        <div class="sixteen columns">
+          <p>Copyright  &copy; <%= DateTime.now.strftime("%Y") %>, Intelligent Retinal Imaging Systems</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,147 @@
+<div class="content_wrapper" id='block_<%= block.id %>'>
+  <div class="content_body">    
+    <% if controller_view_content && controller_view_content.strip.length > 0 %>
+      <% if block.constrain == true %><div class='constrain'><% end %>
+      <%= raw controller_view_content %>    
+      <% if block.constrain == true %></div><% end %>
+    <% elsif post && post.body %>
+      <%= raw block.partial('post', local_assigns) %>
+    <% elsif block.children.count > 0 %>
+      <%      
+      constrain_all = block.constrain_all
+      outer_header = block.constrain == true ? (constrain_all ? "<div class='constrain'>" : '') : ''
+      outer_footer = block.constrain == true ? (constrain_all ? "</div>" : '') : ''
+      inner_header = block.constrain == true ? (constrain_all ? '' : "<div class='constrain'>") : ''
+      inner_footer = block.constrain == true ? (constrain_all ? '' : "</div>") : ''      
+      %>
+      <%= raw outer_header %>
+      <% block.children.each do |b| %>
+      	<% if !@product %>
+	        <% if block.constrain && !b.full_width %><%= raw inner_header %><% end %>
+	        <%= raw block.render(b, local_assigns) %>
+	        <% if block.constrain && !b.full_width %><%= raw inner_footer %><% end %>
+	      <% else %>
+	      	<% block.children.where(:block_type_id => 657).each do |b| %><%= raw block.render(b, local_assigns) %><% end %>
+	      <% end %>
+      <% end %>
+      <%= raw outer_footer %>
+    <% else %>
+      <% if editing %>
+        <p style="border:1px dashed gray;padding:10px;">Empty content area. Click to add child blocks.</p>
+      <% end %>
+    <% end %> 
+  </div>
+</div>
+
+<% if page.id == 578 && !editing %>
+
+<div class="fullscreen-overlay" id="newsletter-modal">
+  <div class="table">
+    <div class="table-cell">
+      <div class="modal-wrapper">
+        <div class="modal homepage-form">
+          <a href="#" id="close-modal" class="icon-close"></a>
+          <div id="mc_embed_signup">
+            <form action="//watersbluff.us11.list-manage.com/subscribe/post?u=6e88bd6ddeffead136976e463&amp;id=7a1fb1424b" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/watersbluff/images/popup.jpg" alt="Newsletter Sign Up" class="giveaway" />
+            <p class="info" style="text-align:center;margin-bottom:16px;">Sign up for our newsletter to receive 10% off your first purchase and a free sticker.</p>
+            <div class="mc-field-group size1of2">
+              <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span></label>
+              <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Email Address">
+            </div>
+            <div class="mc-field-group size1of2">
+              <label for="mce-FNAME">First Name </label>
+              <input type="text" value="" name="FNAME" class="" id="mce-FNAME" placeholder="First Name">
+            </div>
+            <input type="hidden" value="" name="LNAME" class="" id="mce-LNAME">
+   <!--          <div class="mc-field-group size1of2">
+              <label for="mce-LNAME">Last Name </label>
+              <input type="text" value="" name="LNAME" class="" id="mce-LNAME" placeholder="Last Name">
+            </div> -->
+            <div class="mc-field-group size1of2" style="padding-bottom:0;">
+              <label for="mce-GENDER">Gender  <span class="asterisk">*</span>
+            </label>
+              <select name="GENDER" class="required" id="mce-GENDER">
+              <option value="">Gender</option>
+              <option value="Male">Male</option>
+            <option value="Female">Female</option>
+
+              </select>
+            </div>
+            <div class="mc-field-group size1of2" style="padding-bottom:0;">
+                <label for="mce-AGERANGE">Age Range  <span class="asterisk">*</span>
+              </label>
+                <select name="AGERANGE" class="required" id="mce-AGERANGE">
+                <option value="">Age Range</option>
+                <option value="13-17">13-17</option>
+              <option value="18-24">18-24</option>
+              <option value="25-35">25-35</option>
+              <option value="35 &amp; up">35 &amp; up</option>
+
+                </select>
+              </div>
+              <div id="mce-responses" class="clear" style="margin-bottom:10px;">
+                <div class="response" id="mce-error-response" style="display:none"></div>
+                <div class="response" id="mce-success-response" style="display:none"></div>
+              </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6e88bd6ddeffead136976e463_7a1fb1424b" tabindex="-1" value=""></div>
+                <p class="disclaimer">By registering, you will be subscribed to our Life on the Water e-newsletter.</p>
+                <div class="clear"><input type="submit" value="Register" name="subscribe" id="mc-embedded-subscribe" class="btn"></div>
+                </div>
+            </form>
+          </div>
+          <div class="stamp-holder">
+            <img src="//d9hjv462jiw15.cloudfront.net/assets/watersbluff/images/stamp.png" alt="Waters Bluff" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if Rails.env.production? %>
+<% content_for :js do %>
+  <script>
+    // function setCookie(cname, cvalue, exdays) {
+    //   var d = new Date();
+    //   d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    //   var expires = "expires="+d.toUTCString();
+    //   document.cookie = cname + "=" + cvalue + "; " + expires;
+    // }
+    // function getCookie(cname) {
+    //   var name = cname + "=";
+    //   var ca = document.cookie.split(';');
+    //   for(var i=0; i<ca.length; i++) {
+    //     var c = ca[i];
+    //     while (c.charAt(0)==' ') c = c.substring(1);
+    //     if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    //   }
+    //   return "";
+    // }
+    // function checkCookie() {
+    //   var subscribed = getCookie("wb_subscribed");
+    //   var subscribed = '';
+    //   if (subscribed == "") {
+    //     $("#newsletter-modal").fadeIn();
+    //   }
+    // }
+    $(document).ready(function() {
+ //     checkCookie();
+      $("#newsletter-modal").fadeIn();
+    });
+    $("#close-modal").click(function(event) {
+      event.preventDefault();
+  //    setCookie("wb_subscribed", true, 365);
+  //    console.log("set cookie");
+      $(".fullscreen-overlay").fadeOut();
+    });
+    $("#mc-embedded-subscribe-form").submit(function() {
+   //   setCookie("wb_subscribed", true, 365);
+  //    console.log("set cookie");
+   //   $(".fullscreen-overlay").fadeOut();
+    });
+  </script>
+<% end %>
+<% end %>
+<% end %>

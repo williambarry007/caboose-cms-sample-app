@@ -1,0 +1,73 @@
+<% if modal %>
+
+  <% if block.child("title") %>
+    <div id="block_<%= block.child('title').id %>" style="text-decoration:underline;cursor:pointer;">
+      Title: <%= block.child_value('title') %>
+    </div>
+  <% end %>
+
+  <% if block.child("to_address") %>
+    <div id="block_<%= block.child('to_address').id %>" style="text-decoration:underline;cursor:pointer;">
+      Notification Email: <%= block.child_value('to_address') %>
+    </div>
+  <% end %>
+
+<% else %>
+
+<div id="block_<%= block.id %>"> 
+  <div id="contact" class="section footer-padding">
+      <div class="container" style="padding-top:0;">
+        <h2><%= block.child_value('title') %></h2>
+
+        <div class="content">
+          <form role="form" id="tinco-contact-form">
+            <input type="hidden" name="block_id" value="<%= block.id %>" />
+            <input type="hidden" name="form_name" value="Contact Form" />
+            <input type="hidden" name="subject" value="Information Request" />
+            <div class="form-group">
+              <label for="exampleInputName"><i class="icon-tag"></i></label>
+              <input type="text" name="name" class="form-control" id="exampleInputName" placeholder="Name" required>
+              <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1"><i class="icon-inbox"></i></label>
+              <input type="email" name="email_required" class="form-control" id="exampleInputEmail1" placeholder="Email Address" required>
+              <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPhone"><i class="icon-inbox"></i></label>
+              <input type="phone" name="phone_required" class="form-control" id="exampleInputPhone" placeholder="Phone Number" required>
+              <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPhone"><i class="icon-tag"></i></label>
+              <input type="phone" name="budget" class="form-control" id="exampleInputPhone" placeholder="What's your estimated budget?" required>
+              <div class="clearfix"></div>
+            </div>
+            <div class="form-group textarea">
+              <label for="exampleInputMessage"><i class="icon-pencil"></i></label>
+              <textarea name="message_required" rows="6" class="form-control" id="exampleInputMessage" placeholder="Write Message" required></textarea>
+              <div class="clearfix"></div>
+            </div>
+            <a href="#" class="btn color" id="submit-contact-form">SEND MESSAGE</a>
+          </form>
+          <div id="message"></div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<% content_for :js do %>
+  <%= javascript_include_tag "form_submit" %>
+  <script>
+    $(document).ready(function() {
+      $("#submit-contact-form").click(function(event) {
+        event.preventDefault();
+        submit_form("tinco-contact-form"); 
+        return false;
+      });
+    });
+  </script>
+<% end %>
+
+<% end %>

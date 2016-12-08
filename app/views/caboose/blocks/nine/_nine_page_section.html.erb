@@ -1,0 +1,12 @@
+<% p = block.page %>
+<div class="page-section page-<%= p.slug %>" id="block_<%= block.id %>">
+	<div class="constrain">
+		<% if block.children.count > 0 %>
+			<h3 class="page-section-title"><%= block.child_value('section_title') %></h3>
+			<% block.children.each do |b| %>
+				<% next if b.block_type_id == 1385 %>
+				<%= raw block.render(b, local_assigns) %>
+			<% end %>
+		<% end %>
+	</div>
+</div>

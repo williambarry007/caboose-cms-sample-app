@@ -1,0 +1,39 @@
+<div class="delay-show">
+  <div id="mmenu">
+    <ul>
+      <li><a href="/" title="Home">Home</a></li>
+      <% Caboose::Page.where(:parent_id => 879, :hide => false).order(:sort_order).all.each do |p| %>
+        <li><%== ApplicationHelper.nav_link(p, editing, false) %>
+          <% subpages = p.children.where(:hide => false).order(:sort_order).all %>
+          <% if subpages.count > 0 %>
+            <ul class="submenu">
+              <% subpages.each do |s| %>
+                <li>
+                  <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                  <% if grandchildren.count > 0 %>
+                    <span><%= s.menu_title.blank? ? s.title : s.menu_title %></span>
+                    <ul>
+                      <% grandchildren.each do |g| %>
+                        <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <%== ApplicationHelper.nav_link(s, editing, false) %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </li>
+        <% if p.id == 880 && false # after About page show Exclusive Content link %>
+          <% user = controller.logged_in_user %>
+          <% if user && user.id != 2 %>
+            <li><a href="/stories/exclusive-content" title="Exclusive Content">Exclusive Content</a></li>
+          <% else %>
+            <li><a href="#" title="Login" class="show-login">Login</a></li>
+          <% end %>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+</div>

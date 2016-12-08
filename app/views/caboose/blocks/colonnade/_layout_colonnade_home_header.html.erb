@@ -1,0 +1,115 @@
+<%
+img = block.child_value('background_image')
+%>
+
+<div class="header-wrapper" id="block_<%= block.id %>">
+  <div class="image-holder" data-parallax="scroll" data-image-src="<%= img.url(:huge) %>"></div>
+  <div class="top">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/colonnade/images/white_logo.png" alt="<%= site.description %>" width="300" height="56" />
+      </a>
+      <a href="#" class="show-menu-link">
+        <span class="text">MENU</span>
+        <span class="icon-menu-4"></span>
+      </a>
+    </div>
+  </div>
+  <div class="table">
+    <div class="table-cell">
+      <h1 class="title" id="home-title"><span><%== block.child_value('title') %></span></h1>
+    </div>
+  </div>
+  <div class="video-holder">
+    <iframe src="https://player.vimeo.com/video/183000537?title=0&byline=0&portrait=0&autoplay=1" width="800" height="448" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+  </div>
+  <div class="bottom">
+    <div class="center">
+      <a href="#block_95715" class="local" title="Scroll Down">
+        <span>KEEP READING</span>
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/colonnade/images/down_arrow.png" alt="Scroll Down" />
+      </a>
+    </div>
+  </div>
+  <header class="main">
+    <div class="constrain">
+      <a class="logo-link" href="/" title="<%= site.description %>">
+        <img src="//d9hjv462jiw15.cloudfront.net/assets/colonnade/images/blue_logo.png" alt="<%= site.description %>" width="220" height="41" />
+      </a>
+      <nav class="reveal">
+        <ul>
+          <li class="top-li"><a href="/" title="Home">Home</a></li>
+          <% pages = Caboose::Page.where(:parent_id => 2226, :hide => false).order(:sort_order).all %>
+          <% pages.each_with_index do |p,i| %>
+            <% subpages = Caboose::Page.where(:parent_id => p.id, :hide => false).order(:sort_order).all %>
+            <li class="top-li">
+              <% if subpages.count > 0 %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+                <div class="dropdown <%= (pages.count - i < 3) ? 'right' : '' %>">
+                  <div class="contain">
+                    <ul class="level-2">
+                      <% subpages.each do |s| %>
+                        <li class="li-2">
+                          <% grandchildren = s.children.where(:hide => false).order(:sort_order).all %>
+                          <% if grandchildren.count > 0 %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                            <ul class="level-3">
+                              <% grandchildren.each do |g| %>
+                                <li><%== ApplicationHelper.nav_link(g, editing, false) %></li>
+                              <% end %>
+                            </ul>
+                          <% else %>
+                            <%== ApplicationHelper.nav_link(s, editing, false) %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% else %>
+                <%== ApplicationHelper.nav_link(p, editing, false) %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+      <a href="#" class="show-menu-link conceal">
+        <span class="icon-menu-4"></span>
+      </a>
+    </div>
+  </header>
+</div>
+
+<% content_for :js do %>
+<script>
+  function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+  }
+  function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1);
+      if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+  }
+  function checkCookie() {
+    var watched = getCookie("colonnade_video_watched");
+    if (watched == "") {
+      setTimeout(function(){ $("#home-title").addClass('small'); $(".video-holder").addClass('shown'); }, 2000);
+      setCookie("colonnade_video_watched", true, 365);
+    }
+    else {
+      $('.video-holder').remove();
+    }
+  }
+  $(window).load(function() {
+    checkCookie();
+  });
+</script>
+<% end %>

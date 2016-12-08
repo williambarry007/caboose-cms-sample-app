@@ -1,0 +1,36 @@
+<%
+# cat = Caboose::MediaCategory.where(:id => 1048).first
+media = Caboose::Media.where(:media_category_id => 1048).order("id DESC").all
+title = block.child_value('title')
+body = block.child_value('body')
+%>
+
+<% if page && page.id == 1577 %>
+	<div class="publications home clearfix" id="block_<%= block.id %>">
+		<div class="image-wrapper">
+			<% m = media.first %>
+			<a href="<%= m.description %>" target="_blank">
+				<img src="<%= m.image.url(:large) %>">
+			</a>
+		</div>
+		<div class="text-wrapper">
+			<h3><%= title %></h3>
+			<div class="richtext"><%== body %></div>
+			<br />
+			<% if m.description && m.description.include?("http") %>
+				<a href="<%= m.description %>" class="btn" target="_blank">View Publication</a>
+			<% end %>
+		</div>
+	</div>
+<% else %>
+	<div class="publications clearfix" id="block_<%= block.id %>">
+		<% media.each do |m| %>
+			<div class="image-wrapper">
+				<a href="<%= m.description %>" target="_blank">
+					<img src="<%= m.image.url(:large) %>">
+				</a>
+			</div>
+		<% end %>
+	</div>
+<% end %>
+

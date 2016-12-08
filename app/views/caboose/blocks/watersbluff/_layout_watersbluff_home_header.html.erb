@@ -1,0 +1,85 @@
+<header class="main home" id="block_<%= block.id %>">
+  <div class="top clearfix">
+    <div class="constrain">
+      <div class="banner-text">
+        <div class="left-icons">
+          <a href="/" class="icon-home" title="Home"></a>
+        </div>
+        <div class="left-title">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/watersbluff/images/waters2.png" alt="Waters" width="247" height="46" />
+        </div>
+        <a href="/" class="logo-link" title="Home">
+          <img src="//cabooseit.s3.amazonaws.com/assets/watersbluff/images/wb_logo.png" alt="Waters Bluff" />
+        </a>
+        <div class="right-title">
+          <img src="//d9hjv462jiw15.cloudfront.net/assets/watersbluff/images/bluff2.png" alt="Bluff" height="46" width="182" />
+        </div>
+        <div class="right-icons">
+          <a href="/my-account" class="icon-user reveal" title="My Account"></a>
+          <a href="/cart" class="icon-cart reveal" title="Cart"></a>
+          <a href="#" id="show-search" class="icon-search reveal" title="Search"></a>
+          <a id="menu-icon" class="cmn-toggle-switch cmn-toggle-switch__htx conceal" href="#mmenu" title="Menu">
+            <span>toggle menu</span>
+          </a>
+        </div>
+      </div>
+      <div class="search-dropdown" id="search-dropdown">
+        <form id="search-form" method="get" action="/products">
+          <input type="text" name="query" id="query" placeholder="Keyword" />
+        </form>
+        <a href="#" id="submit-search" class="btn">Search</a>
+      </div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="constrain">
+      <ul class="left nav reveal">
+        <% cats = [407,341,243] %>
+        <% cats.each do |cat| %>
+          <% c = Caboose::Category.where(:id => cat).first %>
+          <% if c %>
+            <% subs = Caboose::Category.where(:parent_id => c.id).where(:status => "Active").order(:sort_order).all %>
+            <li class="dropdown-li">
+              <a href="<%= c.url %>" title="<%= c.name %>"><% if cat == 407 || cat == 341 %>Shop<% end %> <%= c.name %></a>
+              <% if subs.count > 0 %>
+                <div class="dropdown">
+                  <ul>
+                    <% subs.each do |s| %>
+                      <li>
+                        <a href="<%= s.url %>" title="<%= s.name %>"><%= s.name %></a>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+      <ul class="right nav reveal">
+        <li><a href="/about" title="About Us">About Us</a></li>
+        <li><a href="/life-on-the-water" title="Media">Media</a></li>
+        <li><a href="/blog" title="Blog">Blog</a></li>
+        <li class="outlet"><a href="/wb-outlet" title="WB Outlet" class="outlet">WB Outlet</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="tagline">
+    <div class="constrain">
+      <p><%== block.child_value('banner_text').blank? ? "Welcome to Waters Bluff!" : block.child_value('banner_text') %></p>
+    </div>
+  </div>
+</header>
+
+<% content_for :js do %>
+  <script>
+  $("#show-search").click(function(event) {
+    event.preventDefault();
+    $("#search-dropdown").slideToggle();
+  });
+  $("#submit-search").click(function(e) {
+    e.preventDefault();
+    $("#search-form").submit();
+  });
+  </script>
+<% end %>
